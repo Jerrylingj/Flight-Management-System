@@ -1,5 +1,6 @@
 import QtQuick
 import QtQuick.Controls
+import NetworkHandler 1.0
 
 Flickable {
     id:flickableContainer
@@ -17,74 +18,71 @@ Flickable {
 
     property int pageIndex: 1
     // 允许接收一个函数，之后封装好后可以从外面传进来，或者就在这也行
-    property var getMoreData:function(loadingCallback, hasMoreCallBack,pageSize=10){
-        // 可能需要考虑封装一下网络请求
-        const xhr = new XMLHttpRequest();
-        xhr.open('POST', 'https://m.ctrip.com/restapi/soa2/16189/json/searchTripShootListForHomePageV2');
-        xhr.setRequestHeader('Content-Type', 'application/json');
-        const requestBody = JSON.stringify({
-                                               "districtId": 152,
-                                               "groupChannelCode": "tourphoto_all",
-                                               // "locatedDistrictId": 0,
-                                               "pagePara": {
-                                                   "pageIndex": pageIndex,
-                                                   "pageSize": pageSize,
-                                                   "sortType": 9,
-                                                   "sortDirection": 0
-                                               },
-                                               // "imageCutType": 1,
-                                               "head": {
-                                                   // "cid": "09031099210072157423",
-                                                   "ctok": "",
-                                                   "cver": "1.0",
-                                                   "lang": "01",
-                                                   "sid": "8888",
-                                                   "syscode": "09",
-                                                   "auth": "",
-                                                   "xsid": "",
-                                                   "extension": [
-                                                       {
-                                                           "name": "source",
-                                                           "value": "web"
-                                                       },
-                                                       {
-                                                           "name": "technology",
-                                                           "value": "H5"
-                                                       },
-                                                       {
-                                                           "name": "os",
-                                                           "value": "PC"
-                                                       },
-                                                       {
-                                                           "name": "application",
-                                                           "value": ""
-                                                       }
-                                                   ]
-                                               }
-                                           })
-        xhr.onreadystatechange = function() {
-            if (xhr.readyState === 4) {
-                if (xhr.status === 200) {
-                    // 处理成功响应
-                    const response = JSON.parse(xhr.responseText);
-                    // 处理返回的数据
-                    const list = response.resultList
-                    list.forEach(item=>{
-                        listModel.append({article:item.article})
-                    })
-                    ++pageIndex
-                    loadingCallback()
-                    if(!response.hasMore){
-                        hasMoreCallback()
-                    }
-                } else {
-                    // 处理错误
-                    console.error('Request failed');
-                    loadCallback()
-                }
-            }
-        };
-        xhr.send(requestBody);
+
+    NetworkHandler{
+        id:networkHandler
+        onRequestSuccess:(response)=>{
+                            const list = response.resultList
+                            list.forEach((item)=>{
+                                noteContainer.model.append({article:item.article})
+                                        })
+                            if(response.hasMore){
+                                hasMore = true
+                            }
+                            isLoading = false
+                        }
+        onRequestFailed:(response)=>{
+                            console.log(JSON.stringify(response,null,2))
+                            isLoading = false
+                        }
+    }
+
+    function getMoreData(pageSize=10){
+        isLoading = true
+        networkHandler.request(
+                      "https://m.ctrip.com/restapi/soa2/16189/json/searchTripShootListForHomePageV2",
+                      NetworkHandler.POST,
+                      {
+                                                                     "districtId": 152,
+                                                                     "groupChannelCode": "tourphoto_all",
+                                                                     // "locatedDistrictId": 0,
+                                                                     "pagePara": {
+                                                                         "pageIndex": pageIndex,
+                                                                         "pageSize": pageSize,
+                                                                         "sortType": 9,
+                                                                         "sortDirection": 0
+                                                                     },
+                                                                     // "imageCutType": 1,
+                                                                     "head": {
+                                                                         // "cid": "09031099210072157423",
+                                                                         "ctok": "",
+                                                                         "cver": "1.0",
+                                                                         "lang": "01",
+                                                                         "sid": "8888",
+                                                                         "syscode": "09",
+                                                                         "auth": "",
+                                                                         "xsid": "",
+                                                                         "extension": [
+                                                                             {
+                                                                                 "name": "source",
+                                                                                 "value": "web"
+                                                                             },
+                                                                             {
+                                                                                 "name": "technology",
+                                                                                 "value": "H5"
+                                                                             },
+                                                                             {
+                                                                                 "name": "os",
+                                                                                 "value": "PC"
+                                                                             },
+                                                                             {
+                                                                                 "name": "application",
+                                                                                 "value": ""
+                                                                             }
+                                                                         ]
+                                                                     }
+                                                                 }
+                      )
     }
 
     // 根据宽度决定列数
@@ -157,15 +155,14 @@ Flickable {
         }
 
         Component.onCompleted: {
-            getMoreData(()=>{},()=>{hasMore=false},16)
+            getMoreData(16)
         }
     }
 
     // 滑到底部附近加载数据
     onContentYChanged: {
         if ((contentY >= contentHeight - height - 50) && !isLoading && hasMore) {
-            isLoading = true
-            getMoreData(() => {isLoading = false},()=>{hasMore=false}, 12)
+            getMoreData(12)
         }
     }
 

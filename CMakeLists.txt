@@ -2,14 +2,17 @@ cmake_minimum_required(VERSION 3.16)
 
 project(FlightManagementSystem VERSION 0.1 LANGUAGES CXX)
 
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(Qt6 6.5 REQUIRED COMPONENTS Quick)
+find_package(Qt6 6.5 REQUIRED COMPONENTS Quick Network)  # 添加Network
 
 qt_standard_project_setup(REQUIRES 6.5)
 
 qt_add_executable(appuntitled7
     main.cpp
+    api/networkhandler.h
+    api/networkhandler.cpp
 )
 
 qt_add_qml_module(appuntitled7
@@ -19,6 +22,7 @@ qt_add_qml_module(appuntitled7
         Main.qml
         QML_FILES components/NoteList.qml
         QML_FILES components/NoteCard.qml
+        SOURCES api/networkhandler.h api/networkhandler.cpp
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
@@ -33,7 +37,7 @@ set_target_properties(appuntitled7 PROPERTIES
 )
 
 target_link_libraries(appuntitled7
-    PRIVATE Qt6::Quick
+    PRIVATE Qt6::Quick Qt6::Network
 )
 
 include(GNUInstallDirs)
