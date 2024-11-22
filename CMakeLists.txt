@@ -23,6 +23,7 @@ qt_add_qml_module(appuntitled7
         QML_FILES components/NoteList.qml
         QML_FILES components/NoteCard.qml
         SOURCES api/networkhandler.h api/networkhandler.cpp
+        RESOURCES android/AndroidManifest.xml
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
@@ -39,6 +40,8 @@ set_target_properties(appuntitled7 PROPERTIES
 target_link_libraries(appuntitled7
     PRIVATE Qt6::Quick Qt6::Network
 )
+
+set(ANDROID_PACKAGE_SOURCE_DIR "${CMAKE_SOURCE_DIR}/android")
 
 include(GNUInstallDirs)
 install(TARGETS appuntitled7
