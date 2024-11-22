@@ -1,7 +1,7 @@
 import QtQuick
 
 Window {
-    width: 500
+    width: 300
     height: 772
     visible: true
     title: "test"
@@ -13,7 +13,7 @@ Window {
     //     height: parent.height
     // }
 
-    NewList{
+    NoteList{
         visible: true
         width:parent.width
         height:parent.height

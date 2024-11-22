@@ -17,9 +17,8 @@ qt_add_qml_module(appuntitled7
     VERSION 1.0
     QML_FILES
         Main.qml
-        QML_FILES NoteList.qml
-        QML_FILES NoteCard.qml
-        QML_FILES NewList.qml
+        QML_FILES components/NoteList.qml
+        QML_FILES components/NoteCard.qml
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
