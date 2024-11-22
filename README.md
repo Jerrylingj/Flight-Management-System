@@ -8,4 +8,4 @@ A Flight Ticketing Management System Based on QT + MySQL
 - components: 存放各种组件
 - views: 存放页面
 - api 存放与服务器交互的代码
-- figure 存放图片
+- figure 存放图片，图片命名规范：页面-名字，EG：login-flight
