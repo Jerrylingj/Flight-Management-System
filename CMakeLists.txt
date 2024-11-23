@@ -22,6 +22,10 @@ qt_add_qml_module(appuntitled7
         Main.qml
         QML_FILES components/NoteList.qml
         QML_FILES components/NoteCard.qml
+        QML_FILES views/HomeView.qml
+        QML_FILES views/FlightInfoView.qml
+        QML_FILES views/OrdersView.qml
+        QML_FILES views/ProfileView.qml
         SOURCES api/networkhandler.h api/networkhandler.cpp
         RESOURCES android/AndroidManifest.xml
 )
