@@ -6,8 +6,10 @@ import QtQuick.Layouts
 Page {
     id: homeView
 
-    ColumnLayout {
-        anchors.centerIn: parent
-        spacing: 20
+    Loader {
+        source: "../components/NoteList.qml"
+        width: parent.width
+        height: parent.height
     }
+
 }
