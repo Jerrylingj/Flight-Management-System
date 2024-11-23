@@ -5,7 +5,7 @@ project(FlightManagementSystem VERSION 0.1 LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(Qt6 6.5 REQUIRED COMPONENTS Quick Network)  # 添加Network
+find_package(Qt6 6.5 REQUIRED COMPONENTS Quick Network)
 
 qt_standard_project_setup(REQUIRES 6.5)
 
@@ -28,6 +28,8 @@ qt_add_qml_module(appuntitled7
         QML_FILES views/ProfileView.qml
         SOURCES api/networkhandler.h api/networkhandler.cpp
         RESOURCES android/AndroidManifest.xml
+        RESOURCES android/res/xml/network_security_config.xml
+        QML_FILES views/NoteDetailView.qml
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.

@@ -14,6 +14,7 @@ Flickable {
 
     property bool hasMore: true
     property bool isLoading: false
+    property int cityID: 152 // 城市id, 默认广州
 
     property int pageIndex: 1
     // 允许接收一个函数，之后封装好后可以从外面传进来，或者就在这也行
@@ -42,7 +43,7 @@ Flickable {
                       "https://m.ctrip.com/restapi/soa2/16189/json/searchTripShootListForHomePageV2",
                       NetworkHandler.POST,
                       {
-                                                                     "districtId": 152,
+                                                                     "districtId": cityID, // 城市
                                                                      "groupChannelCode": "tourphoto_all",
                                                                      // "locatedDistrictId": 0,
                                                                      "pagePara": {

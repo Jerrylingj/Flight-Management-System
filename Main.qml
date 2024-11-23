@@ -14,12 +14,15 @@ Window {
         anchors.top: parent.top
         height:pageName.height
         width: parent.width
+        color:"white"
+        z:3
         Text {
             id:pageName
             property string nameText: "主页"
             text: qsTr(nameText)
             font.pointSize: 16
             anchors.centerIn: parent
+            color:"black"
         }
     }
 

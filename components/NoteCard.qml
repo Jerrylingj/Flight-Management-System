@@ -4,25 +4,21 @@ import QtQuick.Effects
 Rectangle {
     height: userInfo.height + articleContentRect.height + columnContainer.topPadding + columnContainer.bottomPadding
 
-    // 给最外层 Rectangle 添加阴影
+    // 不知道有没有用的东西，理论上会让边框有阴影。ai写的
     layer.enabled: true
     layer.effect: MultiEffect {
         shadowEnabled: true
-        shadowColor: "#40000000"  // 半透明黑色
+        shadowColor: "#40000000"
         shadowBlur: 0.5
         shadowHorizontalOffset: 3
         shadowVerticalOffset: 3
-        shadowScale: 1.02  // 稍微放大阴影
+        shadowScale: 1.02
     }
 
     required property var note
 
     color:"transparent"
     z:0
-
-    MouseArea{
-        anchors.fill: parent
-    }
 
     Image {
         id: sourceImage
