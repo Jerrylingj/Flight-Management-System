@@ -4,7 +4,6 @@ import NetworkHandler 1.0
 
 Flickable {
     id:flickableContainer
-    // anchors.fill: parent
     contentWidth: width
     contentHeight: Math.min(...yArray)
 
@@ -96,24 +95,6 @@ Flickable {
         }
     }
 
-    // 鼠标点击事件, 可能用来处理页面跳转/通信
-    property var clickHandler: function(arg){
-        console.log(arg)
-    }
-
-    MouseArea{
-        id:parentMouseArea
-        anchors.fill: parent
-        propagateComposedEvents: true
-        onClicked: {
-            if(delegeteTarget){
-                clickHandler(delegeteTarget)
-            }
-        }
-        property var delegeteTarget:null
-        z:3
-    }
-
     Repeater {
         id: noteContainer
         model:ListModel{
@@ -124,15 +105,6 @@ Flickable {
             height: card.height
             width:parent.width/flickableContainer.column - flickableContainer.spacing
             color:"transparent"
-            MouseArea{
-                anchors.fill: parent
-                onClicked: {
-                    // 以后需要什么返回什么吧
-                    parentMouseArea.delegeteTarget = {
-
-                    }
-                }
-            }
 
             NoteCard {
                 id: card

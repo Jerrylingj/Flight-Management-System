@@ -33,6 +33,7 @@ Window {
         anchors.bottom: bottomNavBar.top
         height: parent.height - pageNameRect.height - bottomNavBar.height
         initialItem: "views/HomeView.qml"
+        property alias view: rootStackView
     }
 
     // 底部导航栏
