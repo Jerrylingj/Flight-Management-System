@@ -4,7 +4,7 @@ import NetworkHandler 1.0
 
 Flickable {
     id:flickableContainer
-    anchors.fill: parent
+    // anchors.fill: parent
     contentWidth: width
     contentHeight: Math.min(...yArray)
 

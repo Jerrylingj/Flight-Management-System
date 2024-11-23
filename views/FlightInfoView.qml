@@ -4,17 +4,10 @@ import QtQuick.Layouts
 
 Page {
     id: flightInfoView
-    title: qsTr("航班信息")
 
     ColumnLayout {
         anchors.centerIn: parent
         spacing: 20
-
-        Text {
-            text: qsTr("航班信息")
-            font.pointSize: 16
-            horizontalAlignment: Text.AlignHCenter
-        }
 
         // // 一些数据
         // Repeater {

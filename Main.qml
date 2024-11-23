@@ -7,23 +7,32 @@ Window {
     width: 300
     height: 772
     visible: true
-    title: qsTr("Flight Management System")
+    title: qsTr(pageName.nameText+"|航班信息管理系统")
+
+    Rectangle{
+        id:pageNameRect
+        anchors.top: parent.top
+        height:pageName.height
+        width: parent.width
+        Text {
+            id:pageName
+            property string nameText: "主页"
+            text: qsTr(nameText)
+            font.pointSize: 16
+            anchors.centerIn: parent
+        }
+    }
 
 
     // 管理页面
     StackView {
         id: rootStackView
-        anchors.top: navbar.bottom
+        anchors.top: pageNameRect.bottom
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.bottom: bottomNavBar.top
+        height: parent.height - pageNameRect.height - bottomNavBar.height
         initialItem: "views/HomeView.qml"
-    }
-
-    NoteList {
-        visible: true
-        width:parent.width
-        height:parent.height
     }
 
     // 底部导航栏
@@ -45,7 +54,8 @@ Window {
                 onClicked: {
                     // 主页
                     console.log("主页")
-                    rootStackView.push(Qt.resolvedUrl("HomeView.qml"))
+                    pageName.nameText = "主页"
+                    rootStackView.push(Qt.resolvedUrl("views/HomeView.qml"))
                 }
             }
             Button {
@@ -55,6 +65,7 @@ Window {
                 onClicked: {
                     // 航班信息
                     console.log("航班信息")
+                    pageName.nameText = "航班信息"
                     rootStackView.push(Qt.resolvedUrl("views/FlightInfoView.qml"))
                 }
             }
@@ -65,6 +76,7 @@ Window {
                 onClicked: {
                     // 全部订单
                     console.log("全部订单")
+                    pageName.nameText = "全部订单"
                     rootStackView.push(Qt.resolvedUrl("views/OrdersView.qml"))
                 }
             }
@@ -73,6 +85,7 @@ Window {
                 Layout.fillWidth: true
                 // icon.source: "images/profile_icon.png"
                 onClicked: {
+                    pageName.nameText = "个人中心"
                     rootStackView.push(Qt.resolvedUrl("views/ProfileView.qml"))
                 }
             }
