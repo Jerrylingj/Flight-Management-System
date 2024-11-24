@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.dev.flightmanagementsystem" android:versionCode="" android:versionName="">
 
-    <application android:label="@string/app_name" android:networkSecurityConfig="@xml/network_security_config">
+    <application android:label="@string/app_name" android:networkSecurityConfig="@xml/network_security_config" android:icon="@drawable/icon">
         <activity android:name="org.qtproject.qt6.android.bindings.QtActivity" android:configChanges="orientation|screenSize|smallestScreenSize|keyboard|keyboardHidden|navigation" android:label="@string/app_name" android:screenOrientation="unspecified">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -14,4 +14,5 @@
     <uses-permission android:name="android.permission.INTERNET"/>
 <!-- %%INSERT_PERMISSIONS -->
     <!-- %%INSERT_FEATURES -->
+<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 </manifest>
