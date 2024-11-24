@@ -11,5 +11,4 @@ Page {
         width: parent.width
         height: parent.height
     }
-
 }

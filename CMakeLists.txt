@@ -30,6 +30,8 @@ qt_add_qml_module(appuntitled7
         RESOURCES android/AndroidManifest.xml
         RESOURCES android/res/xml/network_security_config.xml
         QML_FILES views/NoteDetailView.qml
+        QML_FILES
+        QML_FILES static/sites.js
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
