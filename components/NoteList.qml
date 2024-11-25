@@ -1,6 +1,7 @@
 import QtQuick
 import QtQuick.Controls
 import NetworkHandler 1.0
+import "../static/sites.js" as Site
 
 Flickable {
     id:flickableContainer
@@ -11,10 +12,8 @@ Flickable {
     property int column: 2 // 列数，默认为2
     property real spacing: 5
 
-
-    property bool hasMore: true
     property bool isLoading: false
-    property int cityID: 152 // 城市id, 默认广州
+    property int cityID: 27 // 城市id, 默认珠海
 
     property int pageIndex: 1
     // 允许接收一个函数，之后封装好后可以从外面传进来，或者就在这也行
@@ -26,8 +25,8 @@ Flickable {
                             list.forEach((item)=>{
                                 noteContainer.model.append({article:item.article})
                                         })
-                            if(response.hasMore){
-                                hasMore = true
+                            if(!response.hasMore){
+                                cityID = Site.getRandomID()
                             }
                             isLoading = false
                         }
@@ -85,6 +84,10 @@ Flickable {
                       )
     }
 
+    function changeToDetail(article){
+        parent.selectedCity = article
+    }
+
     // 根据宽度决定列数
     property var changeColumns:function(windowWidth){
         if(windowWidth<=400){
@@ -124,6 +127,15 @@ Flickable {
                 // 这个 : 疑似双向绑定, 用curY间接赋值
                 y:curY
                 note: article
+                MouseArea {
+                    anchors.fill: parent
+                    width: parent.width
+                    height:parent.height
+                    z:5
+                    onClicked: {
+                        changeToDetail(article)
+                    }
+                }
             }
         }
 
@@ -134,7 +146,7 @@ Flickable {
 
     // 滑到底部附近加载数据
     onContentYChanged: {
-        if ((contentY >= contentHeight - height - 50) && !isLoading && hasMore) {
+        if ((contentY >= contentHeight - height - 50) && !isLoading) {
             getMoreData(12)
         }
     }

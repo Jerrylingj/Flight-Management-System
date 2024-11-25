@@ -92,6 +92,7 @@ Rectangle {
             height: articleTitle.height
             Text {
                 id: articleTitle
+                z:0
                 text: qsTr("　　" + note.articleTitle)
                 font.bold: true  // 粗体
                 font.pixelSize: 16  // 字体大小

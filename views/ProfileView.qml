@@ -5,6 +5,8 @@ import QtQuick.Layouts
 // ProfileView.qml
 Page {
     id: profileView
+
+    property string viewName: '个人中心'
     Rectangle {
         anchors.fill: parent
         color: "#F5F5F5" // 背景颜色
@@ -17,7 +19,6 @@ Page {
             // 头像和用户名部分
             Row {
                 spacing: 10
-                anchors.horizontalCenter: parent
                 Rectangle {
                     width: 80
                     height: 80
@@ -51,7 +52,6 @@ Page {
                 color: "#666666"
                 wrapMode: Text.Wrap // 自动换行
                 horizontalAlignment: Text.AlignHCenter
-                anchors.horizontalCenter: parent
                 width: parent.width * 0.95 // 增加宽度到95%
             }
 
