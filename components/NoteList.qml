@@ -110,17 +110,6 @@ Flickable {
             width:parent.width/flickableContainer.column - flickableContainer.spacing
             color:"transparent"
 
-            MouseArea {
-                anchors.fill: parent
-                width: parent.width
-                height:parent.height
-                z:5
-                preventStealing: true
-                onClicked: {
-                    changeToDetail(article)
-                }
-            }
-
             NoteCard {
                 id: card
                 Component.onCompleted: {
@@ -138,6 +127,15 @@ Flickable {
                 // 这个 : 疑似双向绑定, 用curY间接赋值
                 y:curY
                 note: article
+                MouseArea {
+                    anchors.fill: parent
+                    width: parent.width
+                    height:parent.height
+                    z:5
+                    onClicked: {
+                        changeToDetail(article)
+                    }
+                }
             }
         }
 

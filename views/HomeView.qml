@@ -15,7 +15,7 @@ Page {
         height: parent.height
         property var selectedCity
         onSelectedCityChanged: {
-            stack.changeTo('views/NoteDetailView.qml')
+            stack.changeTo('views/NoteDetailView.qml',selectedCity)
         }
     }
 }

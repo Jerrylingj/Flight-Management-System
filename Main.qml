@@ -52,7 +52,7 @@ Window {
         property alias view: rootStackView
         function changeTo(url,data){
             if(data&&Object.keys(data).length!=0){
-                push(Qt.resolvedUrl(url,{viewData:data}))
+                push(Qt.resolvedUrl(url),{viewData:data})
                 return
             }
             push(Qt.resolvedUrl(url))
