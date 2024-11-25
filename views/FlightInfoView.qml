@@ -5,6 +5,8 @@ import QtQuick.Layouts
 Page {
     id: flightInfoView
 
+    property string viewName: '航班信息'
+
     ColumnLayout {
         anchors.centerIn: parent
         spacing: 20

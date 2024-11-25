@@ -16,9 +16,22 @@ Window {
         width: parent.width
         color:"white"
         z:3
+        Button{
+            Text{
+                text:qsTr("返回")
+                anchors.centerIn: parent
+            }
+
+            width: parent.width * 0.1
+            height:parent.height
+            onClicked: {
+                rootStackView.back()
+            }
+        }
+
         Text {
             id:pageName
-            property string nameText: "主页"
+            property string nameText: rootStackView.currentItem.viewName
             text: qsTr(nameText)
             font.pointSize: 16
             anchors.centerIn: parent
@@ -37,6 +50,19 @@ Window {
         height: parent.height - pageNameRect.height - bottomNavBar.height
         initialItem: "views/HomeView.qml"
         property alias view: rootStackView
+        function changeTo(url,data){
+            if(data&&Object.keys(data).length!=0){
+                push(Qt.resolvedUrl(url,{viewData:data}))
+                return
+            }
+            push(Qt.resolvedUrl(url))
+        }
+        function back(){
+            if(depth>1){
+                pop()
+            }
+
+        }
     }
 
     // 底部导航栏
@@ -57,9 +83,7 @@ Window {
                 // icon.source: "images/home_icon.png"
                 onClicked: {
                     // 主页
-                    console.log("主页")
-                    pageName.nameText = "主页"
-                    rootStackView.push(Qt.resolvedUrl("views/HomeView.qml"))
+                    rootStackView.changeTo('views/HomeView.qml')
                 }
             }
             Button {
@@ -68,9 +92,7 @@ Window {
                 // icon.source: "images/flight_icon.png"
                 onClicked: {
                     // 航班信息
-                    console.log("航班信息")
-                    pageName.nameText = "航班信息"
-                    rootStackView.push(Qt.resolvedUrl("views/FlightInfoView.qml"))
+                    rootStackView.changeTo('views/FlightInfoView.qml')
                 }
             }
             Button {
@@ -79,9 +101,7 @@ Window {
                 // icon.source: "images/orders_icon.png"
                 onClicked: {
                     // 全部订单
-                    console.log("全部订单")
-                    pageName.nameText = "全部订单"
-                    rootStackView.push(Qt.resolvedUrl("views/OrdersView.qml"))
+                    rootStackView.changeTo('views/OrdersView.qml')
                 }
             }
             Button {
@@ -89,8 +109,7 @@ Window {
                 Layout.fillWidth: true
                 // icon.source: "images/profile_icon.png"
                 onClicked: {
-                    pageName.nameText = "个人中心"
-                    rootStackView.push(Qt.resolvedUrl("views/ProfileView.qml"))
+                    rootStackView.changeTo("views/ProfileView.qml")
                 }
             }
         }

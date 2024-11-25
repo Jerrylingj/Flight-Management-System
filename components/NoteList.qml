@@ -84,6 +84,10 @@ Flickable {
                       )
     }
 
+    function changeToDetail(article){
+        parent.selectedCity = article
+    }
+
     // 根据宽度决定列数
     property var changeColumns:function(windowWidth){
         if(windowWidth<=400){
@@ -105,6 +109,17 @@ Flickable {
             height: card.height
             width:parent.width/flickableContainer.column - flickableContainer.spacing
             color:"transparent"
+
+            MouseArea {
+                anchors.fill: parent
+                width: parent.width
+                height:parent.height
+                z:5
+                preventStealing: true
+                onClicked: {
+                    changeToDetail(article)
+                }
+            }
 
             NoteCard {
                 id: card
