@@ -33,6 +33,7 @@ qt_add_qml_module(appuntitled7
         QML_FILES
         QML_FILES static/sites.js
         QML_FILES
+        QML_FILES components/FlightInfoCard.qml
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
