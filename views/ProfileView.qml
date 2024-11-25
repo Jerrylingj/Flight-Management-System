@@ -55,11 +55,28 @@ Page {
                 width: parent.width * 0.95 // 增加宽度到95%
             }
 
+            Rectangle {
+                anchors.left: parent.left // 左边对齐到父元素的左边
+                anchors.leftMargin: parent.width * 0.05 // 左边距增加 20 像素
+                width: parent.width * 0.8
+                height: 50
+                color: "#FFFFFF"
+                radius: 8
+                border.color: "#CCCCCC"
+
+                Text {
+                    anchors.centerIn: parent
+                    text: "更改个人信息"
+                    font.pointSize: 16
+                    color: "#333333"
+                }
+            }
+
             // 按钮部分
             Rectangle {
                 anchors.left: parent.left // 左边对齐到父元素的左边
                 anchors.leftMargin: parent.width * 0.05 // 左边距增加 20 像素
-                width: parent.width * 0.9
+                width: parent.width * 0.8
                 height: 50
                 color: "#FFFFFF"
                 radius: 8
@@ -76,7 +93,7 @@ Page {
             Rectangle {
                 anchors.left: parent.left // 左边对齐到父元素的左边
                 anchors.leftMargin: parent.width * 0.05 // 左边距增加 20 像素
-                width: parent.width * 0.9
+                width: parent.width * 0.8
                 height: 50
                 color: "#FFFFFF"
                 radius: 8
@@ -93,7 +110,7 @@ Page {
             Rectangle {
                 anchors.left: parent.left // 左边对齐到父元素的左边
                 anchors.leftMargin: parent.width * 0.05 // 左边距增加 20 像素
-                width: parent.width * 0.9
+                width: parent.width * 0.8
                 height: 50
                 color: "#FFFFFF"
                 radius: 8
@@ -110,7 +127,7 @@ Page {
             Rectangle {
                 anchors.left: parent.left // 左边对齐到父元素的左边
                 anchors.leftMargin: parent.width * 0.05 // 左边距增加 20 像素
-                width: parent.width * 0.9
+                width: parent.width * 0.8
                 height: 50
                 color: "#FFFFFF"
                 radius: 8
