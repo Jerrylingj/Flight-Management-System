@@ -49,15 +49,23 @@ Page {
                     color: "#333333"
                 }
 
-            }
+                Button {
+                    anchors.top: parent.top
+                    anchors.topMargin: 20
+                    width: parent.width * 0.4
+                    height: 40
+                    text: "编辑"
+                    font.pixelSize: 20
+                    background: Rectangle {
+                        color: "#3498DB"
+                        radius: 10
+                    }
+                    padding: 12
+                    onClicked: {
+                        console.log("编辑个人信息")
+                    }
+                }
 
-            // 剩余金额
-            Text {
-                anchors.left: parent.left // 左边对齐到父元素的左边
-                anchors.leftMargin: parent.width * 0.1
-                text: "剩余金额：￥"+myMoney
-                font.pointSize: 20
-                color: "#EE82EE"
             }
 
             // 个人信息文本框
@@ -78,6 +86,49 @@ Page {
                 wrapMode: Text.Wrap // 自动换行
                 horizontalAlignment: Text.AlignLeft // 修改这里为左对齐
                 width: parent.width * 0.9 // 增加宽度到90%
+            }
+
+            // 剩余金额
+            Text {
+                anchors.left: parent.left // 左边对齐到父元素的左边
+                anchors.leftMargin: parent.width * 0.1
+                text: "剩余金额：￥"+myMoney
+                font.pointSize: 20
+                color: "#EE82EE"
+            }
+
+            Button {
+                anchors.left: parent.left // 左边对齐到父元素的左边
+                anchors.leftMargin: parent.width * 0.05
+                width: parent.width * 0.8
+                height: 40
+                text: "我的订单"
+                font.pixelSize: 20
+                background: Rectangle {
+                    color: "#3498DB"
+                    radius: 10
+                }
+                padding: 12
+                onClicked: {
+                    console.log("我的订单")
+                }
+            }
+
+            Button {
+                anchors.left: parent.left // 左边对齐到父元素的左边
+                anchors.leftMargin: parent.width * 0.05
+                width: parent.width * 0.8
+                height: 40
+                text: "我的收藏"
+                font.pixelSize: 20
+                background: Rectangle {
+                    color: "#3498DB"
+                    radius: 10
+                }
+                padding: 12
+                onClicked: {
+                    console.log("我的收藏")
+                }
             }
 
             Button {
@@ -132,56 +183,9 @@ Page {
             }
 
 
-            Button {
-                anchors.left: parent.left // 左边对齐到父元素的左边
-                anchors.leftMargin: parent.width * 0.05
-                width: parent.width * 0.8
-                height: 40
-                text: "编辑个人信息"
-                font.pixelSize: 20
-                background: Rectangle {
-                    color: "#3498DB"
-                    radius: 10
-                }
-                padding: 12
-                onClicked: {
-                    console.log("编辑个人信息")
-                }
-            }
 
-            Button {
-                anchors.left: parent.left // 左边对齐到父元素的左边
-                anchors.leftMargin: parent.width * 0.05
-                width: parent.width * 0.8
-                height: 40
-                text: "我的订单"
-                font.pixelSize: 20
-                background: Rectangle {
-                    color: "#3498DB"
-                    radius: 10
-                }
-                padding: 12
-                onClicked: {
-                    console.log("我的订单")
-                }
-            }
 
-            Button {
-                anchors.left: parent.left // 左边对齐到父元素的左边
-                anchors.leftMargin: parent.width * 0.05
-                width: parent.width * 0.8
-                height: 40
-                text: "我的收藏"
-                font.pixelSize: 20
-                background: Rectangle {
-                    color: "#3498DB"
-                    radius: 10
-                }
-                padding: 12
-                onClicked: {
-                    console.log("我的收藏")
-                }
-            }
+
         }
     }
 }
