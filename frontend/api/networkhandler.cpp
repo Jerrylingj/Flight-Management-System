@@ -22,7 +22,18 @@ void NetworkHandler::request(const QString &url, RequestMethod method, const QJs
         reply = m_NetworkHandler->post(request, QJsonDocument(data).toJson());
         break;
     }
-        // 可以类似添加PUT、DELETE等方法
+    case PUT: {
+        request.setUrl(url);
+        request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+        reply = m_NetworkHandler->put(request, QJsonDocument(data).toJson());
+        break;
+    }
+    case DELETE: {
+        request.setUrl(url);
+        request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+        reply = m_NetworkHandler->deleteResource(request);
+        break;
+    }
     }
 
     connect(reply, &QNetworkReply::finished, [this, reply]() {

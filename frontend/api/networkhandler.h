@@ -15,8 +15,8 @@ public:
     enum RequestMethod {
         GET,
         POST,
-        // PUT,
-        // DELETE
+        PUT,
+        DELETE
     };
 
     Q_ENUM(RequestMethod)
