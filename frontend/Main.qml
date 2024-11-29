@@ -51,7 +51,7 @@ Window {
         initialItem: "views/HomeView.qml"
         property alias view: rootStackView
         function changeTo(url,data){
-            if(data&&Object.keys(data).length!=0){
+            if(data && Object.keys(data).length !== 0){
                 push(Qt.resolvedUrl(url),{viewData:data})
                 return
             }

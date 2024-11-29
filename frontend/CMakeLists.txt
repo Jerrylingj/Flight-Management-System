@@ -29,6 +29,8 @@ qt_add_qml_module(appuntitled7
         views/NoteDetailView.qml
         components/FlightInfoCard.qml
         views/login.qml
+        views/OrderDetailView.qml
+        components/OrderInfoCard.qml
         static/sites.js
     RESOURCES
         android/AndroidManifest.xml
@@ -37,7 +39,6 @@ qt_add_qml_module(appuntitled7
     SOURCES
         api/networkhandler.h
         api/networkhandler.cpp
-
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
