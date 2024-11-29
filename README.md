@@ -36,4 +36,9 @@ A Flight Ticketing Management System Based on QT + MySQL
 页面应该以 View 作为结尾，并放在 views 文件夹中, 如HomeView.qml           
 图片应该放在 figure 中相应的文件夹。比如 login 页面需要用到flight.png , 则应该将其放在 /figure/login 中            
 qml中自定义属性以及函数使用小驼峰命名，尽量不使用拼音              
-编写完成后使用Qt自带的代码格式化工具 Ctrl+I 来统一缩进。~~虽然QT的缩进真的一坨~~          
+编写完成后使用Qt自带的代码格式化工具 Ctrl+I 来统一缩进。~~虽然QT的缩进真的一坨~~         
+### 还没有完成的任务
+- 我的订单页面
+- 登录、注册、更改个人信息页面
+- 前端逻辑
+- 后端逻辑
