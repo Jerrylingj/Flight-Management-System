@@ -10,6 +10,8 @@ Page {
     property string userName: '未知用户'
     property string personalInfo: "你好，我是未知用户，我来自xxx，欢迎大家和我交流。"
     property int myMoney: 114514
+    property StackView stack: StackView.view
+
     Rectangle {
         anchors.fill: parent
         color: "#F5F5F5" // 背景颜色
@@ -20,6 +22,7 @@ Page {
             anchors.fill: parent
             anchors.centerIn: parent
             spacing: 20
+
 
             // 头像和用户名部分
             Row {
@@ -99,7 +102,7 @@ Page {
 
             Button {
                 anchors.left: parent.left // 左边对齐到父元素的左边
-                anchors.leftMargin: parent.width * 0.05
+                anchors.leftMargin: parent.width * 0.1
                 width: parent.width * 0.8
                 height: 40
                 text: "我的订单"
@@ -116,7 +119,7 @@ Page {
 
             Button {
                 anchors.left: parent.left // 左边对齐到父元素的左边
-                anchors.leftMargin: parent.width * 0.05
+                anchors.leftMargin: parent.width * 0.1
                 width: parent.width * 0.8
                 height: 40
                 text: "我的收藏"
@@ -133,7 +136,7 @@ Page {
 
             Button {
                 anchors.left: parent.left // 左边对齐到父元素的左边
-                anchors.leftMargin: parent.width * 0.05
+                anchors.leftMargin: parent.width * 0.1
                 width: parent.width * 0.8
                 height: 40
                 text: "登录/切换账号"
@@ -145,12 +148,13 @@ Page {
                 padding: 12
                 onClicked: {
                     console.log("登录/切换账号")
+                    stack.changeTo('views/login.qml')
                 }
             }
 
             Button {
                 anchors.left: parent.left // 左边对齐到父元素的左边
-                anchors.leftMargin: parent.width * 0.05
+                anchors.leftMargin: parent.width * 0.1
                 width: parent.width * 0.8
                 height: 40
                 text: "注销账号"
@@ -167,7 +171,7 @@ Page {
 
             Button {
                 anchors.left: parent.left // 左边对齐到父元素的左边
-                anchors.leftMargin: parent.width * 0.05
+                anchors.leftMargin: parent.width * 0.1
                 width: parent.width * 0.8
                 height: 40
                 text: "注册账号"
@@ -181,11 +185,6 @@ Page {
                     console.log("注册账号")
                 }
             }
-
-
-
-
-
         }
     }
 }
