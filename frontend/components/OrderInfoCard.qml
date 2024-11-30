@@ -8,6 +8,7 @@ Item {
     width: parent.width
     height: 220
 
+    // 定义属性，用于接收父组件传递过来的订单信息
     property string flightNumber
     property string departure
     property string destination
@@ -15,36 +16,39 @@ Item {
     property string arrivalTime
     property string checkInTime
 
-    property StackView stack  // 确保 stack 被正确传递
+    // 选中的订单信息，在用户点击 "查看" 时传递
+    property var selectedInfo
 
     Rectangle {
         width: parent.width - 40
         height: parent.height
         radius: 20
-        color: "#FAFAFA"
-        border.color: "#CCCCCC"
-        border.width: 1
-        anchors.horizontalCenter: parent.horizontalCenter
+        color: "#FAFAFA"  // 背景颜色
+        border.color: "green"  // 设置边框颜色为绿色
+        border.width: 2  // 设置边框宽度
+        anchors.horizontalCenter: parent.horizontalCenter  // 居中显示
 
         ColumnLayout {
-            anchors.fill: parent
-            anchors.margins: 20
-            spacing: 12
+            anchors.fill: parent  // 填充父容器
+            anchors.margins: 20  // 边距
+            spacing: 12  // 垂直间距
 
+            // 第一行显示航班号
             RowLayout {
-                Layout.fillWidth: true
-                Layout.alignment: Qt.AlignLeft
-                spacing: 20
+                Layout.fillWidth: true  // 填充宽度
+                Layout.alignment: Qt.AlignLeft  // 左对齐
+                spacing: 20  // 行内间距
 
                 Text {
                     text: "航班号: " + orderInfoCard.flightNumber
                     font.pixelSize: 24
                     font.bold: true
-                    color: "#2C3E50"
-                    Layout.alignment: Qt.AlignLeft
+                    color: "#2C3E50"  // 字体颜色
+                    Layout.alignment: Qt.AlignLeft  // 左对齐
                 }
             }
 
+            // 第二行显示出发地和目的地
             RowLayout {
                 Layout.fillWidth: true
                 Layout.alignment: Qt.AlignLeft
@@ -65,6 +69,7 @@ Item {
                 }
             }
 
+            // 显示出发时间和到达时间
             Text {
                 text: "出发时间: " + orderInfoCard.departureTime + " - 到达时间: " + orderInfoCard.arrivalTime
                 font.pixelSize: 20
@@ -72,6 +77,7 @@ Item {
                 Layout.alignment: Qt.AlignLeft
             }
 
+            // 显示检票时间
             Text {
                 text: "检票时间: " + orderInfoCard.checkInTime
                 font.pixelSize: 20
@@ -79,32 +85,34 @@ Item {
                 Layout.alignment: Qt.AlignLeft
             }
 
+            // 最后一行显示 "查看" 按钮
             RowLayout {
                 spacing: 20
-                Layout.alignment: Qt.AlignRight
+                Layout.alignment: Qt.AlignRight  // 右对齐
 
                 Button {
                     text: "查看"
                     font.pixelSize: 18
                     background: Rectangle {
-                        color: "#2BC43A"  // 嫩绿色
-                        radius: 10
+                        color: "#2BC43A"  // 按钮背景色
+                        radius: 10  // 圆角
                     }
-                    padding: 12
+                    padding: 12  // 按钮内边距
+
+                    // 按钮点击时，传递信息到上级组件
                     onClicked: {
-                        // 确保 stack 已正确传递并且有效
-                        if (stack) {
-                            stack.changeTo("views/OrderDetailView.qml", {
-                                flightNumber: orderInfoCard.flightNumber,
-                                departure: orderInfoCard.departure,
-                                destination: orderInfoCard.destination,
-                                departureTime: orderInfoCard.departureTime,
-                                arrivalTime: orderInfoCard.arrivalTime,
-                                checkInTime: orderInfoCard.checkInTime
-                            })
-                        } else {
-                            console.log("StackView is not available.")
+                        // 当点击查看按钮时，将订单信息传递给上级组件
+                        selectedInfo = {
+                            flightNumber: orderInfoCard.flightNumber,
+                            departure: orderInfoCard.departure,
+                            destination: orderInfoCard.destination,
+                            departureTime: orderInfoCard.departureTime,
+                            arrivalTime: orderInfoCard.arrivalTime,
+                            checkInTime: orderInfoCard.checkInTime
                         }
+
+                        // 将信息传递给父组件（或 StackView）
+                        info = selectedInfo  // 更新 info 属性，父组件会监听这个属性并处理页面跳转
                     }
                 }
             }
