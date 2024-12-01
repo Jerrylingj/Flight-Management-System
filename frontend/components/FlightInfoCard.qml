@@ -2,7 +2,6 @@ import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
 
-// FlightInfoCard.qml
 Item {
     id: flightInfoCard
     width: parent.width
@@ -79,33 +78,48 @@ Item {
                 spacing: 20
                 Layout.alignment: Qt.AlignRight
 
+                // 预定按钮
                 Button {
+                    // Layout.fillWidth: true
                     Layout.minimumWidth: 100
                     height: 40
                     text: flightInfoCard.isBooked ? "取消预订" : "预订"
                     font.pixelSize: 16
                     background: Rectangle {
                         color: flightInfoCard.isBooked ? "#AED6F1" : "#3498DB"
-                        radius: 10
+                        radius: 12
+                        gradient: Gradient {
+                            GradientStop { position: 0; color: flightInfoCard.isBooked ? "#89C4F0" : "#3498DB" }
+                            GradientStop { position: 1; color: flightInfoCard.isBooked ? "#AED6F1" : "#2980B9" }
+                        }
                     }
+
                     onClicked: {
                         flightInfoCard.isBooked = !flightInfoCard.isBooked
-                        console.log(flightInfoCard.isBooked ? "取消预订航班: " + flightInfoCard.flightNumber : "预订航班: " + flightInfoCard.flightNumber)
+                        console.log(flightInfoCard.isBooked ? "预订航班: " + flightInfoCard.flightNumber : "取消预订航班: " + flightInfoCard.flightNumber)
                     }
                 }
 
+                // 收藏按钮
                 Button {
+                    // Layout.fillWidth: true
                     Layout.minimumWidth: 100
+                    width: 100
                     height: 40
                     text: flightInfoCard.isFaved ? "取消收藏" : "收藏"
                     font.pixelSize: 16
                     background: Rectangle {
-                        color: flightInfoCard.isFaved ? "#F39C12" : "#F1C40F"
-                        radius: 10
+                        color: flightInfoCard.isFaved ?  "#F1C40F" : "#F39C12"
+                            radius: 12
+                            gradient: Gradient {
+                                GradientStop { position: 0; color: flightInfoCard.isFaved ? "#F1C40F" : "#F8C471" }
+                                GradientStop { position: 1; color: flightInfoCard.isFaved ? "#F9E79F" : "#F39C12" }
+                            }
                     }
+
                     onClicked: {
                         flightInfoCard.isFaved = !flightInfoCard.isFaved
-                        console.log(flightInfoCard.isFaved ? "取消收藏航班: " + flightInfoCard.flightNumber : "收藏航班: " + flightInfoCard.flightNumber)
+                        console.log(flightInfoCard.isFaved ? "收藏航班: " + flightInfoCard.flightNumber : "取消收藏航班: " + flightInfoCard.flightNumber)
                     }
                 }
             }
