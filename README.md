@@ -3,7 +3,15 @@
 A Flight Ticketing Management System Based on QT + MySQL
 
 
-防止奇怪的事情发生，忽略了build改动
+防止奇怪的事情发生，忽略了build改动               
+
+### 一些事项            
+- 导入组件方法            
+1. 使用loader         
+2. import "../components/"             
+> 需要导入某个路径内所有组件而不是某一特定组件，只能导入所有             
+- 如果使用了parent.width(或者parent.height)，确保parent的width/height已经设置，否则默认为0.虽然内容会不管父组件宽度而溢出(如果没设置换行), 但是之后想设置边框或者换行时就会出现bug                
+
 
 ### 文件夹简介        
 
