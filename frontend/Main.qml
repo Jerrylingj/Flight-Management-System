@@ -33,7 +33,7 @@ Window {
             id:pageName
             property string nameText: rootStackView.currentItem.viewName
             text: qsTr(nameText)
-            font.pointSize: 16
+            font.pointSize: 20
             anchors.centerIn: parent
             color:"black"
         }

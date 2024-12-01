@@ -5,8 +5,6 @@ import QtQuick.Layouts 1.15
 // OrderInfoCard.qml
 Item {
     id: orderInfoCard
-    width: parent.width
-    height: 220
 
     // 定义属性，用于接收父组件传递过来的订单信息
     property string flightNumber
@@ -15,9 +13,6 @@ Item {
     property string departureTime
     property string arrivalTime
     property string checkInTime
-
-    // 选中的订单信息，在用户点击 "查看" 时传递
-    property var selectedInfo
 
     Rectangle {
         width: parent.width - 40
@@ -28,7 +23,7 @@ Item {
         border.width: 2  // 设置边框宽度
         anchors.horizontalCenter: parent.horizontalCenter  // 居中显示
 
-        ColumnLayout {
+        Column {
             anchors.fill: parent  // 填充父容器
             anchors.margins: 20  // 边距
             spacing: 12  // 垂直间距
@@ -102,7 +97,7 @@ Item {
                     // 按钮点击时，传递信息到上级组件
                     onClicked: {
                         // 当点击查看按钮时，将订单信息传递给上级组件
-                        selectedInfo = {
+                        orderInfoCard.parent.info = {
                             flightNumber: orderInfoCard.flightNumber,
                             departure: orderInfoCard.departure,
                             destination: orderInfoCard.destination,
@@ -110,9 +105,6 @@ Item {
                             arrivalTime: orderInfoCard.arrivalTime,
                             checkInTime: orderInfoCard.checkInTime
                         }
-
-                        // 将信息传递给父组件（或 StackView）
-                        info = selectedInfo  // 更新 info 属性，父组件会监听这个属性并处理页面跳转
                     }
                 }
             }
