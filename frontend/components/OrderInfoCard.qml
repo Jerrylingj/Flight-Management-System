@@ -5,6 +5,8 @@ import QtQuick.Layouts 1.15
 // OrderInfoCard.qml
 Item {
     id: orderInfoCard
+    width: parent.width
+    height: 220
 
     // 定义属性，用于接收父组件传递过来的订单信息
     property string flightNumber
@@ -14,13 +16,15 @@ Item {
     property string arrivalTime
     property string checkInTime
 
+    property var info
+
     Rectangle {
         width: parent.width - 40
         height: parent.height
         radius: 20
         color: "#FAFAFA"  // 背景颜色
         border.color: "green"  // 设置边框颜色为绿色
-        border.width: 2  // 设置边框宽度
+        border.width: 1  // 设置边框宽度
         anchors.horizontalCenter: parent.horizontalCenter  // 居中显示
 
         Column {

@@ -14,114 +14,265 @@ Page {
     // 用于页面切换的 StackView
     property StackView stack: StackView.view
 
-    ColumnLayout {
-        anchors.fill: parent
-        spacing: 20
-        anchors.margins: 20  // 替代 padding
-        // 筛选排序器
-        RowLayout {
-            spacing: 10
+    // 模拟数据
+    property var orderData: [
+        {   "flightNumber":"CA123",
+            "departure":"北京",
+            "destination":"上海",
+            "departureTime":"08:00",
+            "arrivalTime":"10:00",
+            "checkInTime":"07:00" },
+        {   "flightNumber":"MU456",
+            "departure":"上海",
+            "destination":"广州",
+            "departureTime":"09:30",
+            "arrivalTime":"12:00",
+            "checkInTime":"08:30" },
+        {   "flightNumber":"CZ789",
+            "departure":"广州",
+            "destination":"深圳",
+            "departureTime":"11:00",
+            "arrivalTime":"11:45",
+            "checkInTime":"10:00" },
+        {   "flightNumber":"HU234",
+            "departure":"深圳",
+            "destination":"成都",
+            "departureTime":"14:00",
+            "arrivalTime":"16:30",
+            "checkInTime":"13:00" },
+        {   "flightNumber":"CA345",
+            "departure":"成都",
+            "destination":"杭州",
+            "departureTime":"15:45",
+            "arrivalTime":"18:15",
+            "checkInTime":"14:45" },
+        {   "flightNumber":"MU567",
+            "departure":"杭州",
+            "destination":"北京",
+            "departureTime":"07:20",
+            "arrivalTime":"09:40",
+            "checkInTime":"06:20" },
+        {   "flightNumber":"CZ890",
+            "departure":"北京",
+            "destination":"广州",
+            "departureTime":"10:00",
+            "arrivalTime":"12:30",
+            "checkInTime":"09:00" },
+        {   "flightNumber":"HU678",
+            "departure":"上海",
+            "destination":"深圳",
+            "departureTime":"13:15",
+            "arrivalTime":"15:45",
+            "checkInTime":"12:15" },
+        {   "flightNumber":"CA999",
+            "departure":"广州",
+            "destination":"杭州",
+            "departureTime":"16:30",
+            "arrivalTime":"18:50",
+            "checkInTime":"15:30" },
+        {   "flightNumber":"MU345",
+            "departure":"深圳",
+            "destination":"上海",
+            "departureTime":"12:00",
+            "arrivalTime":"14:25",
+            "checkInTime":"11:00" },
+        {   "flightNumber":"CZ123",
+            "departure":"杭州",
+            "destination":"成都",
+            "departureTime":"17:00",
+            "arrivalTime":"19:30",
+            "checkInTime":"16:00" },
+        {   "flightNumber":"HU456",
+            "departure":"成都",
+            "destination":"北京",
+            "departureTime":"06:45",
+            "arrivalTime":"09:15",
+            "checkInTime":"05:45" },
+        {   "flightNumber":"CA567",
+            "departure":"北京",
+            "destination":"深圳",
+            "departureTime":"10:30",
+            "arrivalTime":"13:00",
+            "checkInTime":"09:30" },
+        {   "flightNumber":"MU678",
+            "departure":"上海",
+            "destination":"杭州",
+            "departureTime":"14:00",
+            "arrivalTime":"15:20",
+            "checkInTime":"13:00" },
+        {   "flightNumber":"CZ234",
+            "departure":"广州",
+            "destination":"成都",
+            "departureTime":"15:50",
+            "arrivalTime":"18:10",
+            "checkInTime":"14:50" },
+        {   "flightNumber":"HU345",
+            "departure":"深圳",
+            "destination":"北京",
+            "departureTime":"18:00",
+            "arrivalTime":"20:30",
+            "checkInTime":"17:00" },
+        {   "flightNumber":"CA890",
+            "departure":"杭州",
+            "destination":"广州",
+            "departureTime":"19:15",
+            "arrivalTime":"21:45",
+            "checkInTime":"18:15" },
+        {   "flightNumber":"MU123",
+            "departure":"成都",
+            "destination":"上海",
+            "departureTime":"08:30",
+            "arrivalTime":"11:00",
+            "checkInTime":"07:30" },
+        {   "flightNumber":"CZ456",
+            "departure":"北京",
+            "destination":"杭州",
+            "departureTime":"09:45",
+            "arrivalTime":"12:15",
+            "checkInTime":"08:45" },
+        {   "flightNumber":"HU789",
+            "departure":"上海",
+            "destination":"成都",
+            "departureTime":"13:50",
+            "arrivalTime":"16:20",
+            "checkInTime":"12:50" }
+    ]
 
-            // 出发省份下拉选择器
-            ComboBox {
-                id: departureProvince
-                width: 150
-                model: ["全部省份", "北京", "上海", "天津", "重庆", "河北", "山西", "内蒙古", "辽宁", "吉林", "黑龙江", "江苏", "浙江", "安徽", "福建", "江西", "山东", "河南", "湖北", "湖南", "广东", "广西", "海南", "四川", "贵州", "云南", "西藏", "陕西", "甘肃", "青海", "宁夏", "新疆", "香港", "澳门", "台湾"]
+    property bool isAscending: true
+    Rectangle{
+        id: orderFilter
+        color : "#FAFAFA"
+        radius: 0
+        border.width: 0
+        width : parent.width
+        height : 100
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.top: parent.top
+        z : 2
+
+        Rectangle {
+            id : orderFilterRectangle
+            color: "#FAFAFA"
+            radius: 12
+            border.color: "#DDDDDD"
+            border.width: 1
+            width: parent.width - 40
+            height: 80
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.top: parent.top
+            anchors.topMargin: 10
+            // anchors.bottom : parent.top + height + 20
+
+            // anchors.topMargin: 20  // 顶部边距
+
+            RowLayout {
+                anchors.fill: parent
+                anchors.margins: 15
+                Layout.fillWidth: true  // 确保 RowLayout 填充整个可用宽度
+                spacing: 10
+
+                // 出发省份下拉选择器
+                ComboBox {
+                    id: departureProvince
+                    width: 150
+                    model: ["全部省份", "北京", "上海", "天津", "重庆", "河北", "山西", "内蒙古", "辽宁", "吉林", "黑龙江", "江苏", "浙江", "安徽", "福建", "江西", "山东", "河南", "湖北", "湖南", "广东", "广西", "海南", "四川", "贵州", "云南", "西藏", "陕西", "甘肃", "青海", "宁夏", "新疆", "香港", "澳门", "台湾"]
 
 
-                onCurrentTextChanged: {
-                    // 更新出发城市列表并重置选择
-                    departureCity.model = getCities(departureProvince.currentText)
+                    onCurrentTextChanged: {
+                        // 更新出发城市列表并重置选择
+                        departureCity.model = getCities(departureProvince.currentText)
+                    }
                 }
-            }
 
-            // 出发城市下拉选择器
-            ComboBox {
-                id: departureCity
-                width: 50
-                model: null
+                // 出发城市下拉选择器
+                ComboBox {
+                    id: departureCity
+                    width: 50
+                    model: null
 
-                onCurrentIndexChanged: {
-                    arrivalCity.model = getCities(arrivalProvince.currentText)
+                    onCurrentIndexChanged: {
+                        arrivalCity.model = getCities(arrivalProvince.currentText)
+                    }
                 }
-            }
 
-            // 分隔符
-            Rectangle {
-                width: 1
-                height: parent.height
-                color: "black"
-            }
+                // // 分隔符
+                // Rectangle {
+                //     width: 1
+                //     height: parent.height
+                //     color: "black"
+                // }
 
-            // 到达省份下拉选择器
-            ComboBox {
-                id: arrivalProvince
-                width: 150
-                model: ["全部省份", "北京", "上海", "天津", "重庆", "河北", "山西", "内蒙古", "辽宁", "吉林", "黑龙江", "江苏", "浙江", "安徽", "福建", "江西", "山东", "河南", "湖北", "湖南", "广东", "广西", "海南", "四川", "贵州", "云南", "西藏", "陕西", "甘肃", "青海", "宁夏", "新疆", "香港", "澳门", "台湾"]
+                // 到达省份下拉选择器
+                ComboBox {
+                    id: arrivalProvince
+                    width: 150
+                    model: ["全部省份", "北京", "上海", "天津", "重庆", "河北", "山西", "内蒙古", "辽宁", "吉林", "黑龙江", "江苏", "浙江", "安徽", "福建", "江西", "山东", "河南", "湖北", "湖南", "广东", "广西", "海南", "四川", "贵州", "云南", "西藏", "陕西", "甘肃", "青海", "宁夏", "新疆", "香港", "澳门", "台湾"]
 
 
-                onCurrentTextChanged: {
-                    // 更新到达城市列表并重置选择
-                    arrivalCity.model = getCities(arrivalProvince.currentText)
+                    onCurrentTextChanged: {
+                        // 更新到达城市列表并重置选择
+                        arrivalCity.model = getCities(arrivalProvince.currentText)
+                    }
                 }
-            }
-            // 到达城市下拉选择器
-            ComboBox {
-                id: arrivalCity
-                width: 50
-                model: null
+                // 到达城市下拉选择器
+                ComboBox {
+                    id: arrivalCity
+                    width: 50
+                    model: null
 
-                onCurrentIndexChanged: {
-                    arrivalCity.model = getCities(arrivalProvince.currentText)
-                }
-            }
+                    onCurrentIndexChanged: {
+                        arrivalCity.model = getCities(arrivalProvince.currentText)
 
-            // 排序方式下拉选择器
-            ComboBox {
-                id: sortMethod
-                width: 150
-                model: ["按出发时间排序", "按检票时间排序"]
-                currentIndex: 0
-
-                onCurrentIndexChanged: {
-                    // 实现排序逻辑
-                    sortOrders(sortMethod.currentText)
+                    }
                 }
             }
         }
+    }
 
-        // 使用 Flickable 来替代 ScrollView，允许用户滚动浏览内容
-        Flickable {
+
+
+    // 使用 Flickable 来替代 ScrollView，允许用户滚动浏览内容
+    Flickable {
+        anchors {
+            left: parent.left
+            right: parent.right
+            top: orderFilter.bottom
+            bottom: parent.bottom
+            topMargin : 20
+        }
+
+        contentWidth: parent.width
+        contentHeight: orderInfoList.height
+        flickableDirection: Flickable.VerticalFlick
+
+        ColumnLayout {
+            id: orderInfoList
+            // anchors.fill: parent
+            spacing: 20
+            anchors.topMargin: 20  // 替代 padding
             width: parent.width
-            height: parent.height - 100 // 根据需要调整高度
-            contentWidth: parent.width
-            contentHeight: ordersList.height
 
-            flickableDirection: Flickable.VerticalFlick
+            Repeater {
+                model: orderData
+                Loader {
+                    // 用于传递和更新订单详细信息的属性
+                    property var info
+                    // info : info
 
-            ColumnLayout {
-                id: ordersList
-                spacing: 20
-                anchors.margins: 20
-                width: parent.width
-
-                property var info
-
-                onInfoChanged: {
-                    stack.changeTo("views/OrderDetailView.qml", info)
-                }
-
-                Repeater {
-                    model: 5
-                    delegate: OrderInfoCard {
-                        width: parent.width
-                        height: 220
-                        flightNumber:"CA123"
-                        departure:"北京"
-                        destination:"上海"
-                        departureTime:"08:00"
-                        arrivalTime:"10:00"
-                        checkInTime:"07:00"
+                    // 当 info 发生变化时，切换到订单详情页面
+                    onInfoChanged: {
+                        stack.changeTo("views/OrderDetailView.qml", info)
+                    }
+                    width : parent.width
+                    source: "../components/OrderInfoCard.qml"
+                    property var orderInfo : modelData
+                    onLoaded: {
+                        item.flightNumber = orderInfo.flightNumber;
+                        item.departure = orderInfo.departure;
+                        item.destination = orderInfo.destination;
+                        item.departureTime = orderInfo.departureTime;
+                        item.arrivalTime = orderInfo.arrivalTime;
+                        item.checkInTime = orderInfo.checkInTime;
                     }
                 }
             }
@@ -168,12 +319,5 @@ Page {
             "台湾": ["台北", "高雄", "台中", "台南", "新北", "桃园", "基隆", "新竹", "嘉义"]
         };
         return cities[province] || []
-    }
-
-    // 排序功能
-    function sortOrders(method) {
-        // 根据选择的排序方式实现排序逻辑
-        console.log("Sorting by:", method)
-        // TODO: 添加排序实现
     }
 }
