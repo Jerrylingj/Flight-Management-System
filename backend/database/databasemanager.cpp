@@ -53,21 +53,41 @@ bool DatabaseManager::connectToDatabase() {
 
 void DatabaseManager::createTable() {
     QSqlQuery query;
-    query.exec("CREATE TABLE IF NOT EXISTS users ("
-               "id INT AUTO_INCREMENT PRIMARY KEY, "
-               "username VARCHAR(50), "
-               "telephone VARCHAR(100))");
-
-    if(query.lastError().isValid()) {
-        qDebug() << "Create table error:" << query.lastError().text();
+    if (!query.exec("CREATE TABLE IF NOT EXISTS users ("
+                    "id INT AUTO_INCREMENT PRIMARY KEY, "
+                    "username VARCHAR(50) NOT NULL, "
+                    "telephone VARCHAR(15) NOT NULL, "
+                    "password VARCHAR(100) NOT NULL)")){
+        qDebug() << "create users error: " << query.lastError().text();
+    }
+    if(!query.exec("CREATE TABLE IF NOT EXISTS flight_info ("
+                    "id INT AUTO_INCREMENT PRIMARY KEY, "
+                    "flight_number VARCHAR(20) NOT NULL, "
+                    "departure_airport VARCHAR(20) NOT NULL, "
+                    "arrival_airport VARCHAR(20) NOT NULL, "
+                    "departure_time DATETIME NOT NULL, "
+                    "arrival_time DATETIME NOT NULL, "
+                    "price DECIMAL(10,2) NOT NULL, "
+                    "remaining_seats INT NOT NULL)")){
+        qDebug() << "create flight_info error: " << query.lastError().text();
+    }
+    if(!query.exec("CREATE TABLE IF NOT EXISTS all_order ("
+                    "id INT AUTO_INCREMENT PRIMARY KEY, "
+                    "user_id INT NOT NULL, "
+                    "flight_id INT NOT NULL, "
+                    "order_time DATETIME NOT NULL, "
+                    "FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE, "
+                    "FOREIGN KEY (flight_id) REFERENCES flight_info(id) ON DELETE CASCADE)")){
+        qDebug() << "create all_order error: " << query.lastError().text();
     }
 }
 
-void DatabaseManager::insertUser(const QString& username, const QString& telephone) {
+void DatabaseManager::insertUser(const QString& username, const QString& telephone, const QString& password) {
     QSqlQuery query;
-    query.prepare("INSERT INTO users (username, telephone) VALUES (:username, :telephone)");
+    query.prepare("INSERT INTO users (username, telephone) VALUES (:username, :telephone, :password)");
     query.bindValue(":username", username);
     query.bindValue(":telephone", telephone);
+    query.bindValue(":password",password);
 
     if(!query.exec()) {
         qDebug() << "Insert error:" << query.lastError().text();

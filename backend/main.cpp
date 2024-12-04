@@ -1,24 +1,27 @@
 #include <QCoreApplication>
 #include <QHttpServer>
-#include <QWebSocketServer>
 #include <QDebug>
 #include "database/databasemanager.h"
+#include "dto/response_dto.h"
 
 class HttpServer : public QObject {
 public:
     HttpServer(QObject *parent = nullptr) : QObject(parent) {
-        DatabaseManager test = DatabaseManager();
-        test.connectToDatabase();
-        test.createTable();
-        test.insertUser("water","123");
-        test.queryUsers();
-
+        m_db = new DatabaseManager();
+        m_db->connectToDatabase();
+        // 自动创建表，如果没有手动创建过的话
+        m_db->createTable();
         // 创建HTTP服务器
         m_httpServer = new QHttpServer(this);
 
         // 设置路由和处理函数
         m_httpServer->route("/", [](const QHttpServerRequest &request) {
             return "Welcome to Qt HTTP Server!";
+        });
+
+        m_httpServer->route("/api/test/<arg>",QHttpServerRequest::Method::Post,[](int userId){
+            auto response = success(userId);
+            return response->toJson();
         });
 
         // 监听端口
@@ -31,6 +34,7 @@ public:
 
 private:
     QHttpServer *m_httpServer;
+    DatabaseManager* m_db;
 };
 
 int main(int argc, char *argv[]) {

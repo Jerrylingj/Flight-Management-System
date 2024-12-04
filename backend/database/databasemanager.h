@@ -10,11 +10,14 @@ class DatabaseManager {
 public:
     DatabaseManager();
 
+    // 连接数据库，只连一次就好
     bool connectToDatabase();
 
+    // 自动创建表
     void createTable();
 
-    void insertUser(const QString& username, const QString& telephone);
+    // password应该是加密过的密码而不是原文
+    void insertUser(const QString& username, const QString& telephone, const QString& password);
 
     void queryUsers();
 

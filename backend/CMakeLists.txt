@@ -22,6 +22,7 @@ add_executable(QtHttpServer
     config/database_config.json
     config/database_config.qrc
     config/database_config.template.json
+    dto/response_dto.h dto/response_dto.cpp
 )
 target_link_libraries(QtHttpServer PRIVATE
     Qt6::Core
