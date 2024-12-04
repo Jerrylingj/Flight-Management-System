@@ -331,7 +331,7 @@ Page {
         console.log("开始根据城市筛选订单信息：")
         var searchDeparture = departureCity.currentText;
         var searchDestination = arrivalCity.currentText;
-        console.log("当前出发城市为 " + searchDeparture + " ，到达市为 " + searchDestination)
+        console.log("当前出发城市为 " + searchDeparture + " ，到达城市为 " + searchDestination)
 
         filteredOrders = orderData.filter(function(order){
             if(searchDeparture !== "全部城市" && searchDestination !== "全部城市"){
