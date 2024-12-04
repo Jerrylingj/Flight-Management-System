@@ -66,6 +66,7 @@ Page {
                     padding: 12
                     onClicked: {
                         console.log("编辑个人信息")
+                        stack.changeTo("views/EditPersonalInfo.qml")
                     }
                 }
 
@@ -114,6 +115,7 @@ Page {
                 padding: 12
                 onClicked: {
                     console.log("我的订单")
+                    stack.changeTo("views/OrdersView.qml")
                 }
             }
 
@@ -131,6 +133,7 @@ Page {
                 padding: 12
                 onClicked: {
                     console.log("我的收藏")
+                    stack.changeTo("views/FlightInfoView.qml")
                 }
             }
 
@@ -166,6 +169,60 @@ Page {
                 padding: 12
                 onClicked: {
                     console.log("注销账号")
+                    erase_dialog.open()
+                }
+            }
+            Dialog{
+                id:erase_dialog
+                visible:false
+                modal:true
+                width: parent.width * 0.6
+                x: (parent.width - width) / 2  // 居中水平位置
+                y: 10                    // 顶部位置
+                contentItem: Rectangle {
+                    color: "#f0f0f0"
+                    implicitHeight: 100
+                    Column{
+                        anchors.fill: parent
+                        anchors.centerIn: parent
+                        spacing: 60
+                        Label {
+                            anchors.horizontalCenter: parent.horizontalCenter  // 确保水平居中
+                            text: "确定注销账号"
+                            font.pointSize: 20
+                            color: "#8B0000"
+                        }
+                        Row{
+                            anchors.centerIn: parent
+                            spacing: 30
+                            Button{
+                                text: "确定"
+                                font.pointSize: 14
+                                onClicked: {
+                                    erase_dialog.close()
+                                    console.log("确定")
+                                }
+                                background: Rectangle {
+                                    color: "#90EE90"
+                                    radius: 5
+                                }
+                                height: 30
+                            }
+                            Button{
+                                text: "取消"
+                                font.pointSize: 14
+                                onClicked: {
+                                    erase_dialog.close()
+                                    console.log("取消")
+                                }
+                                background: Rectangle {
+                                    color: "#90EE90"
+                                    radius: 5
+                                }
+                                height: 30
+                            }
+                        }
+                    }
                 }
             }
 
