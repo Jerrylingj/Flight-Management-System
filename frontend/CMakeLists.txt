@@ -32,10 +32,12 @@ qt_add_qml_module(appuntitled7
         views/OrderDetailView.qml
         components/OrderInfoCard.qml
         static/sites.js
+        views/EditPersonalInfo.qml
     RESOURCES
         android/AndroidManifest.xml
         android/res/xml/network_security_config.xml
         figure/login-flight.png
+        figure/editinfo.png
     SOURCES
         api/networkhandler.h
         api/networkhandler.cpp
