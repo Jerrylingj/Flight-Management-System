@@ -12,6 +12,10 @@ A Flight Ticketing Management System Based on QT + MySQL
 > 需要导入某个路径内所有组件而不是某一特定组件，只能导入所有             
 - 如果使用了parent.width(或者parent.height)，确保parent的width/height已经设置，否则默认为0.虽然内容会不管父组件宽度而溢出(如果没设置换行), 但是之后想设置边框或者换行时就会出现bug                
 
+### 后端数据库连接         
+需要配置ODBC        
+需要在config里新建一个database_config.json文件，database_config.template.json是模板                    
+
 
 ### 文件夹简介        
 

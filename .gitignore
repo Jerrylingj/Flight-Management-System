@@ -4,3 +4,5 @@ build
 
 CMakeLists.txt.user
 CMakeLists.txt.user.*
+
+database_config.json
