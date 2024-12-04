@@ -70,7 +70,7 @@ std::shared_ptr<ResponseDTO<T>> success(const T &data, const QString &message = 
 }
 
 template<typename T>
-std::shared_ptr<ResponseDTO<T>> error(const QString &message, int code = 500) {
+std::shared_ptr<ResponseDTO<T>> fail(const QString &message, int code = 500) {
     auto resp = std::make_shared<ResponseDTO<T>>();
     resp->setSuccess(false);
     resp->setCode(code);
