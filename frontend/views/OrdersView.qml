@@ -6,9 +6,8 @@ import "../components/"
 
 // OrdersView.qml
 Page {
-    id: ordersView
-
     // 页面名称属性
+    id: ordersView
     property string viewName: '全部订单'
 
     // 用于页面切换的 StackView
@@ -138,6 +137,7 @@ Page {
             "checkInTime":"12:50" }
     ]
 
+    // 筛选器
     property bool isAscending: true
     Rectangle{
         id: orderFilter
@@ -170,28 +170,30 @@ Page {
                 anchors.margins: 15
                 Layout.fillWidth: true  // 确保 RowLayout 填充整个可用宽度
                 spacing: 10
-
                 // 出发省份下拉选择器
                 ComboBox {
                     id: departureProvince
                     width: 150
                     model: ["全部省份", "北京", "上海", "天津", "重庆", "河北", "山西", "内蒙古", "辽宁", "吉林", "黑龙江", "江苏", "浙江", "安徽", "福建", "江西", "山东", "河南", "湖北", "湖南", "广东", "广西", "海南", "四川", "贵州", "云南", "西藏", "陕西", "甘肃", "青海", "宁夏", "新疆", "香港", "澳门", "台湾"]
 
-
                     onCurrentTextChanged: {
                         // 更新出发城市列表并重置选择
                         departureCity.model = getCities(departureProvince.currentText)
+                        departureCity.currentIndex = 0  // 重置城市选择为第一个
+                        console.log("出发省份已更新为 " + currentText)
+                        updateFilter()
                     }
                 }
 
                 // 出发城市下拉选择器
                 ComboBox {
                     id: departureCity
-                    width: 50
-                    model: null
+                    width: 150
+                    model: getCities(departureProvince.currentText)  // 初始化城市列表
 
-                    onCurrentIndexChanged: {
-                        arrivalCity.model = getCities(arrivalProvince.currentText)
+                    onCurrentTextChanged: {
+                        console.log("出发城市已更新为 " + currentText)
+                        updateFilter()
                     }
                 }
 
@@ -208,21 +210,23 @@ Page {
                     width: 150
                     model: ["全部省份", "北京", "上海", "天津", "重庆", "河北", "山西", "内蒙古", "辽宁", "吉林", "黑龙江", "江苏", "浙江", "安徽", "福建", "江西", "山东", "河南", "湖北", "湖南", "广东", "广西", "海南", "四川", "贵州", "云南", "西藏", "陕西", "甘肃", "青海", "宁夏", "新疆", "香港", "澳门", "台湾"]
 
-
                     onCurrentTextChanged: {
                         // 更新到达城市列表并重置选择
                         arrivalCity.model = getCities(arrivalProvince.currentText)
+                        arrivalCity.currentIndex = 0 // 重置城市选择为第一个
+                        console.log("到达省份已更新为 " + currentText)
+                        updateFilter();
                     }
                 }
                 // 到达城市下拉选择器
                 ComboBox {
                     id: arrivalCity
                     width: 50
-                    model: null
+                    model: getCities(arrivalProvince.currentText)
 
-                    onCurrentIndexChanged: {
-                        arrivalCity.model = getCities(arrivalProvince.currentText)
-
+                    onCurrentTextChanged: {
+                        console.log("到达城市已更新为 " + currentText)
+                        updateFilter();
                     }
                 }
             }
@@ -230,7 +234,7 @@ Page {
     }
 
 
-
+    // 卡片展示区域
     // 使用 Flickable 来替代 ScrollView，允许用户滚动浏览内容
     Flickable {
         anchors {
@@ -253,7 +257,7 @@ Page {
             width: parent.width
 
             Repeater {
-                model: orderData
+                model: filteredOrders
                 Loader {
                     // 用于传递和更新订单详细信息的属性
                     property var info
@@ -263,6 +267,7 @@ Page {
                     onInfoChanged: {
                         stack.changeTo("views/OrderDetailView.qml", info)
                     }
+
                     width : parent.width
                     source: "../components/OrderInfoCard.qml"
                     property var orderInfo : modelData
@@ -320,4 +325,32 @@ Page {
         };
         return cities[province] || []
     }
+
+    // Helper function to筛选航班
+    function updateFilter() {
+        console.log("开始根据城市筛选订单信息：")
+        var searchDeparture = departureCity.currentText;
+        var searchDestination = arrivalCity.currentText;
+        console.log("当前出发城市为 " + searchDeparture + " ，到达市为 " + searchDestination)
+
+        filteredOrders = orderData.filter(function(order){
+            if(searchDeparture !== "全部城市" && searchDestination !== "全部城市"){
+                // console.log("出发城市筛选+到达城市筛选")
+                return order.departure.includes(searchDeparture) && order.destination.includes(searchDestination);
+            }else if(searchDeparture !== "全部城市"){
+                // console.log("出发城市筛选")
+                return order.departure.includes(searchDeparture);
+            }else if(searchDestination !== "全部城市"){
+                // console.log("到达城市筛选")
+                return order.destination.includes(searchDestination);
+            }else{
+                return true;
+            }
+        });
+
+        console.log("尝试更新filteredOrders")
+        // filteredOrders = filteredOrders.slice();
+    }
+
+    property var filteredOrders : orderData
 }
