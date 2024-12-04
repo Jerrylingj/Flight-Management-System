@@ -211,6 +211,8 @@ Page {
     function updateFilter() {
         var searchDeparture = departureCity.text;
         var searchDestination = arrivalCity.text;
+        console.log("开始根据城市筛选航班信息：")
+        console.log("当前出发城市为 " + searchDeparture + " ，到达城市为 " + searchDestination)
 
         // 动态筛选航班数据
         filteredFlights = flightData.filter(function(flight) {
