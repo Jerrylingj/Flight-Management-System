@@ -1,20 +1,47 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
+import NetworkHandler 1.0
 
 Page {
     id: flightInfoView
 
     property string viewName: "航班信息"
+    property var flightData: []
 
-    // 模拟数据
-    property var flightData: [
-        { "flightNumber": "CA123", "price": 1800, "departure": "北京", "destination": "上海", "departureTime": "08:30", "arrivalTime": "11:00", "remainingSeats": 5, isBooked: true, isFaved: true },
-        { "flightNumber": "MU456", "price": 2000, "departure": "北京", "destination": "上海", "departureTime": "09:00", "arrivalTime": "11:30", "remainingSeats": 3, isBooked: false, isFaved: false },
-        { "flightNumber": "HU789", "price": 1500, "departure": "北京", "destination": "上海", "departureTime": "10:00", "arrivalTime": "12:30", "remainingSeats": 10, isBooked: true, isFaved: false },
-        { "flightNumber": "CA321", "price": 2200, "departure": "北京", "destination": "广州", "departureTime": "07:00", "arrivalTime": "09:30", "remainingSeats": 2, isBooked: false, isFaved: false },
-        { "flightNumber": "MU654", "price": 1800, "departure": "上海", "destination": "北京", "departureTime": "12:00", "arrivalTime": "14:30", "remainingSeats": 7, isBooked: false, isFaved: true }
-    ]
+    // // 模拟数据
+    // property var flightData: [
+    //     { "flightNumber": "CA123", "price": 1800, "departure": "北京", "destination": "上海", "departureTime": "08:30", "arrivalTime": "11:00", "remainingSeats": 5, isBooked: true, isFaved: true },
+    //     { "flightNumber": "MU456", "price": 2000, "departure": "北京", "destination": "上海", "departureTime": "09:00", "arrivalTime": "11:30", "remainingSeats": 3, isBooked: false, isFaved: false },
+    //     { "flightNumber": "HU789", "price": 1500, "departure": "北京", "destination": "上海", "departureTime": "10:00", "arrivalTime": "12:30", "remainingSeats": 10, isBooked: true, isFaved: false },
+    //     { "flightNumber": "CA321", "price": 2200, "departure": "北京", "destination": "广州", "departureTime": "07:00", "arrivalTime": "09:30", "remainingSeats": 2, isBooked: false, isFaved: false },
+    //     { "flightNumber": "MU654", "price": 1800, "departure": "上海", "destination": "北京", "departureTime": "12:00", "arrivalTime": "14:30", "remainingSeats": 7, isBooked: false, isFaved: true }
+    // ]
+
+    // 创建 NetworkHandler 实例
+    NetworkHandler {
+        id: networkHandler
+        onRequestSuccess: function(responseData) {
+            console.log("请求成功，返回数据：", responseData); // 打印返回的数据
+            flightData = responseData;  // 更新 flightData
+            updateFilter();  // 重新更新筛选
+        }
+        onRequestFailed: function(errorMessage) {
+            console.log("请求失败：", errorMessage); // 打印失败的错误信息
+        }
+    }
+
+    // 调用网络请求
+    function fetchFlightData() {
+        var url = "http://localhost:8080/api/flights";  // 替换成你实际的后端 API URL
+        console.log("发送请求，URL:", url); // 打印请求的 URL
+        networkHandler.request(url, NetworkHandler.GET);  // 发送 GET 请求
+    }
+
+    // 在页面初始化时调用 fetchFlightData 获取航班数据
+    Component.onCompleted: {
+        fetchFlightData();  // 页面加载完毕后调用 fetchFlightData 方法获取数据
+    }
 
     // 跟踪当前的排序方法和排序方向
     property int sortMethod: 0  // 默认按时间排序
