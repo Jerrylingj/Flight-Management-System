@@ -65,24 +65,7 @@ public:
         });
 
         // 根据航班ID获取航班信息的API路由
-        m_httpServer->route("/api/flights/{id}", QHttpServerRequest::Method::Get, [this](const QHttpServerRequest &request) -> QByteArray {
-            // 获取路径中的航班ID，使用 URL 的 path 来提取
-            QUrl url = request.url();
-            QString path = url.path();
-
-            // 提取 {id} 部分
-            QStringList pathParts = path.split("/");
-
-            if (pathParts.size() < 3) {
-                return "Invalid URL format";  // 如果路径不包含航班ID
-            }
-
-            bool ok;
-            int flightId = pathParts[2].toInt(&ok);  // 获取路径中的航班ID
-            if (!ok) {
-                return "Invalid flight ID";  // 返回错误信息
-            }
-
+        m_httpServer->route("/api/flights/<arg>", QHttpServerRequest::Method::Get, [this](const int flightId) -> QByteArray {
             // 根据航班ID获取航班信息
             FlightInfo flight = m_flightAPI->getFlightById(flightId);
 
