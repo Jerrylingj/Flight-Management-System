@@ -96,7 +96,7 @@ void DatabaseManager::createTable() {
                     "id INT AUTO_INCREMENT PRIMARY KEY, "
                     "user_id INT NOT NULL, "
                     "flight_id INT NOT NULL, "
-                    "order_time DATETIME NOT NULL, "
+                    "order_time DATETIME DEFAULT CURRENT_TIMESTAMP, "
                     "FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE, "
                     "FOREIGN KEY (flight_id) REFERENCES flight_info(flight_id) ON DELETE CASCADE)")){
         qDebug() << "create all_order error: " << query.lastError().text();
