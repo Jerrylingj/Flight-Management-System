@@ -16,9 +16,11 @@ public:
     // 自动创建表
     void createTable();
 
-    // password应该是加密过的密码而不是原文
+    // 插入用户，传入的密码应该是原文
     bool insertUser(const QString& username, const QString& telephone, const QString& password);
 
+    // 根据手机号找用户，存在返回true，不存在返回false
+    bool queryUsers(const QString& telephone);
     // 根据手机号和密码找用户，存在返回true，不存在返回false
     bool queryUsers(const QString& telephone, const QString& password);
 

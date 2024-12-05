@@ -108,6 +108,18 @@ bool DatabaseManager::insertUser(const QString& username, const QString& telepho
     return true;
 }
 
+bool DatabaseManager::queryUsers(const QString& telephone){
+    QSqlQuery query;
+    query.prepare("SELECT COUNT(*) FROM users WHERE telephone = :phone");
+    query.bindValue(":phone", telephone);
+
+    if (query.exec() && query.next()) {
+        return query.value(0).toInt() > 0;
+    }
+
+    return false;
+}
+
 bool DatabaseManager::queryUsers(const QString& telephone, const QString& password) {
     QSqlQuery query;
     query.prepare("SELECT COUNT(*) FROM users WHERE telephone = :phone AND password = :pwd");

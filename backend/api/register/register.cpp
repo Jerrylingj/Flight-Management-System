@@ -28,7 +28,7 @@ QJsonObject registerUser(const QHttpServerRequest &request, DatabaseManager* m_d
             auto response = fail<QJsonObject>("请输入密码");
             return response->toJson();
         }
-        if(m_db->queryUsers(telephone, password)){
+        if(m_db->queryUsers(telephone)){
             auto response = fail<QJsonObject>(QString("该账号已注册过"));
             return response->toJson();
         }else {
