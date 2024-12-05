@@ -1,13 +1,24 @@
-#include <QSqlDatabase>
-#include <QSqlQuery>
-#include <QSqlError>
-#include <QDebug>
 #include "databasemanager.h"
 #include <QFile>
 #include <QJsonDocument>
 #include <QJsonObject>
-#include <QDir>
-#include <QFileInfo>
+#include <QCryptographicHash>
+#include <QRandomGenerator>
+#include <QString>
+
+QString hashPassword(const QString& password) {
+    QString salt = "fixed_salt_value"; // 使用固定盐值
+    QString passwordWithSalt = password + salt;
+    QByteArray hash;
+    for (int i = 0; i < 10000; ++i) {
+        hash = QCryptographicHash::hash(
+            passwordWithSalt.toUtf8(),
+            QCryptographicHash::Sha256
+            );
+        passwordWithSalt = hash.toHex();
+    }
+    return salt + "$" + QString::fromUtf8(hash.toHex());
+}
 
 DatabaseManager::DatabaseManager() {
     QFile configFile(":/config/database_config.json");
@@ -82,26 +93,33 @@ void DatabaseManager::createTable() {
     }
 }
 
-void DatabaseManager::insertUser(const QString& username, const QString& telephone, const QString& password) {
+bool DatabaseManager::insertUser(const QString& username, const QString& telephone, const QString& password) {
     QSqlQuery query;
-    query.prepare("INSERT INTO users (username, telephone) VALUES (:username, :telephone, :password)");
+    query.prepare("INSERT INTO users (username, telephone, password) VALUES (:username, :telephone, :password)");
+    QString hashedPassword = hashPassword(password);
     query.bindValue(":username", username);
     query.bindValue(":telephone", telephone);
-    query.bindValue(":password",password);
+    query.bindValue(":password",hashedPassword);
 
     if(!query.exec()) {
         qDebug() << "Insert error:" << query.lastError().text();
+        return false;
     }
+    return true;
 }
 
-void DatabaseManager::queryUsers() {
-    QSqlQuery query("SELECT * FROM users");
-    while(query.next()) {
-        int id = query.value(0).toInt();
-        QString username = query.value(1).toString();
-        QString telephone = query.value(2).toString();
-        qDebug() << "User:" << id << username << telephone;
+bool DatabaseManager::queryUsers(const QString& telephone, const QString& password) {
+    QSqlQuery query;
+    query.prepare("SELECT COUNT(*) FROM users WHERE telephone = :phone AND password = :pwd");
+    query.bindValue(":phone", telephone);
+    QString hashedPassword = hashPassword(password);
+    query.bindValue(":pwd", hashedPassword);
+
+    if (query.exec() && query.next()) {
+        return query.value(0).toInt() > 0;
     }
+
+    return false;
 }
 
 DatabaseManager::~DatabaseManager() {

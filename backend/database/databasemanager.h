@@ -17,9 +17,10 @@ public:
     void createTable();
 
     // password应该是加密过的密码而不是原文
-    void insertUser(const QString& username, const QString& telephone, const QString& password);
+    bool insertUser(const QString& username, const QString& telephone, const QString& password);
 
-    void queryUsers();
+    // 根据手机号和密码找用户，存在返回true，不存在返回false
+    bool queryUsers(const QString& telephone, const QString& password);
 
     ~DatabaseManager();
 

@@ -2,8 +2,8 @@
 #include <QHttpServer>
 #include <QDebug>
 #include "database/databasemanager.h"
-#include "dto/response_dto.h"
 #include "api/login/login.h"
+#include "api/register/register.h"
 
 class HttpServer : public QObject {
 public:
@@ -20,7 +20,13 @@ public:
             return "Welcome to Qt HTTP Server!";
         });
 
-        m_httpServer->route("/api/login",QHttpServerRequest::Method::Post,login);
+        m_httpServer->route("/api/login",QHttpServerRequest::Method::Post,[this](const QHttpServerRequest &request){
+            return login(request, m_db);
+        });
+
+        m_httpServer->route("/api/register",QHttpServerRequest::Method::Post,[this](const QHttpServerRequest &request){
+            return registerUser(request, m_db);
+        });
 
         // 监听端口
         if (m_httpServer->listen(QHostAddress::Any, 8080)) {
