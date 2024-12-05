@@ -17,8 +17,8 @@ public:
         m_db->createTable();
         // 创建HTTP服务器
         m_httpServer = new QHttpServer(this);
-        // 创建FlightAPI实例
-        m_flightAPI = new FlightAPI(this);
+        // 创建FlightAPI实例并传入数据库连接
+        m_flightAPI = new FlightAPI(m_db, this);  // 修改这里，传入m_db
 
         // 设置路由和处理函数
         m_httpServer->route("/", [](const QHttpServerRequest &request) {

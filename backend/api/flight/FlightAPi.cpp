@@ -5,25 +5,19 @@
 #include <QVariant>
 #include <QDebug>
 
-FlightAPI::FlightAPI(QObject *parent) : QObject(parent) {
-    // 在构造函数中可以执行一些初始化工作
-    // 例如连接数据库
-    if (!m_dbManager.connectToDatabase()) {
-        qDebug() << "无法连接数据库！";
-    } else {
-        qDebug() << "数据库连接成功！";
-    }
+FlightAPI::FlightAPI(DatabaseManager* dbManager, QObject *parent) : QObject(parent), m_dbManager(dbManager) {
+    // 这里不再连接数据库，直接使用传入的数据库连接
 }
 
 FlightAPI::~FlightAPI() {
-    // 析构时不需要手动断开数据库，DatabaseManager 会自动关闭
+    // 不需要手动断开数据库，DatabaseManager 会自动处理
 }
 
 // 获取所有航班信息
 QList<FlightInfo> FlightAPI::getAllFlights() {
     QList<FlightInfo> flights;
 
-    // 这里可以进行航班信息的查询，假设你的数据库中有一个航班表 "flights"
+    // 使用传入的 m_dbManager 执行数据库查询
     QSqlQuery query("SELECT * FROM flights");
 
     if (!query.exec()) {
@@ -60,7 +54,7 @@ FlightInfo FlightAPI::getFlightById(int flightId) {
 
     if (!query.exec()) {
         qDebug() << "查询失败:" << query.lastError().text();
-        return flight;  // 返回空的FlightInfo
+        return flight;  // 返回一个空的FlightInfo对象
     }
 
     if (query.next()) {

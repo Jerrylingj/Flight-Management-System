@@ -10,7 +10,7 @@ class FlightAPI : public QObject
 {
     Q_OBJECT
 public:
-    explicit FlightAPI(QObject *parent = nullptr);
+    explicit FlightAPI(DatabaseManager* dbManager, QObject *parent = nullptr);  // 接受DatabaseManager
     ~FlightAPI();
 
     // 获取所有航班信息
@@ -20,7 +20,7 @@ public:
     FlightInfo getFlightById(int flightId);
 
 private:
-    DatabaseManager m_dbManager;  // 使用 DatabaseManager 管理数据库
+    DatabaseManager* m_dbManager;  // 使用传入的DatabaseManager来管理数据库
 };
 
 #endif // FLIGHTAPI_H
