@@ -4,6 +4,5 @@
 ResponseDTOBase::ResponseDTOBase(QObject *parent)
     : QObject(parent)
     , m_code(200)
-    , m_success(true)
 {
 }

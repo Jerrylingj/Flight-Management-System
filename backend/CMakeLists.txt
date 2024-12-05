@@ -28,6 +28,7 @@ add_executable(QtHttpServer
     api/register/register.h api/register/register.cpp
     api/flight/FlightInfo.h api/flight/FlightInfo.cpp
     api/flight/FlightAPI.h api/flight/FlightAPI.cpp
+    dto/login_dto.h dto/login_dto.cpp
 
 )
 target_link_libraries(QtHttpServer PRIVATE

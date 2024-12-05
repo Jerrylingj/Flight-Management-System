@@ -76,7 +76,7 @@ void DatabaseManager::createTable() {
 
     // 航班信息
     if(!query.exec("CREATE TABLE IF NOT EXISTS flight_info ("
-                    "flight_id INTEGER PRIMARY KEY AUTOINCREMENT, "  // 航班ID，自增主键
+                    "flight_id INTEGER PRIMARY KEY AUTO_INCREMENT, "  // 航班ID，自增主键
                     "flight_number VARCHAR(10) NOT NULL, "             // 航班号
                     "departure_city VARCHAR(20) NOT NULL, "            // 起点城市
                     "arrival_city VARCHAR(20) NOT NULL, "              // 终点城市
@@ -98,7 +98,7 @@ void DatabaseManager::createTable() {
                     "flight_id INT NOT NULL, "
                     "order_time DATETIME NOT NULL, "
                     "FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE, "
-                    "FOREIGN KEY (flight_id) REFERENCES flight_info(id) ON DELETE CASCADE)")){
+                    "FOREIGN KEY (flight_id) REFERENCES flight_info(flight_id) ON DELETE CASCADE)")){
         qDebug() << "create all_order error: " << query.lastError().text();
     }
 }
@@ -107,6 +107,7 @@ bool DatabaseManager::insertUser(const QString& username, const QString& telepho
     QSqlQuery query;
     query.prepare("INSERT INTO users (username, telephone, password) VALUES (:username, :telephone, :password)");
     QString hashedPassword = hashPassword(password);
+    qDebug() << "wwwww" << password << " " << hashedPassword;
     query.bindValue(":username", username);
     query.bindValue(":telephone", telephone);
     query.bindValue(":password",hashedPassword);
@@ -135,6 +136,7 @@ bool DatabaseManager::queryUsers(const QString& telephone, const QString& passwo
     query.prepare("SELECT COUNT(*) FROM users WHERE telephone = :phone AND password = :pwd");
     query.bindValue(":phone", telephone);
     QString hashedPassword = hashPassword(password);
+    qDebug() << "login" << password << " " << hashedPassword;
     query.bindValue(":pwd", hashedPassword);
 
     if (query.exec() && query.next()) {

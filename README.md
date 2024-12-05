@@ -12,9 +12,24 @@ A Flight Ticketing Management System Based on QT + MySQL
 > 需要导入某个路径内所有组件而不是某一特定组件，只能导入所有             
 - 如果使用了parent.width(或者parent.height)，确保parent的width/height已经设置，否则默认为0.虽然内容会不管父组件宽度而溢出(如果没设置换行), 但是之后想设置边框或者换行时就会出现bug                
 
-### 后端数据库连接         
+### 后端相关
+#### 数据库         
 需要配置ODBC        
-需要在config里新建一个database_config.json文件，database_config.template.json是模板                    
+需要在config里新建一个database_config.json文件，database_config.template.json是模板       
+#### dto                  
+之后可能需要对每个请求的接收信息和返回信息都约定好数据结构，然后放在dto文件夹里。           
+命名应该是请求名_dto           
+dto尽可能只保存数据结构，不做其它的事情                
+`response_dto`是统一的返回格式       
+```json
+{
+  "code":200, // 跟http状态码不同，这个是前后端约定好的，可以是别的。比如状态码为1时表示token过期，前端接收到就执行登出之类的          
+  "message":"操作成功", // 如果成功默认为操作成功，失败没有默认值
+  "data":"实际获取的数据" // 根据请求的dto不同而不同。如果请求失败了，则为空
+}
+```         
+参考一下login和login的dto            
+现在的response_dto不是完美的，之后可能要改一下                   
 
 
 ### 文件夹简介        
@@ -26,6 +41,7 @@ A Flight Ticketing Management System Based on QT + MySQL
   - controllers：对接前端接口
   - models：对数据库操作
   - utils：一些工具
+  - dto: 前后端传递信息的约定，表示按照这个格式发送/接收信息
 
 - frontend：前端
 
