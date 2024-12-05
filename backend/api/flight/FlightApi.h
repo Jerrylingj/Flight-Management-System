@@ -2,31 +2,25 @@
 #define FLIGHTAPI_H
 
 #include <QObject>
-#include <memory>
-#include "dto/response_dto.h"
-#include "FlightInfo.h"
+#include <QList>
 #include "database/databasemanager.h"
+#include "FlightInfo.h"
 
 class FlightAPI : public QObject
 {
     Q_OBJECT
 public:
     explicit FlightAPI(QObject *parent = nullptr);
+    ~FlightAPI();
 
     // 获取所有航班信息
-    std::shared_ptr<ResponseDTO<QList<FlightInfo>>> getAllFlights();
+    QList<FlightInfo> getAllFlights();
 
-    // 添加航班
-    std::shared_ptr<ResponseDTO<QString>> addFlight(const FlightInfo &flight);
-
-    // 更新航班
-    std::shared_ptr<ResponseDTO<QString>> updateFlight(int flightId, const FlightInfo &flight);
-
-    // 删除航班
-    std::shared_ptr<ResponseDTO<QString>> deleteFlight(int flightId);
+    // 根据航班ID获取航班信息
+    FlightInfo getFlightById(int flightId);
 
 private:
-    DatabaseManager m_dbManager;  // 数据库管理类
+    DatabaseManager m_dbManager;  // 使用 DatabaseManager 管理数据库
 };
 
 #endif // FLIGHTAPI_H

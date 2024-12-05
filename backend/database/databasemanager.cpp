@@ -76,7 +76,7 @@ void DatabaseManager::createTable() {
 
     // 航班信息
     if(!query.exec("CREATE TABLE IF NOT EXISTS flight_info ("
-                    "flight_id INTEGER PRIMARY KEY AUTO_INCREMENT, "  // 航班ID，自增主键
+                    "flight_id INTEGER PRIMARY KEY AUTO_INCREMENT, "   // 航班ID，自增主键
                     "flight_number VARCHAR(10) NOT NULL, "             // 航班号
                     "departure_city VARCHAR(20) NOT NULL, "            // 起点城市
                     "arrival_city VARCHAR(20) NOT NULL, "              // 终点城市
@@ -87,7 +87,7 @@ void DatabaseManager::createTable() {
                     "checkin_start_time DATETIME NOT NULL, "           // 检票开始时间
                     "checkin_end_time DATETIME NOT NULL, "             // 检票结束时间
                     "status VARCHAR(10) NOT NULL, "                    // 航班状态
-                    "UNIQUE(flight_number) )")) {                     // 确保航班号唯一
+                    "UNIQUE(flight_number) )")) {                      // 确保航班号唯一
         qDebug() << "create flight_info error: " << query.lastError().text();
     }
 
