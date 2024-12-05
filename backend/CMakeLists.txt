@@ -23,8 +23,11 @@ add_executable(QtHttpServer
     config/database_config.qrc
     config/database_config.template.json
     dto/response_dto.h dto/response_dto.cpp
+    dto/flight_info_dto.h dto/flight_info_dto.cpp
     api/login/login.h api/login/login.cpp
     api/register/register.h api/register/register.cpp
+    api/flight/FlightInfo.h api/flight/FlightInfo.cpp
+    api/flight/FlightAPI.h api/flight/FlightAPI.cpp
 
 )
 target_link_libraries(QtHttpServer PRIVATE

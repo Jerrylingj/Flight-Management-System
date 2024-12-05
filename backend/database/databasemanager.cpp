@@ -64,6 +64,8 @@ bool DatabaseManager::connectToDatabase() {
 
 void DatabaseManager::createTable() {
     QSqlQuery query;
+
+    // 用户
     if (!query.exec("CREATE TABLE IF NOT EXISTS users ("
                     "id INT AUTO_INCREMENT PRIMARY KEY, "
                     "username VARCHAR(50) NOT NULL, "
@@ -71,17 +73,25 @@ void DatabaseManager::createTable() {
                     "password VARCHAR(100) NOT NULL)")){
         qDebug() << "create users error: " << query.lastError().text();
     }
+
+    // 航班信息
     if(!query.exec("CREATE TABLE IF NOT EXISTS flight_info ("
-                    "id INT AUTO_INCREMENT PRIMARY KEY, "
-                    "flight_number VARCHAR(20) NOT NULL, "
-                    "departure_airport VARCHAR(20) NOT NULL, "
-                    "arrival_airport VARCHAR(20) NOT NULL, "
-                    "departure_time DATETIME NOT NULL, "
-                    "arrival_time DATETIME NOT NULL, "
-                    "price DECIMAL(10,2) NOT NULL, "
-                    "remaining_seats INT NOT NULL)")){
+                    "flight_id INTEGER PRIMARY KEY AUTOINCREMENT, "  // 航班ID，自增主键
+                    "flight_number VARCHAR(10) NOT NULL, "             // 航班号
+                    "departure_city VARCHAR(20) NOT NULL, "            // 起点城市
+                    "arrival_city VARCHAR(20) NOT NULL, "              // 终点城市
+                    "price DECIMAL(10,2) NOT NULL, "                   // 票价（最多10位数字，两位小数）
+                    "departure_airport VARCHAR(20) NOT NULL, "         // 起点机场
+                    "arrival_airport VARCHAR(20) NOT NULL, "           // 终点机场
+                    "airline_company VARCHAR(20) NOT NULL, "           // 航空公司
+                    "checkin_start_time DATETIME NOT NULL, "           // 检票开始时间
+                    "checkin_end_time DATETIME NOT NULL, "             // 检票结束时间
+                    "status VARCHAR(10) NOT NULL, "                    // 航班状态
+                    "UNIQUE(flight_number) )")) {                     // 确保航班号唯一
         qDebug() << "create flight_info error: " << query.lastError().text();
     }
+
+    // 所有订单
     if(!query.exec("CREATE TABLE IF NOT EXISTS all_order ("
                     "id INT AUTO_INCREMENT PRIMARY KEY, "
                     "user_id INT NOT NULL, "
