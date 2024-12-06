@@ -103,8 +103,8 @@ Page {
 
             Button {
                 anchors.left: parent.left // 左边对齐到父元素的左边
-                anchors.leftMargin: parent.width * 0.1
-                width: parent.width * 0.8
+                anchors.leftMargin: parent.width * 0.15
+                width: parent.width * 0.7
                 height: 40
                 text: "我的订单"
                 font.pixelSize: 20
@@ -121,9 +121,9 @@ Page {
 
             Button {
                 anchors.left: parent.left // 左边对齐到父元素的左边
-                anchors.leftMargin: parent.width * 0.1
-                width: parent.width * 0.8
-                height: 60
+                anchors.leftMargin: parent.width * 0.15
+                width: parent.width * 0.7
+                height: 40
                 text: "我的收藏"
                 font.pixelSize: 20
                 background: Rectangle {
@@ -139,9 +139,9 @@ Page {
 
             Button {
                 anchors.left: parent.left // 左边对齐到父元素的左边
-                anchors.leftMargin: parent.width * 0.1
-                width: parent.width * 0.8
-                height: 60
+                anchors.leftMargin: parent.width * 0.15
+                width: parent.width * 0.7
+                height: 40
                 text: "登录/切换账号"
                 font.pixelSize: 20
                 background: Rectangle {
@@ -157,9 +157,9 @@ Page {
 
             Button {
                 anchors.left: parent.left // 左边对齐到父元素的左边
-                anchors.leftMargin: parent.width * 0.1
-                width: parent.width * 0.8
-                height: 60
+                anchors.leftMargin: parent.width * 0.15
+                width: parent.width * 0.7
+                height: 40
                 text: "注销账号"
                 font.pixelSize: 20
                 background: Rectangle {
@@ -181,11 +181,12 @@ Page {
                 y: 10                    // 顶部位置
                 contentItem: Rectangle {
                     color: "#f0f0f0"
-                    implicitHeight: 100
+                    implicitHeight: 80
+                    radius: 20
                     Column{
                         anchors.fill: parent
                         anchors.centerIn: parent
-                        spacing: 60
+                        spacing:30
                         Label {
                             anchors.horizontalCenter: parent.horizontalCenter  // 确保水平居中
                             text: "确定注销账号"
@@ -193,8 +194,9 @@ Page {
                             color: "#8B0000"
                         }
                         Row{
-                            anchors.centerIn: parent
-                            spacing: 30
+                            anchors.horizontalCenter: parent.horizontalCenter  // 确保水平居中
+                            anchors.bottom: parent.bottom
+                            spacing: 60
                             Button{
                                 text: "确定"
                                 font.pointSize: 14
@@ -228,9 +230,9 @@ Page {
 
             Button {
                 anchors.left: parent.left // 左边对齐到父元素的左边
-                anchors.leftMargin: parent.width * 0.1
-                width: parent.width * 0.8
-                height: 60
+                anchors.leftMargin: parent.width * 0.15
+                width: parent.width * 0.7
+                height: 40
                 text: "注册账号"
                 font.pixelSize: 20
                 background: Rectangle {
