@@ -123,7 +123,7 @@ Page {
                 anchors.left: parent.left // 左边对齐到父元素的左边
                 anchors.leftMargin: parent.width * 0.1
                 width: parent.width * 0.8
-                height: 40
+                height: 60
                 text: "我的收藏"
                 font.pixelSize: 20
                 background: Rectangle {
@@ -141,7 +141,7 @@ Page {
                 anchors.left: parent.left // 左边对齐到父元素的左边
                 anchors.leftMargin: parent.width * 0.1
                 width: parent.width * 0.8
-                height: 40
+                height: 60
                 text: "登录/切换账号"
                 font.pixelSize: 20
                 background: Rectangle {
@@ -159,7 +159,7 @@ Page {
                 anchors.left: parent.left // 左边对齐到父元素的左边
                 anchors.leftMargin: parent.width * 0.1
                 width: parent.width * 0.8
-                height: 40
+                height: 60
                 text: "注销账号"
                 font.pixelSize: 20
                 background: Rectangle {
@@ -230,7 +230,7 @@ Page {
                 anchors.left: parent.left // 左边对齐到父元素的左边
                 anchors.leftMargin: parent.width * 0.1
                 width: parent.width * 0.8
-                height: 40
+                height: 60
                 text: "注册账号"
                 font.pixelSize: 20
                 background: Rectangle {
