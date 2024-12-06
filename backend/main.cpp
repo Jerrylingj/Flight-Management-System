@@ -15,6 +15,10 @@ public:
         m_db->connectToDatabase();
         // 自动创建表，如果没有手动创建过的话
         m_db->createTable();
+
+        /*** 测试函数 ***/
+        m_db->populateSampleFlights(); // 插入航班初始航班信息
+
         // 创建HTTP服务器
         m_httpServer = new QHttpServer(this);
         // 创建FlightAPI实例并传入数据库连接
@@ -37,7 +41,7 @@ public:
         });
 
         // 获取所有航班信息的API路由
-        m_httpServer->route("/api/flights", QHttpServerRequest::Method::Get, [this](const QHttpServerRequest &request) -> QByteArray {
+        m_httpServer->route("/api/flights", QHttpServerRequest::Method::Get, [this](const QHttpServerRequest &request) -> QHttpServerResponse {
             // 获取所有航班信息
             QList<FlightInfo> flights = m_flightAPI->getAllFlights();
 
@@ -51,8 +55,8 @@ public:
                 flightObject["arrival_city"] = flight.arrivalCity;
                 flightObject["departure_airport"] = flight.departureAirport;
                 flightObject["arrival_airport"] = flight.arrivalAirport;
-                flightObject["checkin_start_time"] = flight.checkinStartTime.toString();
-                flightObject["checkin_end_time"] = flight.checkinEndTime.toString();
+                flightObject["checkin_start_time"] = flight.checkinStartTime.toString("yyyy-MM-dd HH:mm:ss"); // 推荐使用标准格式
+                flightObject["checkin_end_time"] = flight.checkinEndTime.toString("yyyy-MM-dd HH:mm:ss");   // 推荐使用标准格式
                 flightObject["price"] = flight.price;
                 flightObject["airline_company"] = flight.airlineCompany;
                 flightObject["status"] = flight.status;
@@ -60,18 +64,36 @@ public:
                 flightArray.append(flightObject);
             }
 
-            // 返回所有航班信息的JSON数组
-            return QJsonDocument(flightArray).toJson();
+            /*** 解决跨域问题 ***/
+            // 创建 JSON 文档
+            QJsonDocument doc(flightArray);
+
+            // 创建响应并设置头部
+            QHttpServerResponse response(doc.toJson());
+            response.setHeader("Content-Type", "application/json");
+            response.setHeader("Access-Control-Allow-Origin", "*"); // 允许所有来源
+
+            // 返回响应对象
+            return response;
         });
 
+
         // 根据航班ID获取航班信息的API路由
-        m_httpServer->route("/api/flights/<arg>", QHttpServerRequest::Method::Get, [this](const int flightId) -> QByteArray {
+        m_httpServer->route("/api/flights/<arg>", QHttpServerRequest::Method::Get, [this](const int flightId) -> QHttpServerResponse {
             // 根据航班ID获取航班信息
             FlightInfo flight = m_flightAPI->getFlightById(flightId);
 
             // 如果没有找到航班信息
             if (flight.flightId == 0) {
-                return "Flight not found";  // 返回未找到航班的提示
+                QJsonObject errorObj;
+                errorObj["error"] = "Flight not found";
+                QJsonDocument errorDoc(errorObj);
+
+                QHttpServerResponse response(errorDoc.toJson());
+                response.setHeader("Content-Type", "application/json");
+                response.setHeader("Access-Control-Allow-Origin", "*"); // 允许所有来源
+
+                return response;
             }
 
             // 将航班信息转成JSON返回
@@ -82,14 +104,21 @@ public:
             flightObject["arrival_city"] = flight.arrivalCity;
             flightObject["departure_airport"] = flight.departureAirport;
             flightObject["arrival_airport"] = flight.arrivalAirport;
-            flightObject["checkin_start_time"] = flight.checkinStartTime.toString();
-            flightObject["checkin_end_time"] = flight.checkinEndTime.toString();
+            flightObject["checkin_start_time"] = flight.checkinStartTime.toString("yyyy-MM-dd HH:mm:ss");
+            flightObject["checkin_end_time"] = flight.checkinEndTime.toString("yyyy-MM-dd HH:mm:ss");
             flightObject["price"] = flight.price;
             flightObject["airline_company"] = flight.airlineCompany;
             flightObject["status"] = flight.status;
 
+            QJsonDocument doc(flightObject);
+
+            // 创建响应并设置头部
+            QHttpServerResponse response(doc.toJson());
+            response.setHeader("Content-Type", "application/json");
+            response.setHeader("Access-Control-Allow-Origin", "*"); // 允许所有来源
+
             // 返回单个航班信息的JSON对象
-            return QJsonDocument(flightObject).toJson();
+            return response;
         });
 
         // 监听端口

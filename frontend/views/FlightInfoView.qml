@@ -22,7 +22,8 @@ Page {
     NetworkHandler {
         id: networkHandler
         onRequestSuccess: function(responseData) {
-            console.log("请求成功，返回数据：", responseData); // 打印返回的数据
+            var jsonString = JSON.stringify(responseData);
+            console.log("请求成功，返回数据：", jsonString); // 打印 JSON 字符串
             flightData = responseData;  // 更新 flightData
             updateFilter();  // 重新更新筛选
         }
@@ -33,7 +34,7 @@ Page {
 
     // 调用网络请求
     function fetchFlightData() {
-        var url = "http://localhost:8080/api/flights";  // 替换成你实际的后端 API URL
+        var url = "http://127.0.0.1:8080/api/flights";  // 替换成你实际的后端 API URL
         console.log("发送请求，URL:", url); // 打印请求的 URL
         networkHandler.request(url, NetworkHandler.GET);  // 发送 GET 请求
     }

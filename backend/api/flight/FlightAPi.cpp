@@ -17,10 +17,11 @@ FlightAPI::~FlightAPI() {
 QList<FlightInfo> FlightAPI::getAllFlights() {
     QList<FlightInfo> flights;
 
-    // 使用传入的 m_dbManager 执行数据库查询
-    QSqlQuery query("SELECT * FROM flights");
+    QString sql = "SELECT * FROM flight_info";
+    qDebug() << "Executing SQL:" << sql;
 
-    if (!query.exec()) {
+    QSqlQuery query;
+    if (!query.exec(sql)) {
         qDebug() << "查询失败:" << query.lastError().text();
     } else {
         while (query.next()) {
@@ -41,6 +42,7 @@ QList<FlightInfo> FlightAPI::getAllFlights() {
         }
     }
 
+    qDebug() << "Retrieved" << flights.size() << "flights.";
     return flights;
 }
 
@@ -48,8 +50,11 @@ QList<FlightInfo> FlightAPI::getAllFlights() {
 FlightInfo FlightAPI::getFlightById(int flightId) {
     FlightInfo flight;
 
+    QString sql = "SELECT * FROM flight_info WHERE flight_id = :flight_id";
+    qDebug() << "Preparing SQL:" << sql << "with flight_id =" << flightId;
+
     QSqlQuery query;
-    query.prepare("SELECT * FROM flights WHERE flight_id = :flight_id");
+    query.prepare(sql);
     query.bindValue(":flight_id", flightId);
 
     if (!query.exec()) {
@@ -69,6 +74,10 @@ FlightInfo FlightAPI::getFlightById(int flightId) {
         flight.price = query.value("price").toDouble();
         flight.airlineCompany = query.value("airline_company").toString();
         flight.status = query.value("status").toString();
+
+        qDebug() << "Flight found:" << flight.flightNumber;
+    } else {
+        qDebug() << "No flight found with flight_id =" << flightId;
     }
 
     return flight;
