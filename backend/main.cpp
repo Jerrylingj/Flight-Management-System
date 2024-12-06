@@ -54,6 +54,8 @@ public:
                 flightObject["flight_number"] = flight.flightNumber;
                 flightObject["departure_city"] = flight.departureCity;
                 flightObject["arrival_city"] = flight.arrivalCity;
+                flightObject["departure_time"] = flight.departureTime.toString("yyyy-MM-dd HH:mm:ss"); // 推荐使用标准格式
+                flightObject["arrival_time"] = flight.arrivalTime.toString("yyyy-MM-dd HH:mm:ss");   // 推荐使用标准格式
                 flightObject["departure_airport"] = flight.departureAirport;
                 flightObject["arrival_airport"] = flight.arrivalAirport;
                 flightObject["checkin_start_time"] = flight.checkinStartTime.toString("yyyy-MM-dd HH:mm:ss"); // 推荐使用标准格式
@@ -90,6 +92,8 @@ public:
             flightObject["flight_number"] = flight.flightNumber;
             flightObject["departure_city"] = flight.departureCity;
             flightObject["arrival_city"] = flight.arrivalCity;
+            flightObject["departure_time"] = flight.departureTime.toString("yyyy-MM-dd HH:mm:ss"); // 推荐使用标准格式
+            flightObject["arrival_time"] = flight.arrivalTime.toString("yyyy-MM-dd HH:mm:ss");   // 推荐使用标准格式
             flightObject["departure_airport"] = flight.departureAirport;
             flightObject["arrival_airport"] = flight.arrivalAirport;
             flightObject["checkin_start_time"] = flight.checkinStartTime.toString("yyyy-MM-dd HH:mm:ss");

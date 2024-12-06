@@ -9,24 +9,43 @@ Page {
     property string viewName: "航班信息"
     property var flightData: []
 
-    // // 模拟数据
-    // property var flightData: [
-    //     { "flightNumber": "CA123", "price": 1800, "departure": "北京", "destination": "上海", "departureTime": "08:30", "arrivalTime": "11:00", "remainingSeats": 5, isBooked: true, isFaved: true },
-    //     { "flightNumber": "MU456", "price": 2000, "departure": "北京", "destination": "上海", "departureTime": "09:00", "arrivalTime": "11:30", "remainingSeats": 3, isBooked: false, isFaved: false },
-    //     { "flightNumber": "HU789", "price": 1500, "departure": "北京", "destination": "上海", "departureTime": "10:00", "arrivalTime": "12:30", "remainingSeats": 10, isBooked: true, isFaved: false },
-    //     { "flightNumber": "CA321", "price": 2200, "departure": "北京", "destination": "广州", "departureTime": "07:00", "arrivalTime": "09:30", "remainingSeats": 2, isBooked: false, isFaved: false },
-    //     { "flightNumber": "MU654", "price": 1800, "departure": "上海", "destination": "北京", "departureTime": "12:00", "arrivalTime": "14:30", "remainingSeats": 7, isBooked: false, isFaved: true }
-    // ]
-
     // 创建 NetworkHandler 实例
     NetworkHandler {
         id: networkHandler
         onRequestSuccess: function(responseData) {
             var jsonString = JSON.stringify(responseData);
             console.log("请求成功，返回数据：", jsonString); // 打印 JSON 字符串
-            flightData = responseData.data;  // 更新 flightData
+
+            // 检查 responseData 是否为数组
+            if (Array.isArray(responseData)) {
+                console.log("responseData 是一个数组，长度为:", responseData.length);
+                // 为每个航班添加 isBooked 和 isFaved 字段，初始化为 false
+                flightData = responseData.map(function(flight) {
+                    flight.isBooked = false;
+                    flight.isFaved = false;
+                    flight.remainingSeats = 10;
+                    return flight;
+                });
+            } else {
+                console.log("responseData 不是一个数组，类型为:", typeof responseData);
+                // 如果 responseData 不是数组，检查是否包含数组字段
+                if (responseData.data && Array.isArray(responseData.data)) {
+                    console.log("responseData.data 是一个数组，长度为:", responseData.data.length);
+                    flightData = responseData.data.map(function(flight) {
+                        flight.isBooked = false;
+                        flight.isFaved = false;
+                        flight.remaingSeats = 10;
+                        return flight;
+                    });
+                } else {
+                    console.log("无法识别的响应数据结构");
+                    flightData = [];
+                }
+            }
+
             updateFilter();  // 重新更新筛选
         }
+
         onRequestFailed: function(errorMessage) {
             console.log("请求失败：", errorMessage); // 打印失败的错误信息
         }
@@ -34,8 +53,8 @@ Page {
 
     // 调用网络请求
     function fetchFlightData() {
-        var url = "http://127.0.0.1:8080/api/flights";  // 替换成你实际的后端 API URL
-        console.log("发送请求，URL:", url); // 打印请求的 URL
+        var url = "http://127.0.0.1:8080/api/flights";  // 后端 API URL
+        // console.log("发送请求，URL:", url); // 打印请求的 URL
         networkHandler.request(url, NetworkHandler.GET);  // 发送 GET 请求
     }
 
@@ -221,15 +240,22 @@ Page {
                 source: "../components/FlightInfoCard.qml"
                 property var flightInfo: modelData // 传递每条航班的数据
                 onLoaded: {
-                    item.flightNumber = flightInfo.flightNumber;
+                    item.flightId = flightInfo.flight_id;
+                    item.flightNumber = flightInfo.flight_number;
+                    item.departureCity = flightInfo.departure_city;
+                    item.arrivalCity = flightInfo.arrival_city;
+                    // item.depatureTime = flightInfo.departure_time;
+                    // item.arrivalTime = flightInfo.arrival_time;
+                    item.departureAirport = flightInfo.departure_airport;
+                    item.arrivalAirport = flightInfo.arrival_airport;
                     item.price = flightInfo.price;
-                    item.departure = flightInfo.departure;
-                    item.destination = flightInfo.destination;
-                    item.departureTime = flightInfo.departureTime;
-                    item.arrivalTime = flightInfo.arrivalTime;
-                    item.remainingSeats = flightInfo.remainingSeats;
+                    item.airlineCompany = flightInfo.airline_company;
+                    item.checkinStartTime = flightInfo.checkin_start_time;
+                    item.checkinEndTime = flightInfo.checkin_end_time;
+                    item.status = flightInfo.status;
                     item.isBooked = flightInfo.isBooked;
                     item.isFaved = flightInfo.isFaved;
+                    item.remainingSeats = flightInfo.remainingSeats;
                 }
             }
         }
@@ -237,50 +263,55 @@ Page {
 
     // 筛选和排序更新函数
     function updateFilter() {
-        var searchDeparture = departureCity.text;
-        var searchDestination = arrivalCity.text;
-        console.log("开始根据城市筛选航班信息：")
-        console.log("当前出发城市为 " + searchDeparture + " ，到达城市为 " + searchDestination)
+        // var searchDeparture = departureCity.text;
+        // var searchDestination = arrivalCity.text;
+        // console.log("开始根据城市筛选航班信息：");
+        // console.log("当前出发城市为 " + searchDeparture + " ，到达城市为 " + searchDestination);
 
-        // 动态筛选航班数据
-        filteredFlights = flightData.filter(function(flight) {
-            return flight.departure.includes(searchDeparture) && flight.destination.includes(searchDestination);
-        });
+        // // 动态筛选航班数据
+        // filteredFlights = flightData.filter(function(flight) {
+        //     var departureMatch = (searchDeparture === "全部城市" || flight.departureCity === searchDeparture);
+        //     var arrivalMatch = (searchDestination === "全部城市" || flight.arrivalCity === searchDestination);
+        //     return departureMatch && arrivalMatch;
+        // });
 
-        // 排序功能
-        switch (sortMethod) {
-            case 0: // 按时间排序
-                filteredFlights.sort(function(a, b) {
-                    var timeA = a.departureTime.split(":");
-                    var timeB = b.departureTime.split(":");
-                    var dateA = new Date(1970, 0, 1, timeA[0], timeA[1]);
-                    var dateB = new Date(1970, 0, 1, timeB[0], timeB[1]);
-                    return isAscending ? dateA - dateB : dateB - dateA;
-                });
-                break;
-            case 1: // 按价格排序
-                filteredFlights.sort(function(a, b) {
-                    return isAscending ? a.price - b.price : b.price - a.price;
-                });
-                break;
-            case 2: // 按剩余座位排序
-                filteredFlights.sort(function(a, b) {
-                    return isAscending ? a.remainingSeats - b.remainingSeats : b.remainingSeats - a.remainingSeats;
-                });
-                break;
-        }
+        // // 排序功能
+        // switch (sortMethod) {
+        //     case 0: // 按时间排序
+        //         filteredFlights.sort(function(a, b) {
+        //             var timeA = a.departureTime.split(":");
+        //             var timeB = b.departureTime.split(":");
+        //             var dateA = new Date(1970, 0, 1, parseInt(timeA[0]), parseInt(timeA[1]));
+        //             var dateB = new Date(1970, 0, 1, parseInt(timeB[0]), parseInt(timeB[1]));
+        //             return isAscending ? dateA - dateB : dateB - dateA;
+        //         });
+        //         break;
+        //     case 1: // 按价格排序
+        //         filteredFlights.sort(function(a, b) {
+        //             return isAscending ? a.price - b.price : b.price - a.price;
+        //         });
+        //         break;
+        //     case 2: // 按剩余座位排序
+        //         filteredFlights.sort(function(a, b) {
+        //             return isAscending ? a.remainingSeats - b.remainingSeats : b.remainingSeats - a.remainingSeats;
+        //         });
+        //         break;
+        //     default:
+        //         console.log("未定义的排序方法:", sortMethod);
+        // }
 
-        filteredFlights = filteredFlights.slice();  // 重新赋值给数组，触发数据更新
+        // // 重新赋值给数组，触发数据更新
+        // filteredFlights = filteredFlights.slice();
     }
 
     // 切换排序顺序
     function toggleSortOrder() {
-        isAscending = !isAscending;
-        sortMethodComboBox.model = [
-            { label: "时间", src: isAscending ? "https://img.icons8.com/?size=100&id=122841&format=png&color=000000" : "https://img.icons8.com/?size=100&id=h2X0Cy3sU70i&format=png&color=000000" },
-            { label: "价格", src: isAscending ? "https://img.icons8.com/?size=100&id=122841&format=png&color=000000" : "https://img.icons8.com/?size=100&id=h2X0Cy3sU70i&format=png&color=000000" },
-            { label: "座位", src: isAscending ? "https://img.icons8.com/?size=100&id=122841&format=png&color=000000" : "https://img.icons8.com/?size=100&id=h2X0Cy3sU70i&format=png&color=000000" }
-        ];
+        // isAscending = !isAscending;
+        // sortMethodComboBox.model = [
+        //     { label: "时间", src: isAscending ? "https://img.icons8.com/?size=100&id=122841&format=png&color=000000" : "https://img.icons8.com/?size=100&id=h2X0Cy3sU70i&format=png&color=000000" },
+        //     { label: "价格", src: isAscending ? "https://img.icons8.com/?size=100&id=122841&format=png&color=000000" : "https://img.icons8.com/?size=100&id=h2X0Cy3sU70i&format=png&color=000000" },
+        //     { label: "座位", src: isAscending ? "https://img.icons8.com/?size=100&id=122841&format=png&color=000000" : "https://img.icons8.com/?size=100&id=h2X0Cy3sU70i&format=png&color=000000" }
+        // ];
     }
 
     // Helper function to获取城市列表

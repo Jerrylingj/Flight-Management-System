@@ -80,6 +80,8 @@ void DatabaseManager::createTable() {
                     "flight_number VARCHAR(10) NOT NULL, "             // 航班号
                     "departure_city VARCHAR(20) NOT NULL, "            // 起点城市
                     "arrival_city VARCHAR(20) NOT NULL, "              // 终点城市
+                    "departure_time DATETIME NOT NULL, "               // 出发时间
+                    "arrival_time DATETIME NOT NULL, "                 // 到达时间
                     "price DECIMAL(10,2) NOT NULL, "                   // 票价（最多10位数字，两位小数）
                     "departure_airport VARCHAR(20) NOT NULL, "         // 起点机场
                     "arrival_airport VARCHAR(20) NOT NULL, "           // 终点机场
@@ -119,20 +121,18 @@ bool DatabaseManager::insertUser(const QString& username, const QString& telepho
     return true;
 }
 
-bool DatabaseManager::insertFlight(const QString& flightNumber, const QString& departureCity, const QString& arrivalCity,
+bool DatabaseManager::insertFlight(const QString& flightNumber, const QString& departureCity, const QString& arrivalCity,const QDateTime& departureTime, const QDateTime& arrivalTime,
                                    double price, const QString& departureAirport, const QString& arrivalAirport,
                                    const QString& airlineCompany, const QDateTime& checkinStartTime,
                                    const QDateTime& checkinEndTime, const QString& status) {
     QSqlQuery query;
-    query.prepare("INSERT INTO flight_info (flight_number, departure_city, arrival_city, price, "
-                  "departure_airport, arrival_airport, airline_company, checkin_start_time, "
-                  "checkin_end_time, status) "
-                  "VALUES (:flight_number, :departure_city, :arrival_city, :price, "
-                  ":departure_airport, :arrival_airport, :airline_company, :checkin_start_time, "
-                  ":checkin_end_time, :status)");
+    query.prepare("INSERT INTO flight_info (flight_number, departure_city, arrival_city, departure_time, arrival_time, price, departure_airport, arrival_airport, checkin_start_time, checkin_end_time, airline_company, status) "
+                  "VALUES (:flight_number, :departure_city, :arrival_city, :departure_time, :arrival_time, :price, :departure_airport, :arrival_airport, :checkin_start_time, :checkin_end_time, :airline_company, :status)");
     query.bindValue(":flight_number", flightNumber);
     query.bindValue(":departure_city", departureCity);
     query.bindValue(":arrival_city", arrivalCity);
+    query.bindValue(":departure_time", departureTime);
+    query.bindValue(":arrival_time", arrivalTime);
     query.bindValue(":price", price);
     query.bindValue(":departure_airport", departureAirport);
     query.bindValue(":arrival_airport", arrivalAirport);
@@ -187,91 +187,90 @@ bool DatabaseManager::isFlightInfoEmpty() const {
 }
 
 
-/*** 测试函数 ***/
 void DatabaseManager::populateSampleFlights() {
-    // 检查 flight_info 表是否为空，避免重复插入
-    if (!isFlightInfoEmpty()) {
-        qDebug() << "flight_info 表已包含数据，跳过示例数据插入。";
+    // 清空表格
+    QSqlQuery queryClear;
+    if (!queryClear.exec("DELETE FROM flight_info")) {
+        qDebug() << "Failed to clear flight_info table:" << queryClear.lastError();
+        return;
+    }
+    qDebug() << "flight_info 表已清空。";
+
+    // 开始事务
+    if (!QSqlDatabase::database().transaction()) {
+        qDebug() << "Failed to start transaction";
         return;
     }
 
-    qDebug() << "flight_info 表为空，开始插入示例航班数据。";
-
-    // 定义30条示例航班数据
     QList<QVariantList> flights = {
-        {"CA123", "北京", "上海", 1800.00, "北京首都国际机场", "上海浦东国际机场", "中国国航", QDateTime::fromString("2024-05-01 07:00:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-05-01 09:30:00", "yyyy-MM-dd HH:mm:ss"), "On Time"},
-        {"MU456", "北京", "广州", 2000.00, "北京首都国际机场", "广州白云国际机场", "东方航空", QDateTime::fromString("2024-05-02 08:00:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-05-02 10:30:00", "yyyy-MM-dd HH:mm:ss"), "Delayed"},
-        {"HU789", "上海", "深圳", 1500.00, "上海浦东国际机场", "深圳宝安国际机场", "海南航空", QDateTime::fromString("2024-05-03 09:00:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-05-03 11:30:00", "yyyy-MM-dd HH:mm:ss"), "Cancelled"},
-        {"CZ101", "成都", "杭州", 1700.00, "成都双流国际机场", "杭州萧山国际机场", "中国南方航空", QDateTime::fromString("2024-05-04 06:00:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-05-04 08:30:00", "yyyy-MM-dd HH:mm:ss"), "On Time"},
-        {"ZH202", "武汉", "西安", 1600.00, "武汉天河国际机场", "西安咸阳国际机场", "深圳航空", QDateTime::fromString("2024-05-05 10:00:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-05-05 12:30:00", "yyyy-MM-dd HH:mm:ss"), "On Time"},
-        {"JD303", "重庆", "昆明", 1900.00, "重庆江北国际机场", "昆明长水国际机场", "吉祥航空", QDateTime::fromString("2024-05-06 14:00:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-05-06 16:30:00", "yyyy-MM-dd HH:mm:ss"), "Delayed"},
-        {"FM404", "深圳", "北京", 2100.00, "深圳宝安国际机场", "北京首都国际机场", "春秋航空", QDateTime::fromString("2024-05-07 15:00:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-05-07 17:30:00", "yyyy-MM-dd HH:mm:ss"), "On Time"},
-        {"SA505", "南京", "厦门", 1400.00, "南京禄口国际机场", "厦门高崎国际机场", "四川航空", QDateTime::fromString("2024-05-08 12:00:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-05-08 14:30:00", "yyyy-MM-dd HH:mm:ss"), "On Time"},
-        {"SN606", "杭州", "广州", 1750.00, "杭州萧山国际机场", "广州白云国际机场", "山东航空", QDateTime::fromString("2024-05-09 13:00:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-05-09 15:30:00", "yyyy-MM-dd HH:mm:ss"), "Cancelled"},
-        {"ZH707", "上海", "北京", 1650.00, "上海浦东国际机场", "北京首都国际机场", "深圳航空", QDateTime::fromString("2024-05-10 09:00:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-05-10 11:30:00", "yyyy-MM-dd HH:mm:ss"), "On Time"},
-        {"MU808", "北京", "成都", 1850.00, "北京首都国际机场", "成都双流国际机场", "东方航空", QDateTime::fromString("2024-05-11 07:30:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-05-11 10:00:00", "yyyy-MM-dd HH:mm:ss"), "On Time"},
-        {"CA909", "广州", "上海", 1950.00, "广州白云国际机场", "上海浦东国际机场", "中国国航", QDateTime::fromString("2024-05-12 11:00:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-05-12 13:30:00", "yyyy-MM-dd HH:mm:ss"), "Delayed"},
-        {"HU010", "昆明", "北京", 2200.00, "昆明长水国际机场", "北京首都国际机场", "海南航空", QDateTime::fromString("2024-05-13 16:00:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-05-13 18:30:00", "yyyy-MM-dd HH:mm:ss"), "On Time"},
-        {"FM111", "西安", "重庆", 1550.00, "西安咸阳国际机场", "重庆江北国际机场", "春秋航空", QDateTime::fromString("2024-05-14 10:30:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-05-14 13:00:00", "yyyy-MM-dd HH:mm:ss"), "On Time"},
-        {"SA212", "厦门", "杭州", 1450.00, "厦门高崎国际机场", "杭州萧山国际机场", "四川航空", QDateTime::fromString("2024-05-15 08:45:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-05-15 11:15:00", "yyyy-MM-dd HH:mm:ss"), "On Time"},
-        {"SN313", "广州", "南京", 1600.00, "广州白云国际机场", "南京禄口国际机场", "山东航空", QDateTime::fromString("2024-05-16 14:15:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-05-16 16:45:00", "yyyy-MM-dd HH:mm:ss"), "On Time"},
-        {"ZH414", "北京", "杭州", 1750.00, "北京首都国际机场", "杭州萧山国际机场", "深圳航空", QDateTime::fromString("2024-05-17 07:15:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-05-17 09:45:00", "yyyy-MM-dd HH:mm:ss"), "On Time"},
-        {"MU515", "成都", "广州", 2050.00, "成都双流国际机场", "广州白云国际机场", "东方航空", QDateTime::fromString("2024-05-18 12:30:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-05-18 15:00:00", "yyyy-MM-dd HH:mm:ss"), "Delayed"},
-        {"CA616", "上海", "北京", 1850.00, "上海浦东国际机场", "北京首都国际机场", "中国国航", QDateTime::fromString("2024-05-19 09:30:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-05-19 12:00:00", "yyyy-MM-dd HH:mm:ss"), "On Time"},
-        {"HU717", "深圳", "成都", 2100.00, "深圳宝安国际机场", "成都双流国际机场", "海南航空", QDateTime::fromString("2024-05-20 13:00:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-05-20 15:30:00", "yyyy-MM-dd HH:mm:ss"), "On Time"},
-        {"FM818", "杭州", "西安", 1650.00, "杭州萧山国际机场", "西安咸阳国际机场", "春秋航空", QDateTime::fromString("2024-05-21 10:00:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-05-21 12:30:00", "yyyy-MM-dd HH:mm:ss"), "On Time"},
-        {"SA919", "南京", "北京", 1500.00, "南京禄口国际机场", "北京首都国际机场", "四川航空", QDateTime::fromString("2024-05-22 11:30:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-05-22 14:00:00", "yyyy-MM-dd HH:mm:ss"), "Cancelled"},
-        {"SN020", "北京", "重庆", 1750.00, "北京首都国际机场", "重庆江北国际机场", "山东航空", QDateTime::fromString("2024-05-23 06:00:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-05-23 08:30:00", "yyyy-MM-dd HH:mm:ss"), "On Time"},
-        {"ZH121", "广州", "昆明", 1900.00, "广州白云国际机场", "昆明长水国际机场", "深圳航空", QDateTime::fromString("2024-05-24 15:30:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-05-24 18:00:00", "yyyy-MM-dd HH:mm:ss"), "On Time"},
-        {"MU222", "成都", "上海", 1950.00, "成都双流国际机场", "上海浦东国际机场", "东方航空", QDateTime::fromString("2024-05-25 07:45:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-05-25 10:15:00", "yyyy-MM-dd HH:mm:ss"), "Delayed"},
-        {"CA323", "西安", "深圳", 1600.00, "西安咸阳国际机场", "深圳宝安国际机场", "中国国航", QDateTime::fromString("2024-05-26 08:15:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-05-26 10:45:00", "yyyy-MM-dd HH:mm:ss"), "On Time"},
-        {"HU424", "昆明", "杭州", 1850.00, "昆明长水国际机场", "杭州萧山国际机场", "海南航空", QDateTime::fromString("2024-05-27 14:45:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-05-27 17:15:00", "yyyy-MM-dd HH:mm:ss"), "On Time"},
-        {"FM525", "深圳", "南京", 1700.00, "深圳宝安国际机场", "南京禄口国际机场", "春秋航空", QDateTime::fromString("2024-05-28 16:00:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-05-28 18:30:00", "yyyy-MM-dd HH:mm:ss"), "On Time"},
-        {"SA626", "上海", "重庆", 2000.00, "上海浦东国际机场", "重庆江北国际机场", "四川航空", QDateTime::fromString("2024-05-29 09:15:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-05-29 11:45:00", "yyyy-MM-dd HH:mm:ss"), "On Time"},
-        {"SN727", "杭州", "广州", 1550.00, "杭州萧山国际机场", "广州白云国际机场", "山东航空", QDateTime::fromString("2024-05-30 12:30:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-05-30 15:00:00", "yyyy-MM-dd HH:mm:ss"), "Cancelled"},
-        {"ZH828", "北京", "西安", 1800.00, "北京首都国际机场", "西安咸阳国际机场", "深圳航空", QDateTime::fromString("2024-05-31 07:00:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-05-31 09:30:00", "yyyy-MM-dd HH:mm:ss"), "On Time"},
-        {"MU929", "重庆", "北京", 2050.00, "重庆江北国际机场", "北京首都国际机场", "东方航空", QDateTime::fromString("2024-06-01 13:00:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-06-01 15:30:00", "yyyy-MM-dd HH:mm:ss"), "On Time"},
-        {"CA030", "广州", "成都", 1900.00, "广州白云国际机场", "成都双流国际机场", "中国国航", QDateTime::fromString("2024-06-02 10:30:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-06-02 13:00:00", "yyyy-MM-dd HH:mm:ss"), "On Time"},
-        {"HU131", "西安", "杭州", 1600.00, "西安咸阳国际机场", "杭州萧山国际机场", "海南航空", QDateTime::fromString("2024-06-03 11:45:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-06-03 14:15:00", "yyyy-MM-dd HH:mm:ss"), "Delayed"},
-        {"FM232", "南京", "成都", 1750.00, "南京禄口国际机场", "成都双流国际机场", "春秋航空", QDateTime::fromString("2024-06-04 08:30:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-06-04 11:00:00", "yyyy-MM-dd HH:mm:ss"), "On Time"},
-        {"SA333", "昆明", "深圳", 2000.00, "昆明长水国际机场", "深圳宝安国际机场", "四川航空", QDateTime::fromString("2024-06-05 14:00:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-06-05 16:30:00", "yyyy-MM-dd HH:mm:ss"), "On Time"},
-        {"SN434", "上海", "杭州", 1500.00, "上海浦东国际机场", "杭州萧山国际机场", "山东航空", QDateTime::fromString("2024-06-06 09:45:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-06-06 12:15:00", "yyyy-MM-dd HH:mm:ss"), "On Time"},
-        {"ZH535", "北京", "广州", 1850.00, "北京首都国际机场", "广州白云国际机场", "深圳航空", QDateTime::fromString("2024-06-07 07:30:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-06-07 10:00:00", "yyyy-MM-dd HH:mm:ss"), "On Time"},
-        {"MU636", "成都", "杭州", 1950.00, "成都双流国际机场", "杭州萧山国际机场", "东方航空", QDateTime::fromString("2024-06-08 12:15:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-06-08 14:45:00", "yyyy-MM-dd HH:mm:ss"), "On Time"},
-        {"CA737", "西安", "广州", 1700.00, "西安咸阳国际机场", "广州白云国际机场", "中国国航", QDateTime::fromString("2024-06-09 10:00:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-06-09 12:30:00", "yyyy-MM-dd HH:mm:ss"), "On Time"},
-        {"HU838", "深圳", "上海", 2100.00, "深圳宝安国际机场", "上海浦东国际机场", "海南航空", QDateTime::fromString("2024-06-10 15:30:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-06-10 18:00:00", "yyyy-MM-dd HH:mm:ss"), "On Time"},
-        {"FM939", "杭州", "重庆", 1600.00, "杭州萧山国际机场", "重庆江北国际机场", "春秋航空", QDateTime::fromString("2024-06-11 11:00:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-06-11 13:30:00", "yyyy-MM-dd HH:mm:ss"), "On Time"},
-        {"SA040", "南京", "北京", 1550.00, "南京禄口国际机场", "北京首都国际机场", "四川航空", QDateTime::fromString("2024-06-12 08:00:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-06-12 10:30:00", "yyyy-MM-dd HH:mm:ss"), "Cancelled"},
-        {"SN141", "北京", "杭州", 1750.00, "北京首都国际机场", "杭州萧山国际机场", "山东航空", QDateTime::fromString("2024-06-13 07:15:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-06-13 09:45:00", "yyyy-MM-dd HH:mm:ss"), "On Time"},
-        {"ZH242", "广州", "成都", 1800.00, "广州白云国际机场", "成都双流国际机场", "深圳航空", QDateTime::fromString("2024-06-14 14:30:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-06-14 17:00:00", "yyyy-MM-dd HH:mm:ss"), "On Time"},
-        {"MU343", "西安", "深圳", 1650.00, "西安咸阳国际机场", "深圳宝安国际机场", "东方航空", QDateTime::fromString("2024-06-15 09:00:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-06-15 11:30:00", "yyyy-MM-dd HH:mm:ss"), "On Time"},
-        {"CA444", "上海", "北京", 1900.00, "上海浦东国际机场", "北京首都国际机场", "中国国航", QDateTime::fromString("2024-06-16 10:30:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-06-16 13:00:00", "yyyy-MM-dd HH:mm:ss"), "On Time"},
-        {"HU545", "成都", "杭州", 1750.00, "成都双流国际机场", "杭州萧山国际机场", "海南航空", QDateTime::fromString("2024-06-17 12:00:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-06-17 14:30:00", "yyyy-MM-dd HH:mm:ss"), "Delayed"},
-        {"FM646", "南京", "广州", 1600.00, "南京禄口国际机场", "广州白云国际机场", "春秋航空", QDateTime::fromString("2024-06-18 11:15:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-06-18 13:45:00", "yyyy-MM-dd HH:mm:ss"), "On Time"},
-        {"SA747", "昆明", "北京", 2050.00, "昆明长水国际机场", "北京首都国际机场", "四川航空", QDateTime::fromString("2024-06-19 16:00:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-06-19 18:30:00", "yyyy-MM-dd HH:mm:ss"), "On Time"},
-        {"SN848", "北京", "成都", 1850.00, "北京首都国际机场", "成都双流国际机场", "山东航空", QDateTime::fromString("2024-06-20 07:45:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-06-20 10:15:00", "yyyy-MM-dd HH:mm:ss"), "On Time"},
-        {"ZH949", "广州", "西安", 2000.00, "广州白云国际机场", "西安咸阳国际机场", "深圳航空", QDateTime::fromString("2024-06-21 13:30:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-06-21 16:00:00", "yyyy-MM-dd HH:mm:ss"), "On Time"},
-        {"MU050", "杭州", "深圳", 1700.00, "杭州萧山国际机场", "深圳宝安国际机场", "东方航空", QDateTime::fromString("2024-06-22 10:00:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-06-22 12:30:00", "yyyy-MM-dd HH:mm:ss"), "On Time"}
+        {"MU100", "北京", "上海", QDateTime::fromString("2024-12-08 07:30:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-12-08 09:00:00", "yyyy-MM-dd HH:mm:ss"), 1500.00, "北京首都国际机场", "上海虹桥国际机场", QDateTime::fromString("2024-12-08 06:00:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-12-08 07:00:00", "yyyy-MM-dd HH:mm:ss"), "东方航空", "On Time"},
+        {"MU200", "北京", "广州", QDateTime::fromString("2024-12-08 10:00:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-12-08 12:00:00", "yyyy-MM-dd HH:mm:ss"), 1600.00, "北京首都国际机场", "广州白云国际机场", QDateTime::fromString("2024-12-08 08:30:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-12-08 09:30:00", "yyyy-MM-dd HH:mm:ss"), "东方航空", "On Time"},
+        {"CA300", "上海", "成都", QDateTime::fromString("2024-12-08 08:45:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-12-08 11:30:00", "yyyy-MM-dd HH:mm:ss"), 1800.00, "上海浦东国际机场", "成都双流国际机场", QDateTime::fromString("2024-12-08 07:00:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-12-08 08:00:00", "yyyy-MM-dd HH:mm:ss"), "中国国际航空", "Delayed"},
+        {"MU400", "南京", "青岛", QDateTime::fromString("2024-12-08 09:00:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-12-08 11:30:00", "yyyy-MM-dd HH:mm:ss"), 1700.00, "南京禄口国际机场", "青岛流亭国际机场", QDateTime::fromString("2024-12-08 07:30:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-12-08 08:30:00", "yyyy-MM-dd HH:mm:ss"), "东方航空", "On Time"},
+        {"ZH500", "深圳", "杭州", QDateTime::fromString("2024-12-08 10:30:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-12-08 12:00:00", "yyyy-MM-dd HH:mm:ss"), 1500.00, "深圳宝安国际机场", "杭州萧山国际机场", QDateTime::fromString("2024-12-08 09:00:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-12-08 10:00:00", "yyyy-MM-dd HH:mm:ss"), "春秋航空", "On Time"},
+        {"CA600", "上海", "重庆", QDateTime::fromString("2024-12-08 12:00:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-12-08 14:00:00", "yyyy-MM-dd HH:mm:ss"), 1900.00, "上海浦东国际机场", "重庆江北国际机场", QDateTime::fromString("2024-12-08 10:30:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-12-08 11:30:00", "yyyy-MM-dd HH:mm:ss"), "中国国际航空", "On Time"},
+        {"MU700", "北京", "深圳", QDateTime::fromString("2024-12-08 14:00:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-12-08 16:00:00", "yyyy-MM-dd HH:mm:ss"), 2000.00, "北京首都国际机场", "深圳宝安国际机场", QDateTime::fromString("2024-12-08 12:30:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-12-08 13:30:00", "yyyy-MM-dd HH:mm:ss"), "东方航空", "Delayed"},
+        {"ZH800", "广州", "上海", QDateTime::fromString("2024-12-08 15:00:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-12-08 17:00:00", "yyyy-MM-dd HH:mm:ss"), 1800.00, "广州白云国际机场", "上海虹桥国际机场", QDateTime::fromString("2024-12-08 13:30:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-12-08 14:30:00", "yyyy-MM-dd HH:mm:ss"), "春秋航空", "On Time"},
+        {"CA900", "成都", "西安", QDateTime::fromString("2024-12-08 16:00:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-12-08 17:30:00", "yyyy-MM-dd HH:mm:ss"), 1700.00, "成都双流国际机场", "西安咸阳国际机场", QDateTime::fromString("2024-12-08 14:30:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-12-08 15:30:00", "yyyy-MM-dd HH:mm:ss"), "中国国际航空", "On Time"},
+        {"MU1000", "广州", "杭州", QDateTime::fromString("2024-12-08 17:00:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-12-08 19:00:00", "yyyy-MM-dd HH:mm:ss"), 1600.00, "广州白云国际机场", "杭州萧山国际机场", QDateTime::fromString("2024-12-08 15:30:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-12-08 16:30:00", "yyyy-MM-dd HH:mm:ss"), "东方航空", "On Time"},
+        {"ZH1100", "上海", "南京", QDateTime::fromString("2024-12-08 18:00:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-12-08 19:00:00", "yyyy-MM-dd HH:mm:ss"), 1500.00, "上海虹桥国际机场", "南京禄口国际机场", QDateTime::fromString("2024-12-08 16:30:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-12-08 17:30:00", "yyyy-MM-dd HH:mm:ss"), "春秋航空", "Delayed"},
+        {"MU1200", "北京", "杭州", QDateTime::fromString("2024-12-08 19:00:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-12-08 21:00:00", "yyyy-MM-dd HH:mm:ss"), 1700.00, "北京首都国际机场", "杭州萧山国际机场", QDateTime::fromString("2024-12-08 17:30:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-12-08 18:30:00", "yyyy-MM-dd HH:mm:ss"), "东方航空", "On Time"},
+        {"ZH1300", "上海", "深圳", QDateTime::fromString("2024-12-08 20:00:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-12-08 22:00:00", "yyyy-MM-dd HH:mm:ss"), 1900.00, "上海浦东国际机场", "深圳宝安国际机场", QDateTime::fromString("2024-12-08 18:30:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-12-08 19:30:00", "yyyy-MM-dd HH:mm:ss"), "中国国际航空", "On Time"},
+        {"MU1400", "北京", "武汉", QDateTime::fromString("2024-12-08 21:00:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-12-08 23:00:00", "yyyy-MM-dd HH:mm:ss"), 1600.00, "北京首都国际机场", "武汉天河国际机场", QDateTime::fromString("2024-12-08 19:00:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-12-08 20:00:00", "yyyy-MM-dd HH:mm:ss"), "东方航空", "On Time"},
+        {"CA1500", "上海", "重庆", QDateTime::fromString("2024-12-08 22:00:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-12-08 23:30:00", "yyyy-MM-dd HH:mm:ss"), 1800.00, "上海浦东国际机场", "重庆江北国际机场", QDateTime::fromString("2024-12-08 20:30:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-12-08 21:30:00", "yyyy-MM-dd HH:mm:ss"), "中国国际航空", "Delayed"},
+        {"MU1600", "广州", "上海", QDateTime::fromString("2024-12-09 06:00:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-12-09 08:00:00", "yyyy-MM-dd HH:mm:ss"), 1700.00, "广州白云国际机场", "上海虹桥国际机场", QDateTime::fromString("2024-12-09 04:30:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-12-09 05:30:00", "yyyy-MM-dd HH:mm:ss"), "春秋航空", "On Time"},
+        {"ZH1700", "成都", "南京", QDateTime::fromString("2024-12-09 07:00:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-12-09 08:30:00", "yyyy-MM-dd HH:mm:ss"), 1500.00, "成都双流国际机场", "南京禄口国际机场", QDateTime::fromString("2024-12-09 05:30:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-12-09 06:30:00", "yyyy-MM-dd HH:mm:ss"), "春秋航空", "On Time"},
+        {"MU1800", "武汉", "青岛", QDateTime::fromString("2024-12-09 08:00:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-12-09 10:30:00", "yyyy-MM-dd HH:mm:ss"), 1600.00, "武汉天河国际机场", "青岛流亭国际机场", QDateTime::fromString("2024-12-09 06:30:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-12-09 07:30:00", "yyyy-MM-dd HH:mm:ss"), "东方航空", "Delayed"},
+        {"ZH1900", "上海", "西安", QDateTime::fromString("2024-12-09 09:00:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-12-09 11:00:00", "yyyy-MM-dd HH:mm:ss"), 1700.00, "上海浦东国际机场", "西安咸阳国际机场", QDateTime::fromString("2024-12-09 07:30:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-12-09 08:30:00", "yyyy-MM-dd HH:mm:ss"), "春秋航空", "On Time"},
+        {"CA2000", "北京", "深圳", QDateTime::fromString("2024-12-09 10:00:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-12-09 12:00:00", "yyyy-MM-dd HH:mm:ss"), 1800.00, "北京首都国际机场", "深圳宝安国际机场", QDateTime::fromString("2024-12-09 08:30:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-12-09 09:30:00", "yyyy-MM-dd HH:mm:ss"), "中国国际航空", "Delayed"}
     };
 
-    // 遍历并插入每条航班数据
-    foreach (const QVariantList &flight, flights) {
-        bool success = insertFlight(
-            flight[0].toString(),  // flight_number
-            flight[1].toString(),  // departure_city
-            flight[2].toString(),  // arrival_city
-            flight[3].toDouble(),  // price
-            flight[4].toString(),  // departure_airport
-            flight[5].toString(),  // arrival_airport
-            flight[6].toString(),  // airline_company
-            flight[7].toDateTime(), // checkin_start_time
-            flight[8].toDateTime(), // checkin_end_time
-            flight[9].toString()   // status
-            );
 
-        if (!success) {
-            qDebug() << "Failed to insert flight:" << flight[0].toString();
+    // 准备插入语句
+    QSqlQuery queryInsert;
+    const QString insertStmt = "INSERT INTO flight_info (flight_number, departure_city, arrival_city, departure_time, arrival_time, price, departure_airport, arrival_airport, checkin_start_time, checkin_end_time, airline_company, status) "
+                               "VALUES (:flight_number, :departure_city, :arrival_city, :departure_time, :arrival_time, :price, :departure_airport, :arrival_airport, :checkin_start_time, :checkin_end_time, :airline_company, :status)";
+    if (!queryInsert.prepare(insertStmt)) {
+        qDebug() << "Failed to prepare insert statement:" << queryInsert.lastError();
+        QSqlDatabase::database().rollback();
+        return;
+    }
+
+    for (const QVariant &flight : flights) {
+        QVariantList flightList = flight.toList();
+        if (flightList.size() != 12) {
+            qDebug() << "Invalid flight data size:" << flightList;
+            continue;
         }
+
+        // 绑定参数
+        queryInsert.bindValue(":flight_number", flightList.at(0).toString());
+        queryInsert.bindValue(":departure_city", flightList.at(1).toString());
+        queryInsert.bindValue(":arrival_city", flightList.at(2).toString());
+        queryInsert.bindValue(":departure_time", flightList.at(3).toDateTime());
+        queryInsert.bindValue(":arrival_time", flightList.at(4).toDateTime());
+        queryInsert.bindValue(":price", flightList.at(5).toDouble());
+        queryInsert.bindValue(":departure_airport", flightList.at(6).toString());
+        queryInsert.bindValue(":arrival_airport", flightList.at(7).toString());
+        queryInsert.bindValue(":checkin_start_time", flightList.at(8).toDateTime());
+        queryInsert.bindValue(":checkin_end_time", flightList.at(9).toDateTime());
+        queryInsert.bindValue(":airline_company", flightList.at(10).toString());
+        queryInsert.bindValue(":status", flightList.at(11).toString());
+
+        // 执行插入
+        if (!queryInsert.exec()) {
+            qDebug() << "Failed to insert flight:" << flightList.at(0).toString() << " Error:" << queryInsert.lastError();
+            QSqlDatabase::database().rollback();
+            return;
+        }
+        // 调用 finish() 确保资源被正确释放
+        queryInsert.finish();
+    }
+
+    // 提交事务
+    if (!QSqlDatabase::database().commit()) {
+        qDebug() << "Failed to commit transaction";
+        return;
     }
 
     qDebug() << "Sample flights population completed.";

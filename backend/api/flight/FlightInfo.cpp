@@ -7,10 +7,10 @@ FlightInfo::FlightInfo() : flightId(0), price(0.0) {
     qDebug() << "创建了一个默认的 FlightInfo 对象。";
 }
 
-FlightInfo::FlightInfo(int id, const QString &flightNum, const QString &depCity, const QString &arrCity,
+FlightInfo::FlightInfo(int id, const QString &flightNum, const QString &depCity, const QString &arrCity,const QDateTime &depTime, const QDateTime &arrTime,
                        const QString &depAirport, const QString &arrAirport, const QDateTime &checkinStart,
                        const QDateTime &checkinEnd, double pr, const QString &airline, const QString &status)
-    : flightId(id), flightNumber(flightNum), departureCity(depCity), arrivalCity(arrCity),
+    : flightId(id), flightNumber(flightNum), departureCity(depCity), arrivalCity(arrCity), departureTime(depTime), arrivalTime(arrTime),
     departureAirport(depAirport), arrivalAirport(arrAirport), checkinStartTime(checkinStart),
     checkinEndTime(checkinEnd), price(pr), airlineCompany(airline), status(status)
 {
@@ -20,6 +20,8 @@ FlightInfo::FlightInfo(int id, const QString &flightNum, const QString &depCity,
     qDebug() << "航班号:" << flightNumber;
     qDebug() << "起点城市:" << departureCity;
     qDebug() << "终点城市:" << arrivalCity;
+    qDebug() << "出发时间:" << departureTime;
+    qDebug() << "到达时间:" << arrivalTime;
     qDebug() << "起点机场:" << departureAirport;
     qDebug() << "终点机场:" << arrivalAirport;
     qDebug() << "检票开始时间:" << checkinStartTime.toString();
@@ -36,6 +38,8 @@ QJsonObject FlightInfo::toJson() const
     json["flightNumber"] = flightNumber;
     json["departureCity"] = departureCity;
     json["arrivalCity"] = arrivalCity;
+    json["departureTime"] = departureTime.toString();
+    json["arrivalTime"] = arrivalTime.toString();
     json["departureAirport"] = departureAirport;
     json["arrivalAirport"] = arrivalAirport;
     json["checkinStartTime"] = checkinStartTime.toString();

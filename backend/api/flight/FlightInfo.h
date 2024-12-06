@@ -13,6 +13,8 @@ public:
     QString flightNumber;           // 航班号
     QString departureCity;          // 起点市
     QString arrivalCity;            // 终点市
+    QDateTime departureTime;     // 出发时间
+    QDateTime arrivalTime;       // 到达时间
     QString departureAirport;       // 起点机场
     QString arrivalAirport;         // 终点机场
     QDateTime checkinStartTime;     // 检票开始时间
@@ -23,7 +25,7 @@ public:
 
     // 构造函数
     FlightInfo();
-    FlightInfo(int id, const QString &flightNum, const QString &depCity, const QString &arrCity,
+    FlightInfo(int id, const QString &flightNum, const QString &depCity, const QString &arrCity,const QDateTime &depTime,const QDateTime &arrTime,
                const QString &depAirport, const QString &arrAirport, const QDateTime &checkinStart,
                const QDateTime &checkinEnd, double pr, const QString &airline, const QString &status);
 

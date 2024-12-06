@@ -19,7 +19,7 @@ public:
     // 插入用户，传入的密码应该是原文
     bool insertUser(const QString& username, const QString& telephone, const QString& password);
     // 插入航班信息
-    bool insertFlight(const QString& flightNumber, const QString& departureCity, const QString& arrivalCity,
+    bool insertFlight(const QString& flightNumber, const QString& departureCity, const QString& arrivalCity,const QDateTime& departureTime, const QDateTime& arrivalTime,
                       double price, const QString& departureAirport, const QString& arrivalAirport,
                       const QString& airlineCompany, const QDateTime& checkinStartTime,
                       const QDateTime& checkinEndTime, const QString& status);
