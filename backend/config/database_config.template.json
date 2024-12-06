@@ -1,7 +1,7 @@
 {
     "hostname": "127.0.0.1",
     "port": 3306,
-    "database": "ODBC的名字",
-    "username": "用户名，一般是root",
-    "password": "数据库密码"
+    "database": "TEMPLATE",
+    "username": "TEMPLATE",
+    "password": "TEMPLATE"
 }

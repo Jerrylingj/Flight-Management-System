@@ -73,7 +73,13 @@ Page {
             }
 
             Text {
-                text: "检票时间: " + orderDetailPage.viewData.checkInTime
+                text: "检票开始时间: " + orderDetailPage.viewData.checkInStartTime
+                font.pixelSize: 20
+                color: "#34495E"
+            }
+
+            Text {
+                text: "检票结束时间: " + orderDetailPage.viewData.checkInEndTime
                 font.pixelSize: 20
                 color: "#34495E"
             }

@@ -14,127 +14,78 @@ Page {
     property StackView stack: StackView.view
 
     // 模拟数据
-    property var orderData: [
-        {   "flightNumber":"CA123",
-            "departure":"北京",
-            "destination":"上海",
-            "departureTime":"08:00",
-            "arrivalTime":"10:00",
-            "checkInTime":"07:00" },
-        {   "flightNumber":"MU456",
-            "departure":"上海",
-            "destination":"广州",
-            "departureTime":"09:30",
-            "arrivalTime":"12:00",
-            "checkInTime":"08:30" },
-        {   "flightNumber":"CZ789",
-            "departure":"广州",
-            "destination":"深圳",
-            "departureTime":"11:00",
-            "arrivalTime":"11:45",
-            "checkInTime":"10:00" },
-        {   "flightNumber":"HU234",
-            "departure":"深圳",
-            "destination":"成都",
-            "departureTime":"14:00",
-            "arrivalTime":"16:30",
-            "checkInTime":"13:00" },
-        {   "flightNumber":"CA345",
-            "departure":"成都",
-            "destination":"杭州",
-            "departureTime":"15:45",
-            "arrivalTime":"18:15",
-            "checkInTime":"14:45" },
-        {   "flightNumber":"MU567",
-            "departure":"杭州",
-            "destination":"北京",
-            "departureTime":"07:20",
-            "arrivalTime":"09:40",
-            "checkInTime":"06:20" },
-        {   "flightNumber":"CZ890",
-            "departure":"北京",
-            "destination":"广州",
-            "departureTime":"10:00",
-            "arrivalTime":"12:30",
-            "checkInTime":"09:00" },
-        {   "flightNumber":"HU678",
-            "departure":"上海",
-            "destination":"深圳",
-            "departureTime":"13:15",
-            "arrivalTime":"15:45",
-            "checkInTime":"12:15" },
-        {   "flightNumber":"CA999",
-            "departure":"广州",
-            "destination":"杭州",
-            "departureTime":"16:30",
-            "arrivalTime":"18:50",
-            "checkInTime":"15:30" },
-        {   "flightNumber":"MU345",
-            "departure":"深圳",
-            "destination":"上海",
-            "departureTime":"12:00",
-            "arrivalTime":"14:25",
-            "checkInTime":"11:00" },
-        {   "flightNumber":"CZ123",
-            "departure":"杭州",
-            "destination":"成都",
-            "departureTime":"17:00",
-            "arrivalTime":"19:30",
-            "checkInTime":"16:00" },
-        {   "flightNumber":"HU456",
-            "departure":"成都",
-            "destination":"北京",
-            "departureTime":"06:45",
-            "arrivalTime":"09:15",
-            "checkInTime":"05:45" },
-        {   "flightNumber":"CA567",
-            "departure":"北京",
-            "destination":"深圳",
-            "departureTime":"10:30",
-            "arrivalTime":"13:00",
-            "checkInTime":"09:30" },
-        {   "flightNumber":"MU678",
-            "departure":"上海",
-            "destination":"杭州",
-            "departureTime":"14:00",
-            "arrivalTime":"15:20",
-            "checkInTime":"13:00" },
-        {   "flightNumber":"CZ234",
-            "departure":"广州",
-            "destination":"成都",
-            "departureTime":"15:50",
-            "arrivalTime":"18:10",
-            "checkInTime":"14:50" },
-        {   "flightNumber":"HU345",
-            "departure":"深圳",
-            "destination":"北京",
-            "departureTime":"18:00",
-            "arrivalTime":"20:30",
-            "checkInTime":"17:00" },
-        {   "flightNumber":"CA890",
-            "departure":"杭州",
-            "destination":"广州",
-            "departureTime":"19:15",
-            "arrivalTime":"21:45",
-            "checkInTime":"18:15" },
-        {   "flightNumber":"MU123",
-            "departure":"成都",
-            "destination":"上海",
-            "departureTime":"08:30",
-            "arrivalTime":"11:00",
-            "checkInTime":"07:30" },
-        {   "flightNumber":"CZ456",
-            "departure":"北京",
-            "destination":"杭州",
-            "departureTime":"09:45",
-            "arrivalTime":"12:15",
-            "checkInTime":"08:45" },
-        {   "flightNumber":"HU789",
-            "departure":"上海",
-            "destination":"成都",
-            "departureTime":"13:50",
-            "arrivalTime":"16:20",
-            "checkInTime":"12:50" }
+    property var orderData:[
+        { "flightNumber":"CA123", "departure":"北京", "destination":"上海", "departureTime":"23:00", "arrivalTime":"23:50", "checkInStartTime":"06:30", "checkInEndTime":"07:30" },
+        { "flightNumber":"MU456", "departure":"上海", "destination":"广州", "departureTime":"09:30", "arrivalTime":"12:00", "checkInStartTime":"08:00", "checkInEndTime":"08:59" },
+        { "flightNumber":"CZ789", "departure":"广州", "destination":"深圳", "departureTime":"11:00", "arrivalTime":"11:45", "checkInStartTime":"09:30", "checkInEndTime":"09:59" },
+        { "flightNumber":"HU234", "departure":"深圳", "destination":"成都", "departureTime":"14:00", "arrivalTime":"16:30", "checkInStartTime":"12:30", "checkInEndTime":"13:29" },
+        { "flightNumber":"CA345", "departure":"成都", "destination":"杭州", "departureTime":"15:45", "arrivalTime":"18:15", "checkInStartTime":"14:00", "checkInEndTime":"15:14" },
+        { "flightNumber":"MU567", "departure":"杭州", "destination":"北京", "departureTime":"07:20", "arrivalTime":"09:40", "checkInStartTime":"05:40", "checkInEndTime":"06:19" },
+        { "flightNumber":"CZ890", "departure":"北京", "destination":"广州", "departureTime":"10:00", "arrivalTime":"12:30", "checkInStartTime":"08:30", "checkInEndTime":"08:59" },
+        { "flightNumber":"HU678", "departure":"上海", "destination":"深圳", "departureTime":"13:15", "arrivalTime":"15:45", "checkInStartTime":"11:45", "checkInEndTime":"12:44" },
+        { "flightNumber":"CA999", "departure":"广州", "destination":"杭州", "departureTime":"16:30", "arrivalTime":"23:50", "checkInStartTime":"15:00", "checkInEndTime":"15:29" },
+        { "flightNumber":"MU345", "departure":"深圳", "destination":"上海", "departureTime":"12:00", "arrivalTime":"14:25", "checkInStartTime":"10:30", "checkInEndTime":"10:59" },
+        { "flightNumber":"CZ123", "departure":"杭州", "destination":"成都", "departureTime":"17:00", "arrivalTime":"19:30", "checkInStartTime":"15:30", "checkInEndTime":"16:29" },
+        { "flightNumber":"HU456", "departure":"成都", "destination":"北京", "departureTime":"06:45", "arrivalTime":"09:15", "checkInStartTime":"05:15", "checkInEndTime":"05:44" },
+        { "flightNumber":"CA567", "departure":"北京", "destination":"深圳", "departureTime":"10:30", "arrivalTime":"13:00", "checkInStartTime":"09:00", "checkInEndTime":"09:29" },
+        { "flightNumber":"MU678", "departure":"上海", "destination":"杭州", "departureTime":"14:00", "arrivalTime":"15:20", "checkInStartTime":"13:00", "checkInEndTime":"13:59" },
+        { "flightNumber":"CZ234", "departure":"广州", "destination":"成都", "departureTime":"15:50", "arrivalTime":"18:10", "checkInStartTime":"14:30", "checkInEndTime":"15:29" },
+        { "flightNumber":"HU345", "departure":"深圳", "destination":"北京", "departureTime":"18:00", "arrivalTime":"20:30", "checkInStartTime":"16:30", "checkInEndTime":"17:29" },
+        { "flightNumber":"CA890", "departure":"杭州", "destination":"广州", "departureTime":"19:15", "arrivalTime":"21:45", "checkInStartTime":"18:00", "checkInEndTime":"18:44" },
+        { "flightNumber":"MU123", "departure":"成都", "destination":"上海", "departureTime":"08:30", "arrivalTime":"11:00", "checkInStartTime":"07:00", "checkInEndTime":"07:29" },
+        { "flightNumber":"CZ456", "departure":"北京", "destination":"杭州", "departureTime":"09:45", "arrivalTime":"12:15", "checkInStartTime":"08:00", "checkInEndTime":"08:44" },
+        { "flightNumber":"HU789", "departure":"上海", "destination":"成都", "departureTime":"13:50", "arrivalTime":"16:20", "checkInStartTime":"12:30", "checkInEndTime":"13:29" },
+        {"flightNumber":"CA1234","departure":"北京","destination":"上海","departureTime":"07:00","arrivalTime":"09:20","checkInStartTime":"06:00","checkInEndTime":"06:45"},
+        {"flightNumber":"MU5678","departure":"广州","destination":"深圳","departureTime":"08:00","arrivalTime":"08:45","checkInStartTime":"07:00","checkInEndTime":"07:45"},
+        {"flightNumber":"CZ9876","departure":"武汉","destination":"成都","departureTime":"09:00","arrivalTime":"11:00","checkInStartTime":"08:00","checkInEndTime":"08:45"},
+        {"flightNumber":"HU4321","departure":"杭州","destination":"西安","departureTime":"10:00","arrivalTime":"12:30","checkInStartTime":"09:00","checkInEndTime":"09:45"},
+        {"flightNumber":"CA5678","departure":"深圳","destination":"北京","departureTime":"11:00","arrivalTime":"13:30","checkInStartTime":"10:00","checkInEndTime":"10:45"},
+        {"flightNumber":"MU1234","departure":"上海","destination":"广州","departureTime":"12:00","arrivalTime":"14:30","checkInStartTime":"11:00","checkInEndTime":"11:45"},
+        {"flightNumber":"CZ5678","departure":"成都","destination":"杭州","departureTime":"13:00","arrivalTime":"15:20","checkInStartTime":"12:00","checkInEndTime":"12:45"},
+        {"flightNumber":"HU9876","departure":"西安","destination":"武汉","departureTime":"14:00","arrivalTime":"15:30","checkInStartTime":"13:00","checkInEndTime":"13:45"},
+        {"flightNumber":"CA4321","departure":"北京","destination":"深圳","departureTime":"15:00","arrivalTime":"17:30","checkInStartTime":"14:00","checkInEndTime":"14:45"},
+        {"flightNumber":"MU9876","departure":"广州","destination":"上海","departureTime":"16:00","arrivalTime":"18:30","checkInStartTime":"15:00","checkInEndTime":"15:45"},
+        {"flightNumber":"CZ1234","departure":"深圳","destination":"成都","departureTime":"17:00","arrivalTime":"19:30","checkInStartTime":"16:00","checkInEndTime":"16:45"},
+        {"flightNumber":"HU5678","departure":"杭州","destination":"北京","departureTime":"18:00","arrivalTime":"20:30","checkInStartTime":"17:00","checkInEndTime":"17:45"},
+        {"flightNumber":"CA9876","departure":"西安","destination":"广州","departureTime":"19:00","arrivalTime":"21:30","checkInStartTime":"18:00","checkInEndTime":"18:45"},
+        {"flightNumber":"MU4321","departure":"武汉","destination":"深圳","departureTime":"20:00","arrivalTime":"22:00","checkInStartTime":"19:00","checkInEndTime":"19:45"},
+        {"flightNumber":"CZ7654","departure":"成都","destination":"杭州","departureTime":"21:00","arrivalTime":"23:20","checkInStartTime":"20:00","checkInEndTime":"20:45"},
+        {"flightNumber":"HU3210","departure":"北京","destination":"西安","departureTime":"22:00","arrivalTime":"00:30","checkInStartTime":"21:00","checkInEndTime":"21:45"},
+        {"flightNumber":"CA7654","departure":"上海","destination":"武汉","departureTime":"06:00","arrivalTime":"07:30","checkInStartTime":"05:00","checkInEndTime":"05:45"},
+        {"flightNumber":"MU3210","departure":"深圳","destination":"成都","departureTime":"07:00","arrivalTime":"09:30","checkInStartTime":"06:00","checkInEndTime":"06:45"},
+        {"flightNumber":"CZ2109","departure":"杭州","destination":"北京","departureTime":"08:00","arrivalTime":"10:30","checkInStartTime":"07:00","checkInEndTime":"07:45"},
+        {"flightNumber":"HU6543","departure":"广州","destination":"西安","departureTime":"09:00","arrivalTime":"11:30","checkInStartTime":"08:00","checkInEndTime":"08:45"},
+        {"flightNumber":"CA2109","departure":"成都","destination":"上海","departureTime":"10:00","arrivalTime":"12:30","checkInStartTime":"09:00","checkInEndTime":"09:45"},
+        {"flightNumber":"MU6543","departure":"西安","destination":"深圳","departureTime":"11:00","arrivalTime":"13:30","checkInStartTime":"10:00","checkInEndTime":"10:45"},
+        {"flightNumber":"CZ3210","departure":"武汉","destination":"杭州","departureTime":"12:00","arrivalTime":"14:00","checkInStartTime":"11:00","checkInEndTime":"11:45"},
+        {"flightNumber":"HU7654","departure":"北京","destination":"广州","departureTime":"13:00","arrivalTime":"15:30","checkInStartTime":"12:00","checkInEndTime":"12:45"},
+        {"flightNumber":"CA3210","departure":"上海","destination":"成都","departureTime":"14:00","arrivalTime":"16:30","checkInStartTime":"13:00","checkInEndTime":"13:45"},
+        {"flightNumber":"MU2109","departure":"深圳","destination":"西安","departureTime":"15:00","arrivalTime":"17:30","checkInStartTime":"14:00","checkInEndTime":"14:45"},
+        {"flightNumber":"CZ6543","departure":"广州","destination":"北京","departureTime":"16:00","arrivalTime":"18:30","checkInStartTime":"15:00","checkInEndTime":"15:45"},
+        {"flightNumber":"HU2109","departure":"成都","destination":"武汉","departureTime":"17:00","arrivalTime":"19:00","checkInStartTime":"16:00","checkInEndTime":"16:45"},
+        {"flightNumber":"CA6543","departure":"杭州","destination":"深圳","departureTime":"18:00","arrivalTime":"20:30","checkInStartTime":"17:00","checkInEndTime":"17:45"},
+        {"flightNumber":"MU7654","departure":"西安","destination":"上海","departureTime":"19:00","arrivalTime":"21:30","checkInStartTime":"18:00","checkInEndTime":"18:45"},
+        {"flightNumber":"CZ4321","departure":"北京","destination":"成都","departureTime":"20:00","arrivalTime":"22:30","checkInStartTime":"19:00","checkInEndTime":"19:45"},
+        {"flightNumber":"HU1234","departure":"广州","destination":"杭州","departureTime":"21:00","arrivalTime":"23:20","checkInStartTime":"20:00","checkInEndTime":"20:45"},
+        {"flightNumber":"CA7654","departure":"深圳","destination":"武汉","departureTime":"22:00","arrivalTime":"23:30","checkInStartTime":"21:00","checkInEndTime":"21:45"},
+        {"flightNumber":"MU8765","departure":"成都","destination":"西安","departureTime":"23:00","arrivalTime":"01:30","checkInStartTime":"22:00","checkInEndTime":"22:45"},
+        {"flightNumber":"CZ9876","departure":"北京","destination":"广州","departureTime":"07:00","arrivalTime":"09:20","checkInStartTime":"06:00","checkInEndTime":"06:45"},
+        {"flightNumber":"HU5432","departure":"上海","destination":"深圳","departureTime":"08:00","arrivalTime":"10:30","checkInStartTime":"07:00","checkInEndTime":"07:45"},
+        {"flightNumber":"CA4321","departure":"杭州","destination":"成都","departureTime":"09:00","arrivalTime":"11:20","checkInStartTime":"08:00","checkInEndTime":"08:45"},
+        {"flightNumber":"MU3210","departure":"西安","destination":"武汉","departureTime":"10:00","arrivalTime":"11:30","checkInStartTime":"09:00","checkInEndTime":"09:45"},
+        {"flightNumber":"CZ2109","departure":"广州","destination":"北京","departureTime":"11:00","arrivalTime":"13:30","checkInStartTime":"10:00","checkInEndTime":"10:45"},
+        {"flightNumber":"HU6543","departure":"成都","destination":"上海","departureTime":"12:00","arrivalTime":"14:30","checkInStartTime":"11:00","checkInEndTime":"11:45"},
+        {"flightNumber":"CA1234","departure":"深圳","destination":"杭州","departureTime":"13:00","arrivalTime":"15:30","checkInStartTime":"12:00","checkInEndTime":"12:45"},
+        {"flightNumber":"MU7654","departure":"武汉","destination":"西安","departureTime":"14:00","arrivalTime":"15:30","checkInStartTime":"13:00","checkInEndTime":"13:45"},
+        {"flightNumber":"CZ8765","departure":"北京","destination":"成都","departureTime":"15:00","arrivalTime":"17:30","checkInStartTime":"14:00","checkInEndTime":"14:45"},
+        {"flightNumber":"HU9876","departure":"广州","destination":"深圳","departureTime":"16:00","arrivalTime":"16:45","checkInStartTime":"15:00","checkInEndTime":"15:45"},
+        {"flightNumber":"CA5432","departure":"上海","destination":"武汉","departureTime":"17:00","arrivalTime":"18:30","checkInStartTime":"16:00","checkInEndTime":"16:45"},
+        {"flightNumber":"MU6543","departure":"成都","destination":"北京","departureTime":"18:00","arrivalTime":"20:30","checkInStartTime":"17:00","checkInEndTime":"17:45"},
+        {"flightNumber":"CZ7654","departure":"深圳","destination":"西安","departureTime":"19:00","arrivalTime":"21:30","checkInStartTime":"18:00","checkInEndTime":"18:45"},
+        {"flightNumber":"HU4321","departure":"杭州","destination":"广州","departureTime":"20:00","arrivalTime":"22:30","checkInStartTime":"19:00","checkInEndTime":"19:45"},
+        {"flightNumber":"CA3210","departure":"武汉","destination":"成都","departureTime":"21:00","arrivalTime":"23:00","checkInStartTime":"20:00","checkInEndTime":"20:45"},
+        {"flightNumber":"MU2109","departure":"北京","destination":"上海","departureTime":"22:00","arrivalTime":"00:20","checkInStartTime":"21:00","checkInEndTime":"21:45"},
+        {"flightNumber":"CZ1234","departure":"广州","destination":"深圳","departureTime":"23:00","arrivalTime":"23:45","checkInStartTime":"22:00","checkInEndTime":"22:45"}
     ]
 
     // 筛选器
@@ -173,8 +124,14 @@ Page {
                 // 出发省份下拉选择器
                 ComboBox {
                     id: departureProvince
-                    width: 150
+                    Layout.maximumWidth: 60
                     model: ["全部省份", "北京", "上海", "天津", "重庆", "河北", "山西", "内蒙古", "辽宁", "吉林", "黑龙江", "江苏", "浙江", "安徽", "福建", "江西", "山东", "河南", "湖北", "湖南", "广东", "广西", "海南", "四川", "贵州", "云南", "西藏", "陕西", "甘肃", "青海", "宁夏", "新疆", "香港", "澳门", "台湾"]
+                    background: Rectangle {
+                        color: "#F9F9F9"
+                        radius: 10
+                        border.color: "#DDDDDD"
+                        border.width: 1
+                    }
 
                     onCurrentTextChanged: {
                         // 更新出发城市列表并重置选择
@@ -188,8 +145,14 @@ Page {
                 // 出发城市下拉选择器
                 ComboBox {
                     id: departureCity
-                    width: 150
+                    Layout.maximumWidth: 60
                     model: getCities(departureProvince.currentText)  // 初始化城市列表
+                    background: Rectangle {
+                        color: "#F9F9F9"
+                        radius: 10
+                        border.color: "#DDDDDD"
+                        border.width: 1
+                    }
 
                     onCurrentTextChanged: {
                         console.log("出发城市已更新为 " + currentText)
@@ -197,18 +160,22 @@ Page {
                     }
                 }
 
-                // // 分隔符
-                // Rectangle {
-                //     width: 1
-                //     height: parent.height
-                //     color: "black"
-                // }
+                Text {
+                    text: "————"
+                    width: 20
+                }
 
                 // 到达省份下拉选择器
                 ComboBox {
                     id: arrivalProvince
-                    width: 150
+                    Layout.maximumWidth: 60
                     model: ["全部省份", "北京", "上海", "天津", "重庆", "河北", "山西", "内蒙古", "辽宁", "吉林", "黑龙江", "江苏", "浙江", "安徽", "福建", "江西", "山东", "河南", "湖北", "湖南", "广东", "广西", "海南", "四川", "贵州", "云南", "西藏", "陕西", "甘肃", "青海", "宁夏", "新疆", "香港", "澳门", "台湾"]
+                    background: Rectangle {
+                        color: "#F9F9F9"
+                        radius: 10
+                        border.color: "#DDDDDD"
+                        border.width: 1
+                    }
 
                     onCurrentTextChanged: {
                         // 更新到达城市列表并重置选择
@@ -221,8 +188,14 @@ Page {
                 // 到达城市下拉选择器
                 ComboBox {
                     id: arrivalCity
-                    width: 50
+                    Layout.maximumWidth: 60
                     model: getCities(arrivalProvince.currentText)
+                    background: Rectangle {
+                        color: "#F9F9F9"
+                        radius: 10
+                        border.color: "#DDDDDD"
+                        border.width: 1
+                    }
 
                     onCurrentTextChanged: {
                         console.log("到达城市已更新为 " + currentText)
@@ -277,7 +250,8 @@ Page {
                         item.destination = orderInfo.destination;
                         item.departureTime = orderInfo.departureTime;
                         item.arrivalTime = orderInfo.arrivalTime;
-                        item.checkInTime = orderInfo.checkInTime;
+                        item.checkInStartTime = orderInfo.checkInStartTime;
+                        item.checkInEndTime = orderInfo.checkInEndTime;
                     }
                 }
             }

@@ -6,7 +6,7 @@ import QtQuick.Layouts 1.15
 Item {
     id: orderInfoCard
     width: parent.width
-    height: 220
+    height: 320
 
     // 定义属性，用于接收父组件传递过来的订单信息
     property string flightNumber
@@ -14,17 +14,28 @@ Item {
     property string destination
     property string departureTime
     property string arrivalTime
-    property string checkInTime
+    property string checkInStartTime
+    property string checkInEndTime
+    property string currentTimeValue: Qt.formatTime(new Date(), "HH:mm")
 
     property var info
+
+    Timer {
+        interval: 10000  // 每10秒更新一次
+        repeat: true
+        running: true
+        onTriggered: {
+            currentTimeValue = Qt.formatTime(new Date(), "HH:mm")
+        }
+    }
 
     Rectangle {
         width: parent.width - 40
         height: parent.height
-        radius: 20
+        radius: 30
         color: "#FAFAFA"  // 背景颜色
         border.color: "green"  // 设置边框颜色为绿色
-        border.width: 1  // 设置边框宽度
+        border.width: 6  // 设置边框宽度
         anchors.horizontalCenter: parent.horizontalCenter  // 居中显示
 
         Column {
@@ -78,16 +89,28 @@ Item {
 
             // 显示检票时间
             Text {
-                text: "检票时间: " + orderInfoCard.checkInTime
+                text: "检票开始: " + orderInfoCard.checkInStartTime + " - 检票结束：" + orderInfoCard.checkInEndTime
                 font.pixelSize: 20
                 color: "#34495E"
                 Layout.alignment: Qt.AlignLeft
+            }
+
+            TimeProgressBar {
+                id: progressBar
+                width: parent.width - 40  // 调整宽度
+                height: 80  // 调整高度
+                anchors.horizontalCenter: parent.horizontalCenter
+                startTimeValue : orderInfoCard.checkInStartTime  // 绑定开始时间
+                endTimeValue : orderInfoCard.checkInEndTime      // 绑定结束时间
+                currentTimeValue : orderInfoCard.currentTimeValue
             }
 
             // 最后一行显示 "查看" 按钮
             RowLayout {
                 spacing: 20
                 Layout.alignment: Qt.AlignRight  // 右对齐
+                width : parent.width
+                anchors.horizontalCenter: parent.horizontalCenter
 
                 Button {
                     text: "查看"
@@ -97,6 +120,9 @@ Item {
                         radius: 10  // 圆角
                     }
                     padding: 12  // 按钮内边距
+                    Layout.minimumWidth: parent.width - 20
+                    anchors.horizontalCenter: parent.horizontalCenter
+
 
                     // 按钮点击时，传递信息到上级组件
                     onClicked: {
@@ -107,7 +133,8 @@ Item {
                             destination: orderInfoCard.destination,
                             departureTime: orderInfoCard.departureTime,
                             arrivalTime: orderInfoCard.arrivalTime,
-                            checkInTime: orderInfoCard.checkInTime
+                            checkInStartTime: orderInfoCard.checkInStartTime,
+                            checkInEndTime: orderInfoCard.checkInEndTime
                         }
                     }
                 }

@@ -42,6 +42,7 @@ qt_add_qml_module(appuntitled7
         api/networkhandler.h
         api/networkhandler.cpp
         storage/userinfo.h
+        QML_FILES components/TimeProgressBar.qml
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
