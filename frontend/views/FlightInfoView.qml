@@ -24,7 +24,7 @@ Page {
         onRequestSuccess: function(responseData) {
             var jsonString = JSON.stringify(responseData);
             console.log("请求成功，返回数据：", jsonString); // 打印 JSON 字符串
-            flightData = responseData;  // 更新 flightData
+            flightData = responseData.data;  // 更新 flightData
             updateFilter();  // 重新更新筛选
         }
         onRequestFailed: function(errorMessage) {
