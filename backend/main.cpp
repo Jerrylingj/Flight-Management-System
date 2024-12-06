@@ -7,6 +7,7 @@
 #include "api/login/login.h"
 #include "api/register/register.h"
 #include "api/flight/FlightAPI.h"
+#include "dto/response_dto.h"
 
 class HttpServer : public QObject {
 public:
@@ -64,17 +65,10 @@ public:
                 flightArray.append(flightObject);
             }
 
-            /*** 解决跨域问题 ***/
-            // 创建 JSON 文档
-            QJsonDocument doc(flightArray);
 
-            // 创建响应并设置头部
-            QHttpServerResponse response(doc.toJson());
-            response.setHeader("Content-Type", "application/json");
-            response.setHeader("Access-Control-Allow-Origin", "*"); // 允许所有来源
-
+            auto response = success(flightArray);
             // 返回响应对象
-            return response;
+            return response->toJson();
         });
 
 
@@ -85,15 +79,9 @@ public:
 
             // 如果没有找到航班信息
             if (flight.flightId == 0) {
-                QJsonObject errorObj;
-                errorObj["error"] = "Flight not found";
-                QJsonDocument errorDoc(errorObj);
+                auto response = fail<QJsonObject>("没有航班");
 
-                QHttpServerResponse response(errorDoc.toJson());
-                response.setHeader("Content-Type", "application/json");
-                response.setHeader("Access-Control-Allow-Origin", "*"); // 允许所有来源
-
-                return response;
+                return response->toJson();
             }
 
             // 将航班信息转成JSON返回
@@ -110,15 +98,10 @@ public:
             flightObject["airline_company"] = flight.airlineCompany;
             flightObject["status"] = flight.status;
 
-            QJsonDocument doc(flightObject);
-
-            // 创建响应并设置头部
-            QHttpServerResponse response(doc.toJson());
-            response.setHeader("Content-Type", "application/json");
-            response.setHeader("Access-Control-Allow-Origin", "*"); // 允许所有来源
+            auto response = success(flightObject);
 
             // 返回单个航班信息的JSON对象
-            return response;
+            return response->toJson();
         });
 
         // 监听端口
