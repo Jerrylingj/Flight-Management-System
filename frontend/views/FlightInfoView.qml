@@ -32,9 +32,11 @@ Page {
                 if (responseData.data && Array.isArray(responseData.data)) {
                     console.log("responseData.data 是一个数组，长度为:", responseData.data.length);
                     flightData = responseData.data.map(function(flight) {
+
+                        /*** 初始化数据 ***/
                         flight.isBooked = false;
                         flight.isFaved = false;
-                        flight.remaingSeats = 10;
+                        flight.remainingSeats = 10;
                         return flight;
                     });
                 } else {
@@ -67,199 +69,214 @@ Page {
     property int sortMethod: 0  // 默认按时间排序
     property bool isAscending: true  // 默认升序
 
-    ColumnLayout {
-        id: flightInfoList
-        spacing: 20
-        anchors.margins: 20
+    Flickable {
         width: parent.width
+        height: parent.height
+        contentWidth: width
+        contentHeight: flightInfoList.height // 动态设置内容高度
+        clip: true // 防止超出内容显示
 
-        // 城市选择
-        Rectangle {
-            color: "#FAFAFA"
-            radius: 12
-            border.color: "#DDDDDD"
-            border.width: 1
-            width: parent.width - 40
-            height: 80
-            anchors.left: parent.left
-            anchors.leftMargin: 20 // 左边距
-            Layout.topMargin: 10  // 设置上边距为 20 像素
+        ColumnLayout {
+            id: flightInfoList
+            spacing: 20
+            width: flightInfoView.width
+            anchors.margins: 20 // 设置合理的边距
+            anchors.centerIn: parent // 保证 ColumnLayout 在父容器中居中
 
-            RowLayout {
-                anchors.fill: parent
-                anchors.margins: 15
-                Layout.fillWidth: true  // 确保 RowLayout 填充整个可用宽度
-                spacing: 10
+            // 城市选择
+            Rectangle {
+                color: "#FAFAFA"
+                radius: 12
+                border.color: "#DDDDDD"
+                border.width: 1
+                width: parent.width - 40
+                height: 80
+                anchors.horizontalCenter: parent.horizontalCenter // 居中
 
-                // 出发省份下拉选择器
-                ComboBox {
-                    id: departureProvince
-                    Layout.maximumWidth: 60
-                    model: ["全部省份", "北京", "上海", "天津", "重庆", "河北", "山西", "内蒙古", "辽宁", "吉林", "黑龙江", "江苏", "浙江", "安徽", "福建", "江西", "山东", "河南", "湖北", "湖南", "广东", "广西", "海南", "四川", "贵州", "云南", "西藏", "陕西", "甘肃", "青海", "宁夏", "新疆", "香港", "澳门", "台湾"]
-                    background: Rectangle {
-                        color: "#F9F9F9"
-                        radius: 10
-                        border.color: "#DDDDDD"
-                        border.width: 1
-                    }
+                RowLayout {
+                    anchors.fill: parent
+                    anchors.margins: 15
+                    Layout.fillWidth: true
+                    spacing: 10
 
-                    onCurrentTextChanged: {
-                        // 更新出发城市列表并重置选择
-                        departureCity.model = getCities(departureProvince.currentText)
-                    }
-                }
+                    // 出发省份下拉选择器
+                    ComboBox {
+                        id: departureProvince
+                        Layout.maximumWidth: 60
+                        model: ["全部省份", "北京", "上海", "天津", "重庆", "河北", "山西", "内蒙古", "辽宁", "吉林", "黑龙江", "江苏", "浙江", "安徽", "福建", "江西", "山东", "河南", "湖北", "湖南", "广东", "广西", "海南", "四川", "贵州", "云南", "西藏", "陕西", "甘肃", "青海", "宁夏", "新疆", "香港", "澳门", "台湾"]
+                        background: Rectangle {
+                            color: "#F9F9F9"
+                            radius: 10
+                            border.color: "#DDDDDD"
+                            border.width: 1
+                        }
 
-                // 出发城市下拉选择器
-                ComboBox {
-                    id: departureCity
-                    Layout.maximumWidth: 60
-                    model: null
-                    background: Rectangle {
-                        color: "#F9F9F9"
-                        radius: 10
-                        border.color: "#DDDDDD"
-                        border.width: 1
-                    }
-
-                    onCurrentIndexChanged: {
-                        arrivalCity.model = getCities(arrivalProvince.currentText)
-                    }
-                }
-
-                Text {
-                    text: "————"
-                    width: 20
-                }
-
-                // 到达省份下拉选择器
-                ComboBox {
-                    id: arrivalProvince
-                    Layout.maximumWidth: 60
-                    model: ["全部省份", "北京", "上海", "天津", "重庆", "河北", "山西", "内蒙古", "辽宁", "吉林", "黑龙江", "江苏", "浙江", "安徽", "福建", "江西", "山东", "河南", "湖北", "湖南", "广东", "广西", "海南", "四川", "贵州", "云南", "西藏", "陕西", "甘肃", "青海", "宁夏", "新疆", "香港", "澳门", "台湾"]
-                    background: Rectangle {
-                        color: "#F9F9F9"
-                        radius: 10
-                        border.color: "#DDDDDD"
-                        border.width: 1
-                    }
-
-                    onCurrentTextChanged: {
-                        // 更新到达城市列表并重置选择
-                        arrivalCity.model = getCities(arrivalProvince.currentText)
-                    }
-                }
-
-                // 到达城市下拉选择器
-                ComboBox {
-                    id: arrivalCity
-                    Layout.maximumWidth: 60
-                    model: null
-                    background: Rectangle {
-                        color: "#F9F9F9"
-                        radius: 10
-                        border.color: "#DDDDDD"
-                        border.width: 1
-                    }
-
-                    onCurrentIndexChanged: {
-                        arrivalCity.model = getCities(arrivalProvince.currentText)
-
-                    }
-                }
-            }
-        }
-
-        // 筛选 排序
-        Rectangle {
-            color: "#FAFAFA"
-            radius: 12
-            border.color: "#DDDDDD"
-            border.width: 1
-            width: parent.width - 40
-            height: 80
-            anchors.left: parent.left
-            anchors.leftMargin: 20 // 左边距
-            Layout.topMargin: 10
-
-            RowLayout {
-                anchors.fill: parent
-                anchors.margins: 15
-                Layout.fillWidth: true  // 确保 RowLayout 填充整个可用宽度
-                spacing: 10
-
-                // 排序选择框
-                ComboBox {
-                    id: sortMethodComboBox
-                    model: [
-                        { label: "时间", icon: isAscending ? "↑" : "↓" },
-                        { label: "价格", icon: isAscending ? "↑" : "↓" },
-                        { label: "座位", icon: isAscending ? "↑" : "↓" }
-                    ]
-                    Layout.preferredWidth: 55  // 使用 preferredWidth 而不是 maximumWidth
-                    font.pixelSize: 16
-                    background: Rectangle {
-                        color: "#F9F9F9"
-                        radius: 10
-                        border.color: "#DDDDDD"
-                        border.width: 1
-                    }
-                    textRole: "label"  // 显示 label 属性作为文本
-                    onActivated: {
-                        sortMethod = currentIndex;
-                        toggleSortOrder();
-                        updateFilter();
-                    }
-                    Layout.alignment: Qt.AlignVCenter
-                }
-
-                // 筛选按钮
-                Button {
-                    text: "筛选"
-                    font.pixelSize: 16
-                    Layout.preferredWidth: 80
-                    height: 40
-                    background: Rectangle {
-                        color: "#007AFF"
-                        radius: 12
-                        gradient: Gradient {
-                            GradientStop { position: 0; color: "#3498DB" }
-                            GradientStop { position: 1; color: "#2980B9" }
+                        onCurrentTextChanged: {
+                            // 更新出发城市列表并重置选择
+                            departureCity.model = getCities(departureProvince.currentText)
                         }
                     }
-                    onClicked: updateFilter()
-                    Layout.alignment: Qt.AlignVCenter
+
+                    // 出发城市下拉选择器
+                    ComboBox {
+                        id: departureCity
+                        Layout.maximumWidth: 60
+                        model: null
+                        background: Rectangle {
+                            color: "#F9F9F9"
+                            radius: 10
+                            border.color: "#DDDDDD"
+                            border.width: 1
+                        }
+
+                        onCurrentIndexChanged: {
+                            arrivalCity.model = getCities(arrivalProvince.currentText)
+                        }
+                    }
+
+                    Text {
+                        text: "————"
+                        width: 20
+                    }
+
+                    // 到达省份下拉选择器
+                    ComboBox {
+                        id: arrivalProvince
+                        Layout.maximumWidth: 60
+                        model: ["全部省份", "北京", "上海", "天津", "重庆", "河北", "山西", "内蒙古", "辽宁", "吉林", "黑龙江", "江苏", "浙江", "安徽", "福建", "江西", "山东", "河南", "湖北", "湖南", "广东", "广西", "海南", "四川", "贵州", "云南", "西藏", "陕西", "甘肃", "青海", "宁夏", "新疆", "香港", "澳门", "台湾"]
+                        background: Rectangle {
+                            color: "#F9F9F9"
+                            radius: 10
+                            border.color: "#DDDDDD"
+                            border.width: 1
+                        }
+
+                        onCurrentTextChanged: {
+                            // 更新到达城市列表并重置选择
+                            arrivalCity.model = getCities(arrivalProvince.currentText)
+                        }
+                    }
+
+                    // 到达城市下拉选择器
+                    ComboBox {
+                        id: arrivalCity
+                        Layout.maximumWidth: 60
+                        model: null
+                        background: Rectangle {
+                            color: "#F9F9F9"
+                            radius: 10
+                            border.color: "#DDDDDD"
+                            border.width: 1
+                        }
+
+                        onCurrentIndexChanged: {
+                            arrivalCity.model = getCities(arrivalProvince.currentText)
+                        }
+                    }
                 }
             }
-        }
 
-        // 动态展示航班信息
-        Repeater {
-            model: filteredFlights // 绑定动态筛选后的航班列表
-            Loader {
-                width: parent.width
-                source: "../components/FlightInfoCard.qml"
-                property var flightInfo: modelData // 传递每条航班的数据
-                onLoaded: {
-                    item.flightId = flightInfo.flight_id;
-                    item.flightNumber = flightInfo.flight_number;
-                    item.departureCity = flightInfo.departure_city;
-                    item.arrivalCity = flightInfo.arrival_city;
-                    // item.depatureTime = flightInfo.departure_time;
-                    // item.arrivalTime = flightInfo.arrival_time;
-                    item.departureAirport = flightInfo.departure_airport;
-                    item.arrivalAirport = flightInfo.arrival_airport;
-                    item.price = flightInfo.price;
-                    item.airlineCompany = flightInfo.airline_company;
-                    item.checkinStartTime = flightInfo.checkin_start_time;
-                    item.checkinEndTime = flightInfo.checkin_end_time;
-                    item.status = flightInfo.status;
-                    item.isBooked = flightInfo.isBooked;
-                    item.isFaved = flightInfo.isFaved;
-                    item.remainingSeats = flightInfo.remainingSeats;
+            // 筛选 排序
+            Rectangle {
+                color: "#FAFAFA"
+                radius: 12
+                border.color: "#DDDDDD"
+                border.width: 1
+                width: parent.width - 40
+                height: 80
+                anchors.horizontalCenter: parent.horizontalCenter // 居中
+
+                RowLayout {
+                    anchors.fill: parent
+                    anchors.margins: 15
+                    Layout.fillWidth: true
+                    spacing: 10
+
+                    // 排序选择框
+                    ComboBox {
+                        id: sortMethodComboBox
+                        model: [
+                            { label: "时间", icon: isAscending ? "↑" : "↓" },
+                            { label: "价格", icon: isAscending ? "↑" : "↓" },
+                            { label: "座位", icon: isAscending ? "↑" : "↓" }
+                        ]
+                        Layout.preferredWidth: 55
+                        font.pixelSize: 16
+                        background: Rectangle {
+                            color: "#F9F9F9"
+                            radius: 10
+                            border.color: "#DDDDDD"
+                            border.width: 1
+                        }
+                        textRole: "label"
+                        onActivated: {
+                            sortMethod = currentIndex;
+                            toggleSortOrder();
+                            updateFilter();
+                        }
+                        Layout.alignment: Qt.AlignVCenter
+                    }
+
+                    // 筛选按钮
+                    Button {
+                        text: "筛选"
+                        font.pixelSize: 16
+                        Layout.preferredWidth: 80
+                        height: 40
+                        background: Rectangle {
+                            color: "#007AFF"
+                            radius: 12
+                            gradient: Gradient {
+                                GradientStop { position: 0; color: "#3498DB" }
+                                GradientStop { position: 1; color: "#2980B9" }
+                            }
+                        }
+                        onClicked: updateFilter()
+                        Layout.alignment: Qt.AlignVCenter
+                    }
+                }
+            }
+
+            // 动态展示航班信息
+            ColumnLayout {
+                width: flightInfoList.width
+                // 动态展示航班信息
+                Repeater {
+                    model: filteredFlights // 绑定动态筛选后的航班列表
+                    width: parent.width
+
+                    Loader {
+                        width: parent.width
+                        height: 300
+                        source: "../components/FlightInfoCard.qml"
+                        property var flightInfo: modelData // 传递每条航班的数据
+                        onLoaded: {
+                            item.flightId = flightInfo.flight_id;
+                            item.flightNumber = flightInfo.flight_number;
+                            // item.departureCity = flightInfo.departure_city;
+                            // item.arrivalCity = flightInfo.arrival_city;
+                            item.departureTime = flightInfo.departure_time;
+                            item.arrivalTime = flightInfo.arrival_time;
+                            item.departureAirport = flightInfo.departure_airport;
+                            item.arrivalAirport = flightInfo.arrival_airport;
+                            item.price = flightInfo.price;
+                            item.airlineCompany = flightInfo.airline_company;
+                            // item.checkinStartTime = flightInfo.checkin_start_time;
+                            // item.checkinEndTime = flightInfo.checkin_end_time;
+                            item.status = flightInfo.status;
+                            item.isBooked = flightInfo.isBooked;
+                            item.isFaved = flightInfo.isFaved;
+                            item.remainingSeats = flightInfo.remainingSeats;
+                        }
+                    }
                 }
             }
         }
     }
+
+
+
+
 
     // 筛选和排序更新函数
     function updateFilter() {

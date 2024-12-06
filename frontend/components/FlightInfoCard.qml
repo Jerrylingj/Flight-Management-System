@@ -1,29 +1,32 @@
-// FlightInfoCard.qml
 import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
+import QtQuick.LocalStorage 2.0
 
 Item {
     id: flightInfoCard
     width: parent.width
-    height: 220
+    height: 240  // 设置高度
+    anchors.centerIn: parent
 
     property int flightId
     property string flightNumber
-    property string departureCity
-    property string arrivalCity
-    // property string departureTime
-    // property string arrivalTime
+    property string departureTime
+    property string arrivalTime
     property string departureAirport
     property string arrivalAirport
     property double price
     property string airlineCompany
-    property string checkinStartTime
-    property string checkinEndTime
     property string status
     property bool isBooked: false
     property bool isFaved: false
     property int remainingSeats: 10 // 新增剩余座位属性
+
+    // 函数：格式化时间为 "hh:mm" 格式
+    function formatTime(timeString) {
+        var time = timeString.split(' ')[1].split(':');  // 获取小时和分钟
+        return time[0] + ":" + time[1];  // 返回格式 "hh:mm"
+    }
 
     Rectangle {
         width: parent.width - 40
@@ -37,77 +40,134 @@ Item {
         ColumnLayout {
             anchors.fill: parent
             anchors.margins: 20
-            spacing: 12
+            spacing: 10
 
+            // 航班号和价格行
             RowLayout {
                 Layout.fillWidth: true
                 Layout.alignment: Qt.AlignLeft
                 spacing: 20
 
                 Text {
-                    text: "航班号: " + flightNumber
+                    text: "航班号：" + flightNumber
                     font.pixelSize: 22
                     font.bold: true
                     color: "#2C3E50"
-                    Layout.alignment: Qt.AlignLeft
+                    Layout.fillWidth: true
                 }
 
                 Text {
-                    text: "价格: ￥" + price
+                    text: "￥" + price.toFixed(2)
                     font.pixelSize: 22
                     font.bold: true
                     color: "#E74C3C"
                     Layout.alignment: Qt.AlignRight
+                    Layout.fillWidth: true
                 }
             }
 
-            Text {
-                text: "出发地: " + departureCity + " (" + departureAirport + ")"
-                font.pixelSize: 18
-                color: "#34495E"
-                Layout.alignment: Qt.AlignLeft
-            }
-
-            Text {
-                text: "到达地: " + arrivalCity + " (" + arrivalAirport + ")"
-                font.pixelSize: 18
-                color: "#34495E"
-                Layout.alignment: Qt.AlignLeft
-            }
-
-            Text {
-                text: "检票时间: " + checkinStartTime + " - " + checkinEndTime
-                font.pixelSize: 18
-                color: "#34495E"
-                Layout.alignment: Qt.AlignLeft
-            }
-
-            Text {
-                text: "航空公司: " + airlineCompany
-                font.pixelSize: 18
-                color: "#34495E"
-                Layout.alignment: Qt.AlignLeft
-            }
-
-            Text {
-                text: "状态: " + status
-                font.pixelSize: 18
-                color: status === "On Time" ? "#27AE60" : (status === "Delayed" ? "#F39C12" : "#C0392B")
-                Layout.alignment: Qt.AlignLeft
-            }
-
-            Text {
-                text: "剩余座位: " + remainingSeats
-                font.pixelSize: 18
-                color: "#34495E"
-                Layout.alignment: Qt.AlignLeft
-            }
-
+            // 出发时间和到达时间行，带箭头
             RowLayout {
+                Layout.fillWidth: true
+                Layout.alignment: Qt.AlignLeft
+                spacing: 5
+
+                Text {
+                    text: formatTime(departureTime)
+                    font.pixelSize: 20
+                    font.bold: true
+                    color: "#34495E"
+                    Layout.fillWidth: true
+                }
+
+                // 箭头部分
+                Text {
+                    text: "→"
+                    font.pixelSize: 30
+                    color: "#2C3E50"
+                    Layout.fillWidth: true
+                }
+
+                Text {
+                    text: formatTime(arrivalTime)
+                    font.pixelSize: 20
+                    font.bold: true
+                    color: "#34495E"
+                    Layout.fillWidth: true
+                }
+            }
+
+            // 出发机场和到达机场，左对齐
+            RowLayout {
+                Layout.fillWidth: true
+                Layout.alignment: Qt.AlignLeft
+                spacing: 20
+
+                Text {
+                    text: departureAirport
+                    font.pixelSize: 16
+                    color: "#7F8C8D"
+                    Layout.fillWidth: true
+                }
+
+                Text {
+                    text: arrivalAirport
+                    font.pixelSize: 16
+                    color: "#7F8C8D"
+                    Layout.fillWidth: true
+                }
+            }
+
+            // 航空公司与状态行
+            RowLayout {
+                Layout.fillWidth: true
+                Layout.alignment: Qt.AlignLeft
+                spacing: 20
+
+                Text {
+                    text: airlineCompany
+                    font.pixelSize: 16
+                    color: "#34495E"
+                    Layout.fillWidth: true
+                }
+
+                Rectangle {
+                    width: 80
+                    height: 30
+                    radius: 15
+                    color: status === "On Time" ? "#27AE60" : (status === "Delayed" ? "#F39C12" : "#C0392B")
+                    border.color: "#DDDDDD"
+                    border.width: 1
+                    Text {
+                        anchors.centerIn: parent
+                        text: status
+                        color: "white"
+                        font.pixelSize: 14
+                        font.bold: true
+                    }
+                }
+            }
+
+            // 其他信息行
+            RowLayout {
+                Layout.fillWidth: true
+                Layout.alignment: Qt.AlignLeft
+                spacing: 20
+
+                Text {
+                    text: "剩余座位: " + remainingSeats
+                    font.pixelSize: 14
+                    color: "#7F8C8D"
+                    Layout.fillWidth: true
+                }
+            }
+
+            // 预定与收藏按钮
+            RowLayout {
+                Layout.fillWidth: true
                 spacing: 20
                 Layout.alignment: Qt.AlignRight
 
-                // 预定按钮
                 Button {
                     Layout.minimumWidth: 100
                     height: 40
@@ -128,7 +188,6 @@ Item {
                     }
                 }
 
-                // 收藏按钮
                 Button {
                     Layout.minimumWidth: 100
                     height: 40
