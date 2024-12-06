@@ -41,6 +41,7 @@ qt_add_qml_module(appuntitled7
     SOURCES
         api/networkhandler.h
         api/networkhandler.cpp
+        storage/userinfo.h
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.

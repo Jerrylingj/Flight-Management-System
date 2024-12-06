@@ -4,6 +4,7 @@ import QtQuick.Layouts 1.15
 
 Page {
     visible: true
+    property StackView stack: StackView.view
     // 登录框
     Rectangle {
         anchors.left: parent.left // 左边对齐到父元素的左边
@@ -42,6 +43,7 @@ Page {
 
             // 用户名
             TextField {
+                id: userNameText
                 placeholderText: "用户名"
                 anchors.left: parent.left // 左边对齐到父元素的左边
                 anchors.leftMargin: parent.width * 0.1
@@ -54,6 +56,7 @@ Page {
 
             // 个人信息
             TextField {
+                id:userPersonalInfoText
                 placeholderText: "个人信息"
                 anchors.left: parent.left // 左边对齐到父元素的左边
                 anchors.leftMargin: parent.width * 0.1
@@ -77,8 +80,15 @@ Page {
                     radius: 8
                 }
                 onClicked: {
-                    // 登录逻辑
-                    console.log("确定更改")
+                    if(userNameText.text.length>5){
+                        console.log("名字过长")
+                    }
+                    else{
+                        userInfo.userName=userNameText.text
+                        userInfo.userPersonalInfo=userPersonalInfoText.text
+                        stack.changeTo("views/ProfileView.qml")
+                        console.log("确定更改")
+                    }
                 }
             }
         }

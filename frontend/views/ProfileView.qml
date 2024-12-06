@@ -7,9 +7,6 @@ Page {
     id: profileView
 
     property string viewName: '个人中心'
-    property string userName: '未知用户'
-    property string personalInfo: "你好，我是未知用户，我来自xxx，欢迎大家和我交流。"
-    property int myMoney: 114514
     property StackView stack: StackView.view
 
     Rectangle {
@@ -46,7 +43,7 @@ Page {
                 Text {
                     anchors.top: parent.top
                     anchors.topMargin: 20
-                    text: userName
+                    text: userInfo.userName
                     font.bold: true
                     font.pointSize: 20
                     color: "#333333"
@@ -84,7 +81,7 @@ Page {
             Text {
                 anchors.left: parent.left // 左边对齐到父元素的左边
                 anchors.leftMargin: parent.width * 0.05
-                text: "    " + personalInfo
+                text: "    " + userInfo.userPersonalInfo
                 font.pointSize: 14
                 color: "#666666"
                 wrapMode: Text.Wrap // 自动换行
@@ -96,7 +93,7 @@ Page {
             Text {
                 anchors.left: parent.left // 左边对齐到父元素的左边
                 anchors.leftMargin: parent.width * 0.1
-                text: "剩余金额：￥"+myMoney
+                text: "剩余金额：￥"+userInfo.myMoney
                 font.pointSize: 20
                 color: "#EE82EE"
             }
@@ -203,6 +200,9 @@ Page {
                                 onClicked: {
                                     erase_dialog.close()
                                     console.log("确定")
+                                    userInfo.userName="未知用户"
+                                    userInfo.myMoney=0
+                                    userInfo.userPersonalInfo="无"
                                 }
                                 background: Rectangle {
                                     color: "#90EE90"
