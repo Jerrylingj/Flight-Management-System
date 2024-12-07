@@ -6,8 +6,7 @@
 #include "database/databasemanager.h"
 #include "api/login/login.h"
 #include "api/register/register.h"
-#include "api/flight/FlightAPI.h"
-#include "dto/response_dto.h"
+#include "api/flight/FlightApi.h"
 
 class HttpServer : public QObject {
 public:
@@ -22,8 +21,6 @@ public:
 
         // 创建HTTP服务器
         m_httpServer = new QHttpServer(this);
-        // 创建FlightAPI实例并传入数据库连接
-        m_flightAPI = new FlightAPI(m_db, this);  // 修改这里，传入m_db
 
         // 设置路由和处理函数
         m_httpServer->route("/", [](const QHttpServerRequest &request) {
@@ -43,69 +40,13 @@ public:
 
         // 获取所有航班信息的API路由
         m_httpServer->route("/api/flights", QHttpServerRequest::Method::Get, [this](const QHttpServerRequest &request) -> QHttpServerResponse {
-            // 获取所有航班信息
-            QList<FlightInfo> flights = m_flightAPI->getAllFlights();
-
-            // 将航班信息转成JSON返回
-            QJsonArray flightArray;
-            for (const FlightInfo &flight : flights) {
-                QJsonObject flightObject;
-                flightObject["flight_id"] = flight.flightId;
-                flightObject["flight_number"] = flight.flightNumber;
-                flightObject["departure_city"] = flight.departureCity;
-                flightObject["arrival_city"] = flight.arrivalCity;
-                flightObject["departure_time"] = flight.departureTime.toString("yyyy-MM-dd HH:mm:ss"); // 推荐使用标准格式
-                flightObject["arrival_time"] = flight.arrivalTime.toString("yyyy-MM-dd HH:mm:ss");   // 推荐使用标准格式
-                flightObject["departure_airport"] = flight.departureAirport;
-                flightObject["arrival_airport"] = flight.arrivalAirport;
-                flightObject["checkin_start_time"] = flight.checkinStartTime.toString("yyyy-MM-dd HH:mm:ss"); // 推荐使用标准格式
-                flightObject["checkin_end_time"] = flight.checkinEndTime.toString("yyyy-MM-dd HH:mm:ss");   // 推荐使用标准格式
-                flightObject["price"] = flight.price;
-                flightObject["airline_company"] = flight.airlineCompany;
-                flightObject["status"] = flight.status;
-
-                flightArray.append(flightObject);
-            }
-
-
-            auto response = success(flightArray);
-            // 返回响应对象
-            return response->toJson();
+            return getAllFlights(m_db);
         });
 
 
         // 根据航班ID获取航班信息的API路由
         m_httpServer->route("/api/flights/<arg>", QHttpServerRequest::Method::Get, [this](const int flightId) -> QHttpServerResponse {
-            // 根据航班ID获取航班信息
-            FlightInfo flight = m_flightAPI->getFlightById(flightId);
-
-            // 如果没有找到航班信息
-            if (flight.flightId == 0) {
-                auto response = fail<QJsonObject>("没有航班");
-
-                return response->toJson();
-            }
-
-            // 将航班信息转成JSON返回
-            QJsonObject flightObject;
-            flightObject["flight_id"] = flight.flightId;
-            flightObject["flight_number"] = flight.flightNumber;
-            flightObject["departure_city"] = flight.departureCity;
-            flightObject["arrival_city"] = flight.arrivalCity;
-            flightObject["departure_time"] = flight.departureTime.toString("yyyy-MM-dd HH:mm:ss"); // 推荐使用标准格式
-            flightObject["arrival_time"] = flight.arrivalTime.toString("yyyy-MM-dd HH:mm:ss");   // 推荐使用标准格式
-            flightObject["departure_airport"] = flight.departureAirport;
-            flightObject["arrival_airport"] = flight.arrivalAirport;
-            flightObject["checkin_start_time"] = flight.checkinStartTime.toString("yyyy-MM-dd HH:mm:ss");
-            flightObject["checkin_end_time"] = flight.checkinEndTime.toString("yyyy-MM-dd HH:mm:ss");
-            flightObject["price"] = flight.price;
-            flightObject["airline_company"] = flight.airlineCompany;
-            flightObject["status"] = flight.status;
-
-            auto response = success(flightObject);
-
-            // 返回单个航班信息的JSON对象
-            return response->toJson();
+            return getFlightByID(flightId, m_db);
         });
 
         // 监听端口
@@ -118,7 +59,6 @@ public:
 
 private:
     QHttpServer *m_httpServer;
-    FlightAPI* m_flightAPI;
     DatabaseManager* m_db;
 };
 

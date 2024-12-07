@@ -5,6 +5,8 @@
 #include <QSqlQuery>
 #include <QSqlError>
 #include <QDebug>
+#include <QList>
+#include "dto/flight_info_dto.h"
 
 class DatabaseManager {
 public:
@@ -29,6 +31,9 @@ public:
     // 根据手机号和密码找用户，存在返回true，不存在返回false
     bool queryUsers(const QString& telephone, const QString& password);
 
+
+    void queryFlight(int flightID,FlightInfo& flight);
+    void queryFlight(QJsonArray& flights);
 
     /*** 测试函数 ***/
     bool isFlightInfoEmpty() const; // 判断航班表是否为空

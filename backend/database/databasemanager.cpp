@@ -2,9 +2,11 @@
 #include <QFile>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QJsonArray>
 #include <QCryptographicHash>
 #include <QRandomGenerator>
 #include <QString>
+#include <stdexcept>
 
 QString hashPassword(const QString& password) {
     QString salt = "fixed_salt_value"; // 使用固定盐值
@@ -109,7 +111,6 @@ bool DatabaseManager::insertUser(const QString& username, const QString& telepho
     QSqlQuery query;
     query.prepare("INSERT INTO users (username, telephone, password) VALUES (:username, :telephone, :password)");
     QString hashedPassword = hashPassword(password);
-    qDebug() << "wwwww" << password << " " << hashedPassword;
     query.bindValue(":username", username);
     query.bindValue(":telephone", telephone);
     query.bindValue(":password",hashedPassword);
@@ -173,6 +174,72 @@ bool DatabaseManager::queryUsers(const QString& telephone, const QString& passwo
     }
 
     return false;
+}
+
+void DatabaseManager::queryFlight(int flightId,FlightInfo& flight){
+    QString sql = "SELECT * FROM flight_info WHERE flight_id = :flight_id";
+    qDebug() << "Preparing SQL:" << sql << "with flight_id =" << flightId;
+
+    QSqlQuery query;
+    query.prepare(sql);
+    query.bindValue(":flight_id", flightId);
+
+    if (!query.exec()) {
+        qDebug() << "查询失败:" << query.lastError().text();
+        throw std::runtime_error("Query execution failed: " + query.lastError().text().toStdString());
+    }
+
+    if (query.next()) {
+        flight.flightId = query.value("flight_id").toInt();
+        flight.flightNumber = query.value("flight_number").toString();
+        flight.departureCity = query.value("departure_city").toString();
+        flight.arrivalCity = query.value("arrival_city").toString();
+        flight.departureAirport = query.value("departure_airport").toString();
+        flight.arrivalAirport = query.value("arrival_airport").toString();
+        flight.checkinStartTime = query.value("checkin_start_time").toDateTime();
+        flight.checkinEndTime = query.value("checkin_end_time").toDateTime();
+        flight.price = query.value("price").toDouble();
+        flight.airlineCompany = query.value("airline_company").toString();
+        flight.status = query.value("status").toString();
+
+        qDebug() << "Flight found:" << flight.flightNumber;
+    } else {
+        qDebug() << "No flight found with flight_id =" << flightId;
+        throw std::invalid_argument("无效的id");
+    }
+}
+
+void DatabaseManager::queryFlight(QJsonArray& flights){
+    QString sql = "SELECT * FROM flight_info";
+    qDebug() << "Executing SQL:" << sql;
+
+    QSqlQuery query;
+    if (!query.exec(sql)) {
+        qDebug() << "查询失败:" << query.lastError().text();
+        throw std::runtime_error("查询失败");
+    } else {
+        while (query.next()) {
+            FlightInfo flight;
+            flight.flightId = query.value("flight_id").toInt();
+            flight.flightNumber = query.value("flight_number").toString();
+            flight.departureCity = query.value("departure_city").toString();
+            flight.arrivalCity = query.value("arrival_city").toString();
+            flight.departureAirport = query.value("departure_airport").toString();
+            flight.arrivalAirport = query.value("arrival_airport").toString();
+            flight.checkinStartTime = query.value("checkin_start_time").toDateTime();
+            flight.checkinEndTime = query.value("checkin_end_time").toDateTime();
+            flight.price = query.value("price").toDouble();
+            flight.airlineCompany = query.value("airline_company").toString();
+            flight.status = query.value("status").toString();
+
+            flights.append(flight.toJson());
+        }
+    }
+
+    qDebug() << "Retrieved" << flights.size() << "flights.";
+    if(flights.isEmpty()){
+        throw std::runtime_error("没有数据");
+    }
 }
 
 bool DatabaseManager::isFlightInfoEmpty() const {

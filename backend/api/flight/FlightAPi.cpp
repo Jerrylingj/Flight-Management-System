@@ -1,10 +1,11 @@
-#include "FlightAPI.h"
-#include "FlightInfo.h"
-#include <QSqlQuery>
-#include <QSqlError>
+#include "FlightApi.h"
+#include "dto/response_dto.h"
+#include "dto/flight_info_dto.h"
 #include <QVariant>
 #include <QDebug>
+#include <QJsonArray>
 
+<<<<<<< HEAD
 FlightAPI::FlightAPI(DatabaseManager* dbManager, QObject *parent) : QObject(parent), m_dbManager(dbManager) {
     // 这里不再连接数据库，直接使用传入的数据库连接
 }
@@ -42,27 +43,40 @@ QList<FlightInfo> FlightAPI::getAllFlights() {
 
             flights.append(flight);
         }
+=======
+QJsonObject getAllFlights(DatabaseManager* m_db){
+    try{
+        QJsonArray flights;
+        m_db->queryFlight(flights);
+        auto response = success(flights);
+        return response->toJson();
+    }catch(const std::runtime_error& e){
+        auto response = fail<QJsonObject>(QString::fromStdString(e.what()));
+        return response->toJson();
+    }catch(const std::exception& e){
+        auto response = fail<QJsonObject>("失败");
+        return response->toJson();
+>>>>>>> 5aa9790 (修改代码)
     }
-
-    qDebug() << "Retrieved" << flights.size() << "flights.";
-    return flights;
 }
 
-// 根据航班ID获取航班信息
-FlightInfo FlightAPI::getFlightById(int flightId) {
-    FlightInfo flight;
-
-    QString sql = "SELECT * FROM flight_info WHERE flight_id = :flight_id";
-    qDebug() << "Preparing SQL:" << sql << "with flight_id =" << flightId;
-
-    QSqlQuery query;
-    query.prepare(sql);
-    query.bindValue(":flight_id", flightId);
-
-    if (!query.exec()) {
-        qDebug() << "查询失败:" << query.lastError().text();
-        return flight;  // 返回一个空的FlightInfo对象
+QJsonObject getFlightByID(int flightID,DatabaseManager* m_db){
+    try{
+        FlightInfo flight;
+        m_db->queryFlight(flightID,flight);
+        auto response = success(flight.toJson());
+        return response->toJson();
+    }catch(const std::invalid_argument& e){
+        auto response = fail<QJsonObject>(QString::fromStdString(e.what()));
+        return response->toJson();
+    }catch(const std::runtime_error& e){
+        auto response = fail<QJsonObject>(QString::fromStdString(e.what()));
+        return response->toJson();
+    }catch(const std::exception& e){
+        auto response = fail<QJsonObject>("失败");
+        return response->toJson();
     }
+<<<<<<< HEAD
 
     if (query.next()) {
         flight.flightId = query.value("flight_id").toInt();
@@ -85,4 +99,6 @@ FlightInfo FlightAPI::getFlightById(int flightId) {
     }
 
     return flight;
+=======
+>>>>>>> 5aa9790 (修改代码)
 }
