@@ -27,7 +27,7 @@ add_executable(QtHttpServer
     api/login/login.h api/login/login.cpp
     api/register/register.h api/register/register.cpp
 
-    api/flight/FlightAPI.h api/flight/FlightAPI.cpp
+    api/flight/FlightApi.h api/flight/FlightApi.cpp
     dto/login_dto.h dto/login_dto.cpp
 
 )
