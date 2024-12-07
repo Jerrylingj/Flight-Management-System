@@ -1,5 +1,7 @@
 #include "login_dto.h"
+#include "util/easycrypt.h"
 #include <stdexcept>
+#include <QDebug>
 
 LoginDTO::LoginDTO(const QJsonObject& jsonObj){
     if (!jsonObj.contains("telephone") || !jsonObj["telephone"].isString()) {
@@ -16,7 +18,9 @@ LoginDTO::LoginDTO(const QJsonObject& jsonObj){
 LoginReturnDTO::LoginReturnDTO(const QJsonObject& jsonObj){
     // 之后再写加密函数
     m_telephone = jsonObj.value("telephone").toString();
-    m_token = jsonObj.value("telephone").toString();
+    m_token = encrypt(jsonObj);
+    qDebug()<<"json"<<jsonObj;
+    qDebug()<<"token"<<decrypt(m_token);
 }
 
 QJsonObject LoginReturnDTO::toJson() const {

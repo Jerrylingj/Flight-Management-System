@@ -29,6 +29,7 @@ add_executable(QtHttpServer
 
     api/flight/FlightApi.h api/flight/FlightApi.cpp
     dto/login_dto.h dto/login_dto.cpp
+    util/easycrypt.h util/easycrypt.cpp
 
 )
 target_link_libraries(QtHttpServer PRIVATE

@@ -72,7 +72,10 @@ void DatabaseManager::createTable() {
                     "id INT AUTO_INCREMENT PRIMARY KEY, "
                     "username VARCHAR(50) NOT NULL, "
                     "telephone VARCHAR(15) NOT NULL, "
-                    "password VARCHAR(100) NOT NULL)")){
+                    "password VARCHAR(100) NOT NULL, "
+                    "avartar_url VARCHAR(255), "
+                    "balance DECIMAL(10, 2) DEFAULT 0.00, "
+                    "created_at DATETIME DEFAULT CURRENT_TIMESTAMP)")){
         qDebug() << "create users error: " << query.lastError().text();
     }
 
@@ -161,19 +164,20 @@ bool DatabaseManager::queryUsers(const QString& telephone){
     return false;
 }
 
-bool DatabaseManager::queryUsers(const QString& telephone, const QString& password) {
+int DatabaseManager::queryUsers(const QString& telephone, const QString& password) {
     QSqlQuery query;
-    query.prepare("SELECT COUNT(*) FROM users WHERE telephone = :phone AND password = :pwd");
+    query.prepare("SELECT id FROM users WHERE telephone = :phone AND password = :pwd");
     query.bindValue(":phone", telephone);
     QString hashedPassword = hashPassword(password);
     qDebug() << "login" << password << " " << hashedPassword;
     query.bindValue(":pwd", hashedPassword);
 
     if (query.exec() && query.next()) {
-        return query.value(0).toInt() > 0;
+        int id = query.value("id").toInt();
+        return id;
     }
 
-    return false;
+    return -1;
 }
 
 void DatabaseManager::queryFlight(int flightId,FlightInfo& flight){

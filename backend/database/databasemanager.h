@@ -28,8 +28,8 @@ public:
 
     // 根据手机号找用户，存在返回true，不存在返回false
     bool queryUsers(const QString& telephone);
-    // 根据手机号和密码找用户，存在返回true，不存在返回false
-    bool queryUsers(const QString& telephone, const QString& password);
+    // 根据手机号和密码找用户，存在返回用户id，不存在返回-1
+    int queryUsers(const QString& telephone, const QString& password);
 
 
     void queryFlight(int flightID,FlightInfo& flight);
