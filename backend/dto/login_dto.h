@@ -1,21 +1,17 @@
 #ifndef LOGIN_DTO_H
 #define LOGIN_DTO_H
 
-#include <QObject>
 #include <QString>
 #include <QJsonObject>
 
-class LoginDTO : public QObject
+class LoginDTO
 {
-    Q_OBJECT
-    Q_PROPERTY(QString telephone READ telephone CONSTANT)
-    Q_PROPERTY(QString password READ password CONSTANT)
 public:
-    explicit LoginDTO(const QJsonObject& jsonObj, QObject* parent = nullptr);
-    QString telephone() const {
+    LoginDTO(const QJsonObject& jsonObj);
+    QString getTelephone() const {
         return m_telephone;
     }
-    QString password() const {
+    QString getPassword() const {
         return m_password;
     }
 private:
@@ -23,18 +19,14 @@ private:
     QString m_password;
 };
 
-class LoginReturnDTO : public QObject
+class LoginReturnDTO
 {
-    Q_OBJECT
-    Q_PROPERTY(QString telephone READ telephone CONSTANT)
-    Q_PROPERTY(QString token READ token CONSTANT)
 public:
-    explicit LoginReturnDTO(QObject* parent = nullptr) : QObject(parent) {}
-    explicit LoginReturnDTO(const QJsonObject& jsonObj, QObject* parent = nullptr);
-    QString telephone() const {
+    LoginReturnDTO(const QJsonObject& jsonObj);
+    QString getTelephone() const {
         return m_telephone;
     }
-    QString token() const {
+    QString getToken() const {
         return m_token;
     }
     QJsonObject toJson() const;

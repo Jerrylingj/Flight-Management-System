@@ -40,13 +40,13 @@ public:
 
         // 获取所有航班信息的API路由
         m_httpServer->route("/api/flights", QHttpServerRequest::Method::Get, [this](const QHttpServerRequest &request) -> QHttpServerResponse {
-            return getAllFlights(m_db);
+            return getFlight(m_db);
         });
 
 
         // 根据航班ID获取航班信息的API路由
         m_httpServer->route("/api/flights/<arg>", QHttpServerRequest::Method::Get, [this](const int flightId) -> QHttpServerResponse {
-            return getFlightByID(flightId, m_db);
+            return getFlight(flightId, m_db);
         });
 
         // 监听端口

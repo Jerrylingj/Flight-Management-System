@@ -1,11 +1,9 @@
 #include "FlightApi.h"
 #include "dto/response_dto.h"
 #include "dto/flight_info_dto.h"
-#include <QVariant>
-#include <QDebug>
 #include <QJsonArray>
 
-QJsonObject getAllFlights(DatabaseManager* m_db){
+QJsonObject getFlight(DatabaseManager* m_db){
     try{
         QJsonArray flights;
         m_db->queryFlight(flights);
@@ -20,7 +18,7 @@ QJsonObject getAllFlights(DatabaseManager* m_db){
     }
 }
 
-QJsonObject getFlightByID(int flightID,DatabaseManager* m_db){
+QJsonObject getFlight(int flightID,DatabaseManager* m_db){
     try{
         FlightInfo flight;
         m_db->queryFlight(flightID,flight);

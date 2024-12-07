@@ -1,7 +1,7 @@
 #include "login_dto.h"
 #include <stdexcept>
 
-LoginDTO::LoginDTO(const QJsonObject& jsonObj, QObject* parent):QObject(parent){
+LoginDTO::LoginDTO(const QJsonObject& jsonObj){
     if (!jsonObj.contains("telephone") || !jsonObj["telephone"].isString()) {
         throw std::invalid_argument("Invalid or missing telephone number");
     }
@@ -13,7 +13,7 @@ LoginDTO::LoginDTO(const QJsonObject& jsonObj, QObject* parent):QObject(parent){
     m_password = jsonObj["password"].toString();
 }
 
-LoginReturnDTO::LoginReturnDTO(const QJsonObject& jsonObj, QObject* parent):QObject(parent){
+LoginReturnDTO::LoginReturnDTO(const QJsonObject& jsonObj){
     // 之后再写加密函数
     m_telephone = jsonObj.value("telephone").toString();
     m_token = jsonObj.value("telephone").toString();
