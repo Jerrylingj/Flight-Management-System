@@ -1,9 +1,14 @@
 #include "easycrypt.h"
+#include <QDebug>
 
 // 加密函数
 QString encrypt(const QJsonObject& jsonObject) {
+    // 创建一个可变的副本
+    QJsonObject modifiableJsonObject = jsonObject;
+
     // 将QJsonObject转为字符串
-    QJsonDocument jsonDoc(jsonObject);
+    modifiableJsonObject["timeStamp"] = QDateTime::currentDateTime().toString(Qt::ISODate);
+    QJsonDocument jsonDoc(modifiableJsonObject);
     QString jsonString = jsonDoc.toJson(QJsonDocument::Compact);
 
     // 每个字符+2
@@ -30,5 +35,16 @@ QJsonObject decrypt(const QString& encryptedString) {
     // 将字符串转为QJsonObject
     QJsonDocument jsonDoc = QJsonDocument::fromJson(byteArray);
     QJsonObject jsonObject = jsonDoc.object();
+
+    if (jsonObject.contains("timeStamp")) {
+        QDateTime timeStamp = QDateTime::fromString(jsonObject["timeStamp"].toString(), Qt::ISODate);
+        QDateTime currentTime = QDateTime::currentDateTime();
+        if (timeStamp.isValid() && timeStamp.secsTo(currentTime) > 24 * 3600) { // 24小时 = 24 * 3600秒
+            throw std::runtime_error("Data has expired");
+        }
+    } else {
+        throw std::runtime_error("Invalid data: Missing timeStamp");
+    }
+
     return jsonObject;
 }

@@ -16,11 +16,8 @@ LoginDTO::LoginDTO(const QJsonObject& jsonObj){
 }
 
 LoginReturnDTO::LoginReturnDTO(const QJsonObject& jsonObj){
-    // 之后再写加密函数
     m_telephone = jsonObj.value("telephone").toString();
     m_token = encrypt(jsonObj);
-    qDebug()<<"json"<<jsonObj;
-    qDebug()<<"token"<<decrypt(m_token);
 }
 
 QJsonObject LoginReturnDTO::toJson() const {
