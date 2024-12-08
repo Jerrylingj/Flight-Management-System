@@ -2,6 +2,7 @@
 
 #include "dto/response_dto.h"
 #include "dto/login_dto.h"
+#include <QJsonDocument>
 
 QJsonObject login(const QHttpServerRequest &request, DatabaseManager* m_db){
     QByteArray body = request.body();

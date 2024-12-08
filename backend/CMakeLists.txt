@@ -30,6 +30,8 @@ add_executable(QtHttpServer
     api/flight/FlightApi.h api/flight/FlightApi.cpp
     dto/login_dto.h dto/login_dto.cpp
     util/easycrypt.h util/easycrypt.cpp
+    dto/create_order.h dto/create_order.cpp
+    api/order/CreateOrderApi.h api/order/CreateOrderApi.cpp
 
 )
 target_link_libraries(QtHttpServer PRIVATE

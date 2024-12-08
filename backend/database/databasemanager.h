@@ -30,10 +30,13 @@ public:
     bool queryUsers(const QString& telephone);
     // 根据手机号和密码找用户，存在返回用户id，不存在返回-1
     int queryUsers(const QString& telephone, const QString& password);
-
+    double getUserBalance(int userID);
 
     void queryFlight(int flightID,FlightInfo& flight);
     void queryFlight(QJsonArray& flights);
+
+    void createOrder(int userID, int flightID);
+
 
     /*** 测试函数 ***/
     bool isFlightInfoEmpty() const; // 判断航班表是否为空

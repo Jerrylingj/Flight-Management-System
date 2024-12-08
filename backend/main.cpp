@@ -7,6 +7,7 @@
 #include "api/login/login.h"
 #include "api/register/register.h"
 #include "api/flight/FlightApi.h"
+#include "api/order/CreateOrderApi.h"
 
 class HttpServer : public QObject {
 public:
@@ -47,6 +48,10 @@ public:
         // 根据航班ID获取航班信息的API路由
         m_httpServer->route("/api/flights/<arg>", QHttpServerRequest::Method::Get, [this](const int flightId) -> QHttpServerResponse {
             return getFlight(flightId, m_db);
+        });
+
+        m_httpServer->route("/api/create-order",QHttpServerRequest::Method::Post,[this](const QHttpServerRequest &request){
+            return CreateOrder(request, m_db);
         });
 
         // 监听端口

@@ -125,31 +125,14 @@ bool DatabaseManager::insertUser(const QString& username, const QString& telepho
     return true;
 }
 
-bool DatabaseManager::insertFlight(const QString& flightNumber, const QString& departureCity, const QString& arrivalCity,const QDateTime& departureTime, const QDateTime& arrivalTime,
-                                   double price, const QString& departureAirport, const QString& arrivalAirport,
-                                   const QString& airlineCompany, const QDateTime& checkinStartTime,
-                                   const QDateTime& checkinEndTime, const QString& status) {
+double DatabaseManager::getUserBalance(int userID){
     QSqlQuery query;
-    query.prepare("INSERT INTO flight_info (flight_number, departure_city, arrival_city, departure_time, arrival_time, price, departure_airport, arrival_airport, checkin_start_time, checkin_end_time, airline_company, status) "
-                  "VALUES (:flight_number, :departure_city, :arrival_city, :departure_time, :arrival_time, :price, :departure_airport, :arrival_airport, :checkin_start_time, :checkin_end_time, :airline_company, :status)");
-    query.bindValue(":flight_number", flightNumber);
-    query.bindValue(":departure_city", departureCity);
-    query.bindValue(":arrival_city", arrivalCity);
-    query.bindValue(":departure_time", departureTime);
-    query.bindValue(":arrival_time", arrivalTime);
-    query.bindValue(":price", price);
-    query.bindValue(":departure_airport", departureAirport);
-    query.bindValue(":arrival_airport", arrivalAirport);
-    query.bindValue(":airline_company", airlineCompany);
-    query.bindValue(":checkin_start_time", checkinStartTime.toString("yyyy-MM-dd HH:mm:ss"));
-    query.bindValue(":checkin_end_time", checkinEndTime.toString("yyyy-MM-dd HH:mm:ss"));
-    query.bindValue(":status", status);
-
-    if(!query.exec()) {
-        qDebug() << "Insert flight error:" << query.lastError().text();
-        return false;
+    query.prepare("SELECT balance FROM users WHERE id = :userid");
+    query.bindValue(":userid", userID);
+    if(query.exec() && query.next()){
+        return query.value("balance").toDouble();
     }
-    return true;
+    throw std::runtime_error("无法获取用户余额");
 }
 
 bool DatabaseManager::queryUsers(const QString& telephone){
@@ -178,6 +161,33 @@ int DatabaseManager::queryUsers(const QString& telephone, const QString& passwor
     }
 
     return -1;
+}
+
+bool DatabaseManager::insertFlight(const QString& flightNumber, const QString& departureCity, const QString& arrivalCity,const QDateTime& departureTime, const QDateTime& arrivalTime,
+                                   double price, const QString& departureAirport, const QString& arrivalAirport,
+                                   const QString& airlineCompany, const QDateTime& checkinStartTime,
+                                   const QDateTime& checkinEndTime, const QString& status) {
+    QSqlQuery query;
+    query.prepare("INSERT INTO flight_info (flight_number, departure_city, arrival_city, departure_time, arrival_time, price, departure_airport, arrival_airport, checkin_start_time, checkin_end_time, airline_company, status) "
+                  "VALUES (:flight_number, :departure_city, :arrival_city, :departure_time, :arrival_time, :price, :departure_airport, :arrival_airport, :checkin_start_time, :checkin_end_time, :airline_company, :status)");
+    query.bindValue(":flight_number", flightNumber);
+    query.bindValue(":departure_city", departureCity);
+    query.bindValue(":arrival_city", arrivalCity);
+    query.bindValue(":departure_time", departureTime);
+    query.bindValue(":arrival_time", arrivalTime);
+    query.bindValue(":price", price);
+    query.bindValue(":departure_airport", departureAirport);
+    query.bindValue(":arrival_airport", arrivalAirport);
+    query.bindValue(":airline_company", airlineCompany);
+    query.bindValue(":checkin_start_time", checkinStartTime.toString("yyyy-MM-dd HH:mm:ss"));
+    query.bindValue(":checkin_end_time", checkinEndTime.toString("yyyy-MM-dd HH:mm:ss"));
+    query.bindValue(":status", status);
+
+    if(!query.exec()) {
+        qDebug() << "Insert flight error:" << query.lastError().text();
+        return false;
+    }
+    return true;
 }
 
 void DatabaseManager::queryFlight(int flightId,FlightInfo& flight){
@@ -245,6 +255,47 @@ void DatabaseManager::queryFlight(QJsonArray& flights){
         throw std::runtime_error("没有数据");
     }
 }
+
+void DatabaseManager::createOrder(int userID, int flightID){
+    // 如果要一次执行多次数据库操作需要这样子做
+    QSqlDatabase db = QSqlDatabase::database();
+    if(!db.transaction()){
+        throw std::runtime_error("无法开始事务");
+    }
+    try{
+        double balance = getUserBalance(userID);
+        FlightInfo flight;
+        queryFlight(flightID,flight);
+        if(flight.price > balance) {
+            throw std::invalid_argument("没钱了");
+        }
+        QSqlQuery query;
+        query.prepare("INSERT INTO all_order (user_id, flight_id) "
+                      "VALUES (:userid, :flightid) ");
+        query.bindValue(":userid",userID);
+        query.bindValue(":flightid",flightID);
+        if(!query.exec()){
+            throw std::runtime_error("插入失败");
+        }
+        double newBalance = balance - flight.price;
+        QSqlQuery updateQuery;
+        updateQuery.prepare("UPDATE users SET balance = :balance WHERE id = :userid");
+        updateQuery.bindValue(":balance", newBalance);
+        updateQuery.bindValue(":userid", userID);
+        if(!updateQuery.exec()){
+            throw std::runtime_error("更新用户余额失败");
+        }
+        // 提交事件
+        if(!db.commit()){
+            throw std::runtime_error("事务提交失败");
+        }
+    }catch(const std::exception& e){
+        // 发生错误就回滚数据库，避免票没订但是钱扣了
+        db.rollback();
+        throw;
+    }
+}
+
 
 bool DatabaseManager::isFlightInfoEmpty() const {
     QSqlQuery query("SELECT COUNT(*) FROM flight_info");
