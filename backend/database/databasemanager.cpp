@@ -2,9 +2,11 @@
 #include <QFile>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QJsonArray>
 #include <QCryptographicHash>
 #include <QRandomGenerator>
 #include <QString>
+#include <stdexcept>
 
 QString hashPassword(const QString& password) {
     QString salt = "fixed_salt_value"; // 使用固定盐值
@@ -70,7 +72,10 @@ void DatabaseManager::createTable() {
                     "id INT AUTO_INCREMENT PRIMARY KEY, "
                     "username VARCHAR(50) NOT NULL, "
                     "telephone VARCHAR(15) NOT NULL, "
-                    "password VARCHAR(100) NOT NULL)")){
+                    "password VARCHAR(100) NOT NULL, "
+                    "avartar_url VARCHAR(255), "
+                    "balance DECIMAL(10, 2) DEFAULT 0.00, "
+                    "created_at DATETIME DEFAULT CURRENT_TIMESTAMP)")){
         qDebug() << "create users error: " << query.lastError().text();
     }
 
@@ -109,7 +114,6 @@ bool DatabaseManager::insertUser(const QString& username, const QString& telepho
     QSqlQuery query;
     query.prepare("INSERT INTO users (username, telephone, password) VALUES (:username, :telephone, :password)");
     QString hashedPassword = hashPassword(password);
-    qDebug() << "wwwww" << password << " " << hashedPassword;
     query.bindValue(":username", username);
     query.bindValue(":telephone", telephone);
     query.bindValue(":password",hashedPassword);
@@ -119,6 +123,44 @@ bool DatabaseManager::insertUser(const QString& username, const QString& telepho
         return false;
     }
     return true;
+}
+
+double DatabaseManager::getUserBalance(int userID){
+    QSqlQuery query;
+    query.prepare("SELECT balance FROM users WHERE id = :userid");
+    query.bindValue(":userid", userID);
+    if(query.exec() && query.next()){
+        return query.value("balance").toDouble();
+    }
+    throw std::runtime_error("无法获取用户余额");
+}
+
+bool DatabaseManager::queryUsers(const QString& telephone){
+    QSqlQuery query;
+    query.prepare("SELECT COUNT(*) FROM users WHERE telephone = :phone");
+    query.bindValue(":phone", telephone);
+
+    if (query.exec() && query.next()) {
+        return query.value(0).toInt() > 0;
+    }
+
+    return false;
+}
+
+int DatabaseManager::queryUsers(const QString& telephone, const QString& password) {
+    QSqlQuery query;
+    query.prepare("SELECT id FROM users WHERE telephone = :phone AND password = :pwd");
+    query.bindValue(":phone", telephone);
+    QString hashedPassword = hashPassword(password);
+    qDebug() << "login" << password << " " << hashedPassword;
+    query.bindValue(":pwd", hashedPassword);
+
+    if (query.exec() && query.next()) {
+        int id = query.value("id").toInt();
+        return id;
+    }
+
+    return -1;
 }
 
 bool DatabaseManager::insertFlight(const QString& flightNumber, const QString& departureCity, const QString& arrivalCity,const QDateTime& departureTime, const QDateTime& arrivalTime,
@@ -148,32 +190,112 @@ bool DatabaseManager::insertFlight(const QString& flightNumber, const QString& d
     return true;
 }
 
-bool DatabaseManager::queryUsers(const QString& telephone){
-    QSqlQuery query;
-    query.prepare("SELECT COUNT(*) FROM users WHERE telephone = :phone");
-    query.bindValue(":phone", telephone);
+void DatabaseManager::queryFlight(int flightId,FlightInfo& flight){
+    QString sql = "SELECT * FROM flight_info WHERE flight_id = :flight_id";
+    qDebug() << "Preparing SQL:" << sql << "with flight_id =" << flightId;
 
-    if (query.exec() && query.next()) {
-        return query.value(0).toInt() > 0;
+    QSqlQuery query;
+    query.prepare(sql);
+    query.bindValue(":flight_id", flightId);
+
+    if (!query.exec()) {
+        qDebug() << "查询失败:" << query.lastError().text();
+        throw std::runtime_error("Query execution failed: " + query.lastError().text().toStdString());
     }
 
-    return false;
+    if (query.next()) {
+        flight.flightId = query.value("flight_id").toInt();
+        flight.flightNumber = query.value("flight_number").toString();
+        flight.departureCity = query.value("departure_city").toString();
+        flight.arrivalCity = query.value("arrival_city").toString();
+        flight.departureAirport = query.value("departure_airport").toString();
+        flight.arrivalAirport = query.value("arrival_airport").toString();
+        flight.checkinStartTime = query.value("checkin_start_time").toDateTime();
+        flight.checkinEndTime = query.value("checkin_end_time").toDateTime();
+        flight.price = query.value("price").toDouble();
+        flight.airlineCompany = query.value("airline_company").toString();
+        flight.status = query.value("status").toString();
+
+        qDebug() << "Flight found:" << flight.flightNumber;
+    } else {
+        qDebug() << "No flight found with flight_id =" << flightId;
+        throw std::invalid_argument("无效的id");
+    }
 }
 
-bool DatabaseManager::queryUsers(const QString& telephone, const QString& password) {
-    QSqlQuery query;
-    query.prepare("SELECT COUNT(*) FROM users WHERE telephone = :phone AND password = :pwd");
-    query.bindValue(":phone", telephone);
-    QString hashedPassword = hashPassword(password);
-    qDebug() << "login" << password << " " << hashedPassword;
-    query.bindValue(":pwd", hashedPassword);
+void DatabaseManager::queryFlight(QJsonArray& flights){
+    QString sql = "SELECT * FROM flight_info";
+    qDebug() << "Executing SQL:" << sql;
 
-    if (query.exec() && query.next()) {
-        return query.value(0).toInt() > 0;
+    QSqlQuery query;
+    if (!query.exec(sql)) {
+        qDebug() << "查询失败:" << query.lastError().text();
+        throw std::runtime_error("查询失败");
+    } else {
+        while (query.next()) {
+            FlightInfo flight;
+            flight.flightId = query.value("flight_id").toInt();
+            flight.flightNumber = query.value("flight_number").toString();
+            flight.departureCity = query.value("departure_city").toString();
+            flight.arrivalCity = query.value("arrival_city").toString();
+            flight.departureAirport = query.value("departure_airport").toString();
+            flight.arrivalAirport = query.value("arrival_airport").toString();
+            flight.checkinStartTime = query.value("checkin_start_time").toDateTime();
+            flight.checkinEndTime = query.value("checkin_end_time").toDateTime();
+            flight.price = query.value("price").toDouble();
+            flight.airlineCompany = query.value("airline_company").toString();
+            flight.status = query.value("status").toString();
+
+            flights.append(flight.toJson());
+        }
     }
 
-    return false;
+    qDebug() << "Retrieved" << flights.size() << "flights.";
+    if(flights.isEmpty()){
+        throw std::runtime_error("没有数据");
+    }
 }
+
+void DatabaseManager::createOrder(int userID, int flightID){
+    // 如果要一次执行多次数据库操作需要这样子做
+    QSqlDatabase db = QSqlDatabase::database();
+    if(!db.transaction()){
+        throw std::runtime_error("无法开始事务");
+    }
+    try{
+        double balance = getUserBalance(userID);
+        FlightInfo flight;
+        queryFlight(flightID,flight);
+        if(flight.price > balance) {
+            throw std::invalid_argument("没钱了");
+        }
+        QSqlQuery query;
+        query.prepare("INSERT INTO all_order (user_id, flight_id) "
+                      "VALUES (:userid, :flightid) ");
+        query.bindValue(":userid",userID);
+        query.bindValue(":flightid",flightID);
+        if(!query.exec()){
+            throw std::runtime_error("插入失败");
+        }
+        double newBalance = balance - flight.price;
+        QSqlQuery updateQuery;
+        updateQuery.prepare("UPDATE users SET balance = :balance WHERE id = :userid");
+        updateQuery.bindValue(":balance", newBalance);
+        updateQuery.bindValue(":userid", userID);
+        if(!updateQuery.exec()){
+            throw std::runtime_error("更新用户余额失败");
+        }
+        // 提交事件
+        if(!db.commit()){
+            throw std::runtime_error("事务提交失败");
+        }
+    }catch(const std::exception& e){
+        // 发生错误就回滚数据库，避免票没订但是钱扣了
+        db.rollback();
+        throw;
+    }
+}
+
 
 bool DatabaseManager::isFlightInfoEmpty() const {
     QSqlQuery query("SELECT COUNT(*) FROM flight_info");
