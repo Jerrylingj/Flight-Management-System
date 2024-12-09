@@ -29,6 +29,10 @@ add_executable(QtHttpServer
     api/flight/FlightInfo.h api/flight/FlightInfo.cpp
     api/flight/FlightAPI.h api/flight/FlightAPI.cpp
     dto/login_dto.h dto/login_dto.cpp
+    api/order/OrderApi.h
+    api/order/OrderInfo.h
+    api/order/OrderApi.cpp
+    api/order/OrderInfo.cpp
 
 )
 target_link_libraries(QtHttpServer PRIVATE
