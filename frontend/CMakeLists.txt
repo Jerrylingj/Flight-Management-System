@@ -38,6 +38,7 @@ qt_add_qml_module(appuntitled7
         android/res/xml/network_security_config.xml
         figure/login-flight.png
         figure/editinfo.png
+        figure/help-desk.png
     SOURCES
         api/networkhandler.h
         api/networkhandler.cpp
