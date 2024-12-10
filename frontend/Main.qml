@@ -96,6 +96,15 @@ Window {
                 }
             }
             Button {
+                text: qsTr("客服")
+                Layout.fillWidth: true
+                // icon.source: "images/orders_icon.png"
+                onClicked: {
+                    // 全部订单
+                    rootStackView.changeTo('views/ClientServer.qml')
+                }
+            }
+            Button {
                 text: qsTr("全部订单")
                 Layout.fillWidth: true
                 // icon.source: "images/orders_icon.png"

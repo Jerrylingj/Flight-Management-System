@@ -148,7 +148,7 @@ Page {
                 padding: 12
                 onClicked: {
                     console.log("登录/切换账号")
-                    stack.changeTo('views/login.qml')
+                    stack.changeTo('views/Login.qml')
                 }
             }
 
