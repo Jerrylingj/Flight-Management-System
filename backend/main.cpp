@@ -46,10 +46,11 @@ public:
 
 
         // 根据航班ID获取航班信息的API路由
+        // 获取特定订单
         m_httpServer->route("/api/flights/<arg>", QHttpServerRequest::Method::Get, [this](const int flightId) -> QHttpServerResponse {
             return getFlight(flightId, m_db);
         });
-
+        // 获取全部订单
         m_httpServer->route("/api/create-order",QHttpServerRequest::Method::Post,[this](const QHttpServerRequest &request){
             return CreateOrder(request, m_db);
         });

@@ -208,6 +208,8 @@ void DatabaseManager::queryFlight(int flightId,FlightInfo& flight){
         flight.flightNumber = query.value("flight_number").toString();
         flight.departureCity = query.value("departure_city").toString();
         flight.arrivalCity = query.value("arrival_city").toString();
+        flight.departureTime = query.value("departure_time").toDateTime();
+        flight.arrivalTime = query.value("arrival_time").toDateTime();
         flight.departureAirport = query.value("departure_airport").toString();
         flight.arrivalAirport = query.value("arrival_airport").toString();
         flight.checkinStartTime = query.value("checkin_start_time").toDateTime();
@@ -238,6 +240,8 @@ void DatabaseManager::queryFlight(QJsonArray& flights){
             flight.flightNumber = query.value("flight_number").toString();
             flight.departureCity = query.value("departure_city").toString();
             flight.arrivalCity = query.value("arrival_city").toString();
+            flight.departureTime = query.value("departure_time").toDateTime();
+            flight.arrivalTime = query.value("arrival_time").toDateTime();
             flight.departureAirport = query.value("departure_airport").toString();
             flight.arrivalAirport = query.value("arrival_airport").toString();
             flight.checkinStartTime = query.value("checkin_start_time").toDateTime();

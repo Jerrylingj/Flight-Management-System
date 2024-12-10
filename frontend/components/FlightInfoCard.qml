@@ -20,12 +20,16 @@ Item {
     property string status
     property bool isBooked: false
     property bool isFaved: false
-    property int remainingSeats: 10 // 新增剩余座位属性
+    property int remainingSeats: 10
 
     // 函数：格式化时间为 "hh:mm" 格式
     function formatTime(timeString) {
-        var time = timeString.split(' ')[1].split(':');  // 获取小时和分钟
-        return time[0] + ":" + time[1];  // 返回格式 "hh:mm"
+        var date = new Date(timeString);  // 使用 JavaScript 内置的 Date 对象解析时间字符串
+        var hours = date.getHours();  // 获取小时
+        var minutes = date.getMinutes();  // 获取分钟
+
+        // 保证小时和分钟都是两位数格式
+        return (hours < 10 ? '0' + hours : hours) + ":" + (minutes < 10 ? '0' + minutes : minutes);
     }
 
     Rectangle {

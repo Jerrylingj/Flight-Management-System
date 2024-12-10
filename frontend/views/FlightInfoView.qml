@@ -12,6 +12,7 @@ Page {
     // 创建 NetworkHandler 实例
     NetworkHandler {
         id: networkHandler
+
         onRequestSuccess: function(responseData) {
             var jsonString = JSON.stringify(responseData);
             console.log("请求成功，返回数据：", jsonString); // 打印 JSON 字符串
@@ -32,13 +33,13 @@ Page {
                 if (responseData.data && Array.isArray(responseData.data)) {
                     console.log("responseData.data 是一个数组，长度为:", responseData.data.length);
                     flightData = responseData.data.map(function(flight) {
-
                         /*** 初始化数据 ***/
                         flight.isBooked = false;
                         flight.isFaved = false;
                         flight.remainingSeats = 10;
                         return flight;
                     });
+
                 } else {
                     console.log("无法识别的响应数据结构");
                     flightData = [];
@@ -52,6 +53,7 @@ Page {
             console.log("请求失败：", errorMessage); // 打印失败的错误信息
         }
     }
+
 
     // 调用网络请求
     function fetchFlightData() {
@@ -251,18 +253,28 @@ Page {
                         source: "../components/FlightInfoCard.qml"
                         property var flightInfo: modelData // 传递每条航班的数据
                         onLoaded: {
-                            item.flightId = flightInfo.flight_id;
-                            item.flightNumber = flightInfo.flight_number;
-                            // item.departureCity = flightInfo.departure_city;
-                            // item.arrivalCity = flightInfo.arrival_city;
-                            item.departureTime = flightInfo.departure_time;
-                            item.arrivalTime = flightInfo.arrival_time;
-                            item.departureAirport = flightInfo.departure_airport;
-                            item.arrivalAirport = flightInfo.arrival_airport;
+                            // 打印所有的航班信息
+                            console.log("flightId: " + flightInfo.flightId);
+                            console.log("flightNumber: " + flightInfo.flightNumber);
+                            console.log("departureTime: " + flightInfo.departureTime);
+                            console.log("arrivalTime: " + flightInfo.arrivalTime);
+                            console.log("departureAirport: " + flightInfo.departureAirport);
+                            console.log("arrivalAirport: " + flightInfo.arrivalAirport);
+                            console.log("price: " + flightInfo.price);
+                            console.log("airlineCompany: " + flightInfo.airlineCompany);
+                            console.log("status: " + flightInfo.status);
+                            console.log("isBooked: " + flightInfo.isBooked);
+                            console.log("isFaved: " + flightInfo.isFaved);
+                            console.log("remainingSeats: " + flightInfo.remainingSeats);
+
+                            item.flightId = flightInfo.flightId;
+                            item.flightNumber = flightInfo.flightNumber;
+                            item.departureTime = flightInfo.departureTime;
+                            item.arrivalTime = flightInfo.arrivalTime;
+                            item.departureAirport = flightInfo.departureAirport;
+                            item.arrivalAirport = flightInfo.arrivalAirport;
                             item.price = flightInfo.price;
-                            item.airlineCompany = flightInfo.airline_company;
-                            // item.checkinStartTime = flightInfo.checkin_start_time;
-                            // item.checkinEndTime = flightInfo.checkin_end_time;
+                            item.airlineCompany = flightInfo.airlineCompany;
                             item.status = flightInfo.status;
                             item.isBooked = flightInfo.isBooked;
                             item.isFaved = flightInfo.isFaved;
