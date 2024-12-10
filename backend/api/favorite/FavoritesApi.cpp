@@ -1,4 +1,5 @@
 #include "FavoritesApi.h"
+#include <QJsonArray>
 
 // 添加收藏
 QJsonObject addFavorite(DatabaseManager* m_db, int userId, int flightId) {
@@ -34,7 +35,7 @@ QJsonObject removeFavorite(DatabaseManager* m_db, int userId, int flightId) {
 QJsonObject getFavorites(DatabaseManager* m_db, int userId) {
     QJsonObject response;
 
-    QList<int> favorites = m_db->getFavorites(userId);
+    QList<int> favorites = m_db->queryFavorites(userId);
     QJsonArray flightIds;
     for (int id : favorites) {
         flightIds.append(id);
