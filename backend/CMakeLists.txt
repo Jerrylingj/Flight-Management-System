@@ -39,6 +39,7 @@ add_executable(QtHttpServer
     api/favorite/FavoritesApi.cpp api/favorite/FavoritesApi.h
     dto/flight_favorite_dto.h
     dto/flight_favorite_dto.cpp
+    aichat/aichat.h aichat/aichat.cpp
 
 )
 target_link_libraries(QtHttpServer PRIVATE
