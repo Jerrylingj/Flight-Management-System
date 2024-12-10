@@ -8,6 +8,7 @@
 #include "api/register/register.h"
 #include "api/flight/FlightApi.h"
 #include "api/order/CreateOrderApi.h"
+#include "api/favorite/FavoritesApi.h"
 
 class HttpServer : public QObject {
 public:
@@ -29,30 +30,61 @@ public:
         });
 
         /***  API ***/
+        /*** users ***/
         // 登录
         m_httpServer->route("/api/login",QHttpServerRequest::Method::Post,[this](const QHttpServerRequest &request){
             return login(request, m_db);
         });
-
         // 注册
         m_httpServer->route("/api/register",QHttpServerRequest::Method::Post,[this](const QHttpServerRequest &request){
             return registerUser(request, m_db);
         });
 
-        // 获取所有航班信息的API路由
+        /*** flight_info ***/
+        // 获取所有航班信息
         m_httpServer->route("/api/flights", QHttpServerRequest::Method::Get, [this](const QHttpServerRequest &request) -> QHttpServerResponse {
             return getFlight(m_db);
         });
-
-
-        // 根据航班ID获取航班信息的API路由
         // 获取特定订单
         m_httpServer->route("/api/flights/<arg>", QHttpServerRequest::Method::Get, [this](const int flightId) -> QHttpServerResponse {
             return getFlight(flightId, m_db);
         });
-        // 获取全部订单
+
+        /*** order ***/
+        // 创建订单
         m_httpServer->route("/api/create-order",QHttpServerRequest::Method::Post,[this](const QHttpServerRequest &request){
             return CreateOrder(request, m_db);
+        });
+
+        /*** flight_favorites ***/
+        // 添加收藏
+        m_httpServer->route("/api/favorites/add", QHttpServerRequest::Method::Post, [this](const QHttpServerRequest &request) {
+            QJsonDocument body = QJsonDocument::fromJson(request.body());
+            QJsonObject json = body.object();
+
+            int userId = json["userId"].toInt();
+            int flightId = json["flightId"].toInt();
+
+            return addFavorite(m_db, userId, flightId);
+        });
+        // 取消收藏
+        m_httpServer->route("/api/favorites/remove", QHttpServerRequest::Method::Post, [this](const QHttpServerRequest &request) {
+            QJsonDocument body = QJsonDocument::fromJson(request.body());
+            QJsonObject json = body.object();
+
+            int userId = json["userId"].toInt();
+            int flightId = json["flightId"].toInt();
+
+            return removeFavorite(m_db, userId, flightId);
+        });
+        // 查询收藏
+        m_httpServer->route("/api/favorites", QHttpServerRequest::Method::Post, [this](const QHttpServerRequest &request) {
+            QJsonDocument body = QJsonDocument::fromJson(request.body());
+            QJsonObject json = body.object();
+
+            int userId = json["userId"].toInt();
+
+            return getFavorites(m_db, userId);
         });
 
         // 监听端口

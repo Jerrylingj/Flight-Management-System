@@ -36,6 +36,9 @@ add_executable(QtHttpServer
     util/easycrypt.h util/easycrypt.cpp
     dto/create_order.h dto/create_order.cpp
     api/order/CreateOrderApi.h api/order/CreateOrderApi.cpp
+    api/favorite/FavoritesApi.cpp api/favorite/FavoritesApi.h
+    dto/flight_favorite_dto.h
+    dto/flight_favorite_dto.cpp
 
 )
 target_link_libraries(QtHttpServer PRIVATE
