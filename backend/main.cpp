@@ -9,6 +9,7 @@
 #include "api/flight/FlightApi.h"
 #include "api/order/CreateOrderApi.h"
 #include "api/favorite/FavoritesApi.h"
+#include "aichat/aichat.h"
 
 class HttpServer : public QObject {
 public:
@@ -20,6 +21,8 @@ public:
 
         /*** 测试函数 ***/
         m_db->populateSampleFlights(); // 插入航班初始航班信息
+
+        ai = new AIChat(m_db);
 
         // 创建HTTP服务器
         m_httpServer = new QHttpServer(this);
@@ -54,6 +57,10 @@ public:
         // 创建订单
         m_httpServer->route("/api/create-order",QHttpServerRequest::Method::Post,[this](const QHttpServerRequest &request){
             return CreateOrder(request, m_db);
+        });
+
+        m_httpServer->route("/api/aichat",QHttpServerRequest::Method::Post,[this](const QHttpServerRequest& request){
+            return ai->chat(request);
         });
 
         /*** flight_favorites ***/
@@ -98,6 +105,7 @@ public:
 private:
     QHttpServer *m_httpServer;
     DatabaseManager* m_db;
+    AIChat* ai;
 };
 
 int main(int argc, char *argv[]) {

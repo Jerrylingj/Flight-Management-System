@@ -272,6 +272,43 @@ void DatabaseManager::queryFlight(QJsonArray& flights){
         throw std::runtime_error("没有数据");
     }
 }
+void DatabaseManager::queryFlight(QJsonArray& flights, QString departureCity, QString arrivalCity){
+    QString sql = "SELECT * FROM flight_info WHERE departure_city = :departureCity AND arrival_city = :arrivalCity";
+    qDebug() << "Executing SQL:" << sql;
+
+    QSqlQuery query;
+    query.prepare(sql);
+    query.bindValue(":departureCity",departureCity);
+    query.bindValue(":arrivalCity",arrivalCity);
+    if (!query.exec()) {
+        qDebug() << "查询失败:" << query.lastError().text();
+        throw std::runtime_error("查询失败");
+    } else {
+        while (query.next()) {
+            FlightInfo flight;
+            flight.flightId = query.value("flight_id").toInt();
+            flight.flightNumber = query.value("flight_number").toString();
+            flight.departureCity = query.value("departure_city").toString();
+            flight.arrivalCity = query.value("arrival_city").toString();
+            flight.departureTime = query.value("departure_time").toDateTime();
+            flight.arrivalTime = query.value("arrival_time").toDateTime();
+            flight.departureAirport = query.value("departure_airport").toString();
+            flight.arrivalAirport = query.value("arrival_airport").toString();
+            flight.checkinStartTime = query.value("checkin_start_time").toDateTime();
+            flight.checkinEndTime = query.value("checkin_end_time").toDateTime();
+            flight.price = query.value("price").toDouble();
+            flight.airlineCompany = query.value("airline_company").toString();
+            flight.status = query.value("status").toString();
+
+            flights.append(flight.toJson());
+        }
+    }
+
+    qDebug() << "Retrieved" << flights.size() << "flights.";
+    if(flights.isEmpty()){
+        throw std::runtime_error("没有数据");
+    }
+}
 
 /*** order ***/
 // 创建订单

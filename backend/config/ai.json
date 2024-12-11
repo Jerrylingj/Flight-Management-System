@@ -1,0 +1,28 @@
+{
+    "token":"9dd5a53f2e83f204fa8aa3712b2700ef.hF3UprIcOAMdHwLe",
+    "api_base":"https://open.bigmodel.cn/api/paas/v4/chat/completions",
+    "model":"glm-4-flash",
+    "tools":[
+        {
+          "type": "function",
+          "function": {
+            "name": "get_flight",
+            "description": "获取从起点到终点的所有航班",
+            "parameters": {
+              "type": "object",
+              "properties": {
+                "arrivalCity": {
+                  "description": "终点",
+                  "type": "string"
+                },
+                "departureCity": {
+                  "description": "起点",
+                  "type": "string"
+                }
+              },
+              "required": ["departure", "destination"]
+            }
+          }
+        }
+      ]
+}
