@@ -30,9 +30,9 @@ add_executable(QtHttpServer
     api/flight/FlightApi.h api/flight/FlightApi.cpp
     dto/login_dto.h dto/login_dto.cpp
     api/order/OrderApi.h
-    api/order/OrderInfo.h
+
     api/order/OrderApi.cpp
-    api/order/OrderInfo.cpp
+
     util/easycrypt.h util/easycrypt.cpp
     dto/create_order.h dto/create_order.cpp
     api/order/CreateOrderApi.h api/order/CreateOrderApi.cpp
