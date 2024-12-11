@@ -62,6 +62,8 @@ Page {
             // 密码输入框
             TextField {
                 placeholderText: "Password"
+                id: pssField
+
                 anchors.left: parent.left // 左边对齐到父元素的左边
                 anchors.leftMargin: parent.width * 0.1
                 width: parent.width * 0.8
@@ -75,6 +77,7 @@ Page {
             // 密码输入框
             TextField {
                 placeholderText: "Confirm password"
+                id: pssConirmField
                 anchors.left: parent.left // 左边对齐到父元素的左边
                 anchors.leftMargin: parent.width * 0.1
                 width: parent.width * 0.8
@@ -99,10 +102,37 @@ Page {
                 }
                 onClicked: {
                     // 注册逻辑
-                    console.log("注册")
+                    if(pssField.text!=pssConirmField.text){
+                        console.log("两次密码输入不同")
+                        confirmationDialog.open()
+
+                    }
+                    else{
+                        passWord=pssField.text
+                        console.log("注册")
+                    }
+                }
+                Dialog {
+                    id: confirmationDialog
+                    standardButtons: Dialog.Yes
+                    x: (parent.width - width) / 2
+                    y: (parent.height - height) / 2
+                    parent: Overlay.overlay
+
+                    modal: true
+                    Column {
+                        spacing: 20
+                        anchors.fill: parent
+                        Label {
+                            text: qsTr("两次密码输入不同！")
+                        }
+                        CheckBox {
+                            text: qsTr("Do not ask again")
+                            anchors.right: parent.right
+                        }
+                    }
                 }
             }
-
 
         }
     }

@@ -291,22 +291,6 @@ Page {
             //     }
             // }
 
-            Button {
-                anchors.left: parent.left // 左边对齐到父元素的左边
-                anchors.leftMargin: parent.width * 0.15
-                width: parent.width * 0.7
-                height: 40
-                text: "注册账号"
-                font.pixelSize: 20
-                background: Rectangle {
-                    color: "#3498DB"
-                    radius: 10
-                }
-                padding: 12
-                onClicked: {
-                    console.log("注册账号")
-                }
-            }
         }
     }
 }
