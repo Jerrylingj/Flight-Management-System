@@ -16,8 +16,10 @@ public:
     // 给ai发信息并获取回复
     QJsonObject sendToAI(QJsonArray& messages);
 
+    // 使用工具
     QJsonObject useTools(QJsonObject& messages);
 
+    // 调用工具
     QString callTool(const QString& toolName, const QJsonObject& arg);
 private:
     QJsonArray tools;

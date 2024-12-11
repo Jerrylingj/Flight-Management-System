@@ -124,6 +124,7 @@ QJsonObject AIChat::useTools(QJsonObject& message){
 }
 
 QString AIChat::callTool(const QString& toolName, const QJsonObject& arg){
+    // 使用if-else以后可能可以添加新的工具
     if(toolName == "get_flight"){
         QJsonArray flights;
         qDebug() << arg;
