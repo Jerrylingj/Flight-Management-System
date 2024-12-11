@@ -34,6 +34,7 @@ qt_add_qml_module(appuntitled7
         static/sites.js
         views/EditPersonalInfo.qml
         views/ClientServer.qml
+        views/Register.qml
     RESOURCES
         android/AndroidManifest.xml
         android/res/xml/network_security_config.xml

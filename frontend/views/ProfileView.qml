@@ -139,6 +139,24 @@ Page {
                 anchors.leftMargin: parent.width * 0.15
                 width: parent.width * 0.7
                 height: 40
+                text: "注册"
+                font.pixelSize: 20
+                background: Rectangle {
+                    color: "#3498DB"
+                    radius: 10
+                }
+                padding: 12
+                onClicked: {
+                    console.log("注册")
+                    stack.changeTo('views/Register.qml')
+                }
+            }
+
+            Button {
+                anchors.left: parent.left // 左边对齐到父元素的左边
+                anchors.leftMargin: parent.width * 0.15
+                width: parent.width * 0.7
+                height: 40
                 text: "登录/切换账号"
                 font.pixelSize: 20
                 background: Rectangle {
@@ -152,81 +170,126 @@ Page {
                 }
             }
 
-            Button {
+            DelayButton {
+                id: button
+                text: qsTr("注销账号")
                 anchors.left: parent.left // 左边对齐到父元素的左边
                 anchors.leftMargin: parent.width * 0.15
                 width: parent.width * 0.7
                 height: 40
-                text: "注销账号"
                 font.pixelSize: 20
+                onClicked: confirmationDialog.open()
+
                 background: Rectangle {
                     color: "#3498DB"
                     radius: 10
                 }
-                padding: 12
-                onClicked: {
-                    console.log("注销账号")
-                    erase_dialog.open()
-                }
-            }
-            Dialog{
-                id:erase_dialog
-                visible:false
-                modal:true
-                width: parent.width * 0.6
-                x: (parent.width - width) / 2  // 居中水平位置
-                y: 10                    // 顶部位置
-                contentItem: Rectangle {
-                    color: "#f0f0f0"
-                    implicitHeight: 80
-                    radius: 20
-                    Column{
+
+                Dialog {
+                    id: confirmationDialog
+
+                    x: (parent.width - width) / 2
+                    y: (parent.height - height) / 2
+                    parent: Overlay.overlay
+
+                    modal: true
+                    title: qsTr("确认")
+                    standardButtons: Dialog.Yes | Dialog.No
+
+                    Column {
+                        spacing: 20
                         anchors.fill: parent
-                        anchors.centerIn: parent
-                        spacing:30
                         Label {
-                            anchors.horizontalCenter: parent.horizontalCenter  // 确保水平居中
-                            text: "确定注销账号"
-                            font.pointSize: 20
-                            color: "#8B0000"
+                            text: qsTr("你确定要注销账号？")
                         }
-                        Row{
-                            anchors.horizontalCenter: parent.horizontalCenter  // 确保水平居中
-                            anchors.bottom: parent.bottom
-                            spacing: 60
-                            Button{
-                                text: "确定"
-                                font.pointSize: 14
-                                onClicked: {
-                                    erase_dialog.close()
-                                    console.log("确定")
-                                    userInfo.userName="未知用户"
-                                    userInfo.myMoney=0
-                                    userInfo.userPersonalInfo="无"
-                                }
-                                background: Rectangle {
-                                    color: "#90EE90"
-                                    radius: 5
-                                }
-                                height: 30
-                            }
-                            Button{
-                                text: "取消"
-                                font.pointSize: 14
-                                onClicked: {
-                                    erase_dialog.close()
-                                    console.log("取消")
-                                }
-                                background: Rectangle {
-                                    color: "#90EE90"
-                                    radius: 5
-                                }
-                                height: 30
-                            }
+                        CheckBox {
+                            text: qsTr("Do not ask again")
+                            anchors.right: parent.right
                         }
+                    }
+                    onAccepted: {
+                        userInfo.userName="未知用户"
+                        userInfo.myMoney=0
+                        userInfo.userPersonalInfo="无"
                     }
                 }
             }
+
+            // Button {
+            //     anchors.left: parent.left // 左边对齐到父元素的左边
+            //     anchors.leftMargin: parent.width * 0.15
+            //     width: parent.width * 0.7
+            //     height: 40
+            //     text: "注销账号"
+            //     font.pixelSize: 20
+            //     background: Rectangle {
+            //         color: "#3498DB"
+            //         radius: 10
+            //     }
+            //     padding: 12
+            //     onClicked: {
+            //         console.log("注销账号")
+            //         erase_dialog.open()
+            //     }
+            // }
+            // Dialog{
+            //     id:erase_dialog
+            //     visible:false
+            //     modal:true
+            //     width: parent.width * 0.6
+            //     x: (parent.width - width) / 2  // 居中水平位置
+            //     y: 10                    // 顶部位置
+            //     contentItem: Rectangle {
+            //         color: "#f0f0f0"
+            //         implicitHeight: 80
+            //         radius: 20
+            //         Column{
+            //             anchors.fill: parent
+            //             anchors.centerIn: parent
+            //             spacing:30
+            //             Label {
+            //                 anchors.horizontalCenter: parent.horizontalCenter  // 确保水平居中
+            //                 text: "确定注销账号"
+            //                 font.pointSize: 20
+            //                 color: "#8B0000"
+            //             }
+            //             Row{
+            //                 anchors.horizontalCenter: parent.horizontalCenter  // 确保水平居中
+            //                 anchors.bottom: parent.bottom
+            //                 spacing: 60
+            //                 Button{
+            //                     text: "确定"
+            //                     font.pointSize: 14
+            //                     onClicked: {
+            //                         erase_dialog.close()
+            //                         console.log("确定")
+            //                         userInfo.userName="未知用户"
+            //                         userInfo.myMoney=0
+            //                         userInfo.userPersonalInfo="无"
+            //                     }
+            //                     background: Rectangle {
+            //                         color: "#90EE90"
+            //                         radius: 5
+            //                     }
+            //                     height: 30
+            //                 }
+            //                 Button{
+            //                     text: "取消"
+            //                     font.pointSize: 14
+            //                     onClicked: {
+            //                         erase_dialog.close()
+            //                         console.log("取消")
+            //                     }
+            //                     background: Rectangle {
+            //                         color: "#90EE90"
+            //                         radius: 5
+            //                     }
+            //                     height: 30
+            //                 }
+            //             }
+            //         }
+            //     }
+            // }
 
             Button {
                 anchors.left: parent.left // 左边对齐到父元素的左边

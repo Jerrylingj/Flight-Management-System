@@ -5,6 +5,8 @@ import NetworkHandler 1.0
 
 Page {
     visible: true
+    property string userNmae: "none"
+    property string passWord: "none"
     NetworkHandler{
 
     }
@@ -32,7 +34,7 @@ Page {
             Text {
                 // anchors.top:parent.top
                 // anchors.topMargin: 20
-                text: "登录界面"
+                text: "注册界面"
                 font.bold: true
                 font.pixelSize: 28
                 color: "#00796b"
@@ -70,9 +72,22 @@ Page {
                 color: "#00796b"
             }
 
+            // 密码输入框
+            TextField {
+                placeholderText: "Confirm password"
+                anchors.left: parent.left // 左边对齐到父元素的左边
+                anchors.leftMargin: parent.width * 0.1
+                width: parent.width * 0.8
+                font.pixelSize: 18
+                height: 40
+                padding: 10
+                echoMode: TextInput.Password
+                color: "#00796b"
+            }
+
             // 登录按钮
             Button {
-                text: "登录"
+                text: "注册"
                 anchors.left: parent.left // 左边对齐到父元素的左边
                 anchors.leftMargin: parent.width * 0.1
                 width: parent.width * 0.8
@@ -83,26 +98,12 @@ Page {
                     radius: 8
                 }
                 onClicked: {
-                    // 登录逻辑
-                    console.log("Login clicked")
+                    // 注册逻辑
+                    console.log("注册")
                 }
             }
 
-            // 忘记密码链接
-            Text {
-                anchors.left: parent.left // 左边对齐到父元素的左边
-                anchors.leftMargin: parent.width * 0.05
-                text: "Forgot Password?"
-                font.pixelSize: 18
-                color: "#00796b"
-                horizontalAlignment: Text.AlignHCenter
-                MouseArea {
-                    anchors.fill: parent
-                    onClicked: {
-                        console.log("Forgot Password clicked")
-                    }
-                }
-            }
+
         }
     }
 }

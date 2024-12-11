@@ -40,6 +40,8 @@ add_executable(QtHttpServer
     dto/flight_favorite_dto.h
     dto/flight_favorite_dto.cpp
     aichat/aichat.h aichat/aichat.cpp
+    config/ai.qrc
+    config/ai.json
 
 )
 target_link_libraries(QtHttpServer PRIVATE
