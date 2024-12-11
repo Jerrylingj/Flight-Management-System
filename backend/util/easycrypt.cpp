@@ -48,3 +48,29 @@ QJsonObject decrypt(const QString& encryptedString) {
 
     return jsonObject;
 }
+
+int getUserID(const QHttpServerRequest &request){
+    QList<QPair<QByteArray, QByteArray>> headers = request.headers();
+    QString authHeader;
+    for (const auto &header : headers) {
+        if (header.first.toLower() == "authorization") {
+            authHeader = QString::fromUtf8(header.second);
+            break;
+        }
+    }
+    if (authHeader.isEmpty()) {
+        throw std::invalid_argument("没有token");
+    }
+    QString token;
+    if (authHeader.startsWith("Bearer ")) {
+        token = authHeader.mid(7);
+    } else {
+        throw std::invalid_argument("token错误");
+    }
+    QJsonObject userInfo = decrypt(token);
+    if(!userInfo.contains("userID")){
+        throw std::invalid_argument("token错误");
+    }else{
+        return userInfo.value("userID").toInt();
+    }
+}

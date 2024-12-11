@@ -5,6 +5,7 @@
 #include <QJsonDocument>
 #include <QByteArray>
 #include <QString>
+#include <QHttpServer>
 
 ///
 /// 加密
@@ -25,5 +26,7 @@ QString encrypt(const QJsonObject& jsonObject);
 ///
 ///
 QJsonObject decrypt(const QString& encryptedString);
+
+int getUserID(const QHttpServerRequest &request);
 
 #endif // EASYCRYPT_H
