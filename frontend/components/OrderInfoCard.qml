@@ -14,8 +14,12 @@ Item {
     property string destination
     property string departureTime
     property string arrivalTime
+    property string departureAirport
+    property string arrivalAirport
     property string checkInStartTime
     property string checkInEndTime
+    property string airlineCompany
+    property string status
     property string currentTimeValue: Qt.formatTime(new Date(), "HH:mm")
 
     property var info
@@ -65,14 +69,22 @@ Item {
                 spacing: 20
 
                 Text {
-                    text: "出发地: " + orderInfoCard.departure
+                    text: "出发地: " + orderInfoCard.departureAirport
                     font.pixelSize: 20
                     color: "#34495E"
                     Layout.alignment: Qt.AlignLeft
                 }
 
+                // 箭头部分
                 Text {
-                    text: "目的地: " + orderInfoCard.destination
+                    text: "→"
+                    font.pixelSize: 30
+                    color: "#2C3E50"
+                    Layout.fillWidth: true
+                }
+
+                Text {
+                    text: "目的地: " + orderInfoCard.arrivalAirport
                     font.pixelSize: 20
                     color: "#34495E"
                     Layout.alignment: Qt.AlignLeft
@@ -87,13 +99,13 @@ Item {
                 Layout.alignment: Qt.AlignLeft
             }
 
-            // 显示检票时间
-            Text {
-                text: "检票开始: " + orderInfoCard.checkInStartTime + " - 检票结束：" + orderInfoCard.checkInEndTime
-                font.pixelSize: 20
-                color: "#34495E"
-                Layout.alignment: Qt.AlignLeft
-            }
+            // // 显示检票时间
+            // Text {
+            //     text: "检票开始: " + orderInfoCard.checkInStartTime + " - 检票结束：" + orderInfoCard.checkInEndTime
+            //     font.pixelSize: 20
+            //     color: "#34495E"
+            //     Layout.alignment: Qt.AlignLeft
+            // }
 
             TimeProgressBar {
                 id: progressBar
@@ -133,8 +145,12 @@ Item {
                             destination: orderInfoCard.destination,
                             departureTime: orderInfoCard.departureTime,
                             arrivalTime: orderInfoCard.arrivalTime,
+                            departureAirport: orderInfoCard.departureAirport,
+                            arrivalAirport: orderInfoCard.arrivalAirport,
                             checkInStartTime: orderInfoCard.checkInStartTime,
-                            checkInEndTime: orderInfoCard.checkInEndTime
+                            checkInEndTime: orderInfoCard.checkInEndTime,
+                            airlineCompany: orderInfoCard.airlineCompany,
+                            status: orderInfoCard.status
                         }
                     }
                 }

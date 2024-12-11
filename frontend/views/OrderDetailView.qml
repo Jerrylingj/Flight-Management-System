@@ -38,9 +38,8 @@ Page {
         ColumnLayout {
             anchors.fill: parent
             anchors.margins: 20
-            spacing: 20
+            spacing: 10
 
-            // 显示航班的详细信息
             Text {
                 text: "订单详细信息"
                 font.pixelSize: 26
@@ -54,32 +53,68 @@ Page {
                 color: "#34495E"
             }
 
+            Row { // 使用Row来并排放置出发地和目的地
+                spacing: 20
+                Text {
+                    text: "出发地: " + orderDetailPage.viewData.departure
+                    font.pixelSize: 20
+                    color: "#34495E"
+                }
+                Text {
+                    text: "目的地: " + orderDetailPage.viewData.destination
+                    font.pixelSize: 20
+                    color: "#34495E"
+                }
+            }
+
+            Row { // 使用Row来并排放置出发时间和到达时间
+                spacing: 20
+                Text {
+                    text: "出发时间: " + orderDetailPage.viewData.departureTime
+                    font.pixelSize: 20
+                    color: "#34495E"
+                }
+                Text {
+                    text: "到达时间: " + orderDetailPage.viewData.arrivalTime
+                    font.pixelSize: 20
+                    color: "#34495E"
+                }
+            }
+
+            Row { // 使用Row来并排放置检票开始和结束时间
+                spacing: 20
+                Text {
+                    text: "检票开始时间: " + orderDetailPage.viewData.checkInStartTime
+                    font.pixelSize: 20
+                    color: "#34495E"
+                }
+                Text {
+                    text: "检票结束时间: " + orderDetailPage.viewData.checkInEndTime
+                    font.pixelSize: 20
+                    color: "#34495E"
+                }
+            }
+
             Text {
-                text: "出发地: " + orderDetailPage.viewData.departure
+                text: "出发机场: " + orderDetailPage.viewData.departureAirport
                 font.pixelSize: 20
                 color: "#34495E"
             }
 
             Text {
-                text: "目的地: " + orderDetailPage.viewData.destination
+                text: "到达机场: " + orderDetailPage.viewData.arrivalAirport
                 font.pixelSize: 20
                 color: "#34495E"
             }
 
             Text {
-                text: "出发时间: " + orderDetailPage.viewData.departureTime + " - 到达时间: " + orderDetailPage.viewData.arrivalTime
+                text: "航空公司: " + orderDetailPage.viewData.airlineCompany
                 font.pixelSize: 20
                 color: "#34495E"
             }
 
             Text {
-                text: "检票开始时间: " + orderDetailPage.viewData.checkInStartTime
-                font.pixelSize: 20
-                color: "#34495E"
-            }
-
-            Text {
-                text: "检票结束时间: " + orderDetailPage.viewData.checkInEndTime
+                text: "状态: " + orderDetailPage.viewData.status
                 font.pixelSize: 20
                 color: "#34495E"
             }

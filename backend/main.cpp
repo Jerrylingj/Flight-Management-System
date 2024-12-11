@@ -52,9 +52,13 @@ public:
 
         /*** order ***/
         // 创建订单
-        m_httpServer->route("/api/create-order",QHttpServerRequest::Method::Post,[this](const QHttpServerRequest &request){
-            return CreateOrder(request, m_db);
-        });
+        // m_httpServer->route("/api/orders/create",QHttpServerRequest::Method::Post,[this](const QHttpServerRequest &request){
+        //     return CreateOrder(request, m_db);
+        // });
+
+        // m_httpServer->route("/api/orders/get_all", QHttpServerRequest::Method::Get,[this](const QHttpServerRequest &request) -> QHttpServerResponse {
+        //     return getOrder(m_db);
+        // });
 
         /*** flight_favorites ***/
         // 添加收藏

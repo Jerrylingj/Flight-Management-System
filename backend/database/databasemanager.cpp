@@ -275,45 +275,45 @@ void DatabaseManager::queryFlight(QJsonArray& flights){
 
 /*** order ***/
 // 创建订单
-void DatabaseManager::createOrder(int userID, int flightID){
-    // 如果要一次执行多次数据库操作需要这样子做
-    QSqlDatabase db = QSqlDatabase::database();
-    if(!db.transaction()){
-        throw std::runtime_error("无法开始事务");
-    }
-    try{
-        double balance = getUserBalance(userID);
-        FlightInfo flight;
-        queryFlight(flightID,flight);
-        if(flight.price > balance) {
-            throw std::invalid_argument("没钱了");
-        }
-        QSqlQuery query;
-        query.prepare("INSERT INTO all_order (user_id, flight_id) "
-                      "VALUES (:userid, :flightid) ");
-        query.bindValue(":userid",userID);
-        query.bindValue(":flightid",flightID);
-        if(!query.exec()){
-            throw std::runtime_error("插入失败");
-        }
-        double newBalance = balance - flight.price;
-        QSqlQuery updateQuery;
-        updateQuery.prepare("UPDATE users SET balance = :balance WHERE id = :userid");
-        updateQuery.bindValue(":balance", newBalance);
-        updateQuery.bindValue(":userid", userID);
-        if(!updateQuery.exec()){
-            throw std::runtime_error("更新用户余额失败");
-        }
-        // 提交事件
-        if(!db.commit()){
-            throw std::runtime_error("事务提交失败");
-        }
-    }catch(const std::exception& e){
-        // 发生错误就回滚数据库，避免票没订但是钱扣了
-        db.rollback();
-        throw;
-    }
-}
+// void DatabaseManager::createOrder(int userID, int flightID){
+//     // 如果要一次执行多次数据库操作需要这样子做
+//     QSqlDatabase db = QSqlDatabase::database();
+//     if(!db.transaction()){
+//         throw std::runtime_error("无法开始事务");
+//     }
+//     try{
+//         double balance = getUserBalance(userID);
+//         FlightInfo flight;
+//         queryFlight(flightID,flight);
+//         if(flight.price > balance) {
+//             throw std::invalid_argument("没钱了");
+//         }
+//         QSqlQuery query;
+//         query.prepare("INSERT INTO all_order (user_id, flight_id) "
+//                       "VALUES (:userid, :flightid) ");
+//         query.bindValue(":userid",userID);
+//         query.bindValue(":flightid",flightID);
+//         if(!query.exec()){
+//             throw std::runtime_error("插入失败");
+//         }
+//         double newBalance = balance - flight.price;
+//         QSqlQuery updateQuery;
+//         updateQuery.prepare("UPDATE users SET balance = :balance WHERE id = :userid");
+//         updateQuery.bindValue(":balance", newBalance);
+//         updateQuery.bindValue(":userid", userID);
+//         if(!updateQuery.exec()){
+//             throw std::runtime_error("更新用户余额失败");
+//         }
+//         // 提交事件
+//         if(!db.commit()){
+//             throw std::runtime_error("事务提交失败");
+//         }
+//     }catch(const std::exception& e){
+//         // 发生错误就回滚数据库，避免票没订但是钱扣了
+//         db.rollback();
+//         throw;
+//     }
+// }
 
 /*** flight_favorites ***/
 // 添加收藏

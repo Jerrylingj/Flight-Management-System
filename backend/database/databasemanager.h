@@ -7,6 +7,7 @@
 #include <QDebug>
 #include <QList>
 #include "dto/flight_info_dto.h"
+#include "dto/order_info_dto.h"
 
 class DatabaseManager {
 public:
@@ -40,7 +41,9 @@ public:
     void queryFlight(QJsonArray& flights);
 
     /*** orders ***/
-    void createOrder(int userID, int flightID);
+    // void createOrder(int userID, int flightID);
+    // void queryOrder(int orderId, OrderInfo& order);
+    // void queryOrder(QJsonArray& orders);
 
     /*** flight_favorites ***/
     // 收藏

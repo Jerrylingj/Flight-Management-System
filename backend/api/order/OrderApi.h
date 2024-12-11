@@ -10,8 +10,6 @@
 
 // QJsonObject createOrder(const OrderInfo& orderInfo, DatabaseManager* m_db);
 
-// QJsonObject updateOrder(int orderID, const OrderInfo& orderInfo, DatabaseManager* m_db);
-
 // QJsonObject deleteOrder(int orderID, DatabaseManager* m_db);
 
 // #endif // ORDERAPI_H

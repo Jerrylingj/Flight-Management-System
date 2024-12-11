@@ -35,7 +35,7 @@ Item {
     Rectangle {
         id: progressBarBackground
         width: parent.width
-        height: 20
+        height: 30
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.verticalCenter: parent.verticalCenter
         color: "#E0E0E0"
@@ -54,7 +54,7 @@ Item {
             Rectangle {
                 width: activeArea.width * progress
                 height: activeArea.height
-                color: "#3B99FC"
+                color: currentTime >= endTime ? "red" : "#3B99FC"
                 radius: 5
             }
         }
@@ -62,29 +62,30 @@ Item {
 
     // 开始时间标签，位于进度条的第一个三等分点
     Text {
-        text: startTimeValue
+        text: "检票开始：" + startTimeValue
         anchors.horizontalCenter: parent.left
         anchors.horizontalCenterOffset: parent.width / 3
         anchors.top: progressBarBackground.bottom
         anchors.topMargin: 5
-        font.pixelSize: 14
+        font.pixelSize: 18
     }
 
     // 结束时间标签，位于进度条的第三个三等分点
     Text {
-        text: endTimeValue
+        text: "检票结束：" + endTimeValue
         anchors.horizontalCenter: parent.left
         anchors.horizontalCenterOffset: parent.width * 2 / 3
         anchors.top: progressBarBackground.bottom
         anchors.topMargin: 5
-        font.pixelSize: 14
+        font.pixelSize: 18
     }
 
     // 当前时间标签
     Text {
         id: currentTimeLabel
-        text: currentTime >= endTime ? "已结束检票" : currentTimeValue
-        font.pixelSize: 14
+        text: currentTime >= endTime ? "已结束检票" : "当前时间：" + currentTimeValue
+        font.pixelSize: 18
+        color: currentTime >= endTime ? "red" :"blue"
         anchors.verticalCenter: progressBarBackground.top
         anchors.verticalCenterOffset: -25
 
