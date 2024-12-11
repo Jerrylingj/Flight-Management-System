@@ -28,11 +28,12 @@ qt_add_qml_module(appuntitled7
         views/ProfileView.qml
         views/NoteDetailView.qml
         components/FlightInfoCard.qml
-        views/login.qml
+        views/Login.qml
         views/OrderDetailView.qml
         components/OrderInfoCard.qml
         static/sites.js
         views/EditPersonalInfo.qml
+        views/ClientServer.qml
     RESOURCES
         android/AndroidManifest.xml
         android/res/xml/network_security_config.xml

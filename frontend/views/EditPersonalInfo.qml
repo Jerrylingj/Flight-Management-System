@@ -36,7 +36,7 @@ Page {
             }
             Image {
                 source: "../figure/editinfo.png"
-                width: parent.width * 0.4
+                width: 100
                 anchors.horizontalCenter: parent.horizontalCenter  // 确保水平居中
                 height: width
             }

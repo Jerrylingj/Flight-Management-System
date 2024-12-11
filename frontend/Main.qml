@@ -87,7 +87,7 @@ Window {
                 }
             }
             Button {
-                text: qsTr("航班信息")
+                text: qsTr("航班")
                 Layout.fillWidth: true
                 // icon.source: "images/flight_icon.png"
                 onClicked: {
@@ -96,7 +96,16 @@ Window {
                 }
             }
             Button {
-                text: qsTr("全部订单")
+                text: qsTr("客服")
+                Layout.fillWidth: true
+                // icon.source: "images/orders_icon.png"
+                onClicked: {
+                    // 全部订单
+                    rootStackView.changeTo('views/ClientServer.qml')
+                }
+            }
+            Button {
+                text: qsTr("订单")
                 Layout.fillWidth: true
                 // icon.source: "images/orders_icon.png"
                 onClicked: {
@@ -105,7 +114,7 @@ Window {
                 }
             }
             Button {
-                text: qsTr("个人中心")
+                text: qsTr("个人")
                 Layout.fillWidth: true
                 // icon.source: "images/profile_icon.png"
                 onClicked: {

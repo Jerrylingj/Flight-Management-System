@@ -100,16 +100,29 @@ void DatabaseManager::createTable() {
 
     // 所有订单
     if(!query.exec("CREATE TABLE IF NOT EXISTS all_order ("
-                    "id INT AUTO_INCREMENT PRIMARY KEY, "
-                    "user_id INT NOT NULL, "
-                    "flight_id INT NOT NULL, "
-                    "order_time DATETIME DEFAULT CURRENT_TIMESTAMP, "
+                    "id INT AUTO_INCREMENT PRIMARY KEY, "               // 订单ID
+                    "user_id INT NOT NULL, "                            // 用户ID
+                    "flight_id INT NOT NULL, "                          // 航班ID
+                    "order_time DATETIME DEFAULT CURRENT_TIMESTAMP, "   // 订单创建时间
                     "FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE, "
                     "FOREIGN KEY (flight_id) REFERENCES flight_info(flight_id) ON DELETE CASCADE)")){
         qDebug() << "create all_order error: " << query.lastError().text();
     }
+
+    // 收藏
+    if (!query.exec("CREATE TABLE IF NOT EXISTS flight_favorites ("
+                    "favorite_id INTEGER PRIMARY KEY AUTO_INCREMENT, "  // 收藏ID
+                    "user_id INTEGER NOT NULL, "                        // 用户ID
+                    "flight_id INTEGER NOT NULL, "                      // 航班ID
+                    "FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE, "
+                    "FOREIGN KEY (flight_id) REFERENCES flight_info(flight_id) ON DELETE CASCADE)")) {
+        qDebug() << "create flight_favorites error: " << query.lastError().text();
+    }
 }
 
+/*** 表的增删改查 ***/
+/*** users ***/
+// 添加用户
 bool DatabaseManager::insertUser(const QString& username, const QString& telephone, const QString& password) {
     QSqlQuery query;
     query.prepare("INSERT INTO users (username, telephone, password) VALUES (:username, :telephone, :password)");
@@ -124,7 +137,7 @@ bool DatabaseManager::insertUser(const QString& username, const QString& telepho
     }
     return true;
 }
-
+// 获取余额
 double DatabaseManager::getUserBalance(int userID){
     QSqlQuery query;
     query.prepare("SELECT balance FROM users WHERE id = :userid");
@@ -134,7 +147,7 @@ double DatabaseManager::getUserBalance(int userID){
     }
     throw std::runtime_error("无法获取用户余额");
 }
-
+// 查询用户
 bool DatabaseManager::queryUsers(const QString& telephone){
     QSqlQuery query;
     query.prepare("SELECT COUNT(*) FROM users WHERE telephone = :phone");
@@ -146,7 +159,6 @@ bool DatabaseManager::queryUsers(const QString& telephone){
 
     return false;
 }
-
 int DatabaseManager::queryUsers(const QString& telephone, const QString& password) {
     QSqlQuery query;
     query.prepare("SELECT id FROM users WHERE telephone = :phone AND password = :pwd");
@@ -163,6 +175,8 @@ int DatabaseManager::queryUsers(const QString& telephone, const QString& passwor
     return -1;
 }
 
+/*** flight_info ***/
+// 添加航班
 bool DatabaseManager::insertFlight(const QString& flightNumber, const QString& departureCity, const QString& arrivalCity,const QDateTime& departureTime, const QDateTime& arrivalTime,
                                    double price, const QString& departureAirport, const QString& arrivalAirport,
                                    const QString& airlineCompany, const QDateTime& checkinStartTime,
@@ -189,7 +203,7 @@ bool DatabaseManager::insertFlight(const QString& flightNumber, const QString& d
     }
     return true;
 }
-
+// 查询航班
 void DatabaseManager::queryFlight(int flightId,FlightInfo& flight){
     QString sql = "SELECT * FROM flight_info WHERE flight_id = :flight_id";
     qDebug() << "Preparing SQL:" << sql << "with flight_id =" << flightId;
@@ -224,7 +238,6 @@ void DatabaseManager::queryFlight(int flightId,FlightInfo& flight){
         throw std::invalid_argument("无效的id");
     }
 }
-
 void DatabaseManager::queryFlight(QJsonArray& flights){
     QString sql = "SELECT * FROM flight_info";
     qDebug() << "Executing SQL:" << sql;
@@ -260,6 +273,8 @@ void DatabaseManager::queryFlight(QJsonArray& flights){
     }
 }
 
+/*** order ***/
+// 创建订单
 void DatabaseManager::createOrder(int userID, int flightID){
     // 如果要一次执行多次数据库操作需要这样子做
     QSqlDatabase db = QSqlDatabase::database();
@@ -300,7 +315,56 @@ void DatabaseManager::createOrder(int userID, int flightID){
     }
 }
 
+/*** flight_favorites ***/
+// 添加收藏
+bool DatabaseManager::addFavorite(int userId, int flightId) {
+    QSqlQuery query;
+    query.prepare("INSERT INTO flight_favorites (user_id, flight_id) VALUES (:user_id, :flight_id)");
+    query.bindValue(":user_id", userId);
+    query.bindValue(":flight_id", flightId);
 
+    if (!query.exec()) {
+        qDebug() << "Error adding favorite:" << query.lastError().text();
+        return false;
+    }
+    return true;
+}
+
+// 取消收藏
+bool DatabaseManager::removeFavorite(int userId, int flightId) {
+    QSqlQuery query;
+    query.prepare("DELETE FROM flight_favorites WHERE user_id = :user_id AND flight_id = :flight_id");
+    query.bindValue(":user_id", userId);
+    query.bindValue(":flight_id", flightId);
+
+    if (!query.exec()) {
+        qDebug() << "Error removing favorite:" << query.lastError().text();
+        return false;
+    }
+    return true;
+}
+
+// 查询我的收藏
+QList<int> DatabaseManager::queryFavorites(int userId) {
+    QSqlQuery query;
+    query.prepare("SELECT flight_id FROM flight_favorites WHERE user_id = :user_id");
+    query.bindValue(":user_id", userId);
+
+    QList<int> favoriteList;
+    if (query.exec()) {
+        while (query.next()) {
+            favoriteList.append(query.value("flight_id").toInt());
+        }
+    } else {
+        qDebug() << "Error querying favorites:" << query.lastError().text();
+    }
+    return favoriteList;
+}
+
+
+/*** 测试函数 ***/
+/*** flight_info ***/
+// 判断是否空
 bool DatabaseManager::isFlightInfoEmpty() const {
     QSqlQuery query("SELECT COUNT(*) FROM flight_info");
     if (query.next()) {
@@ -311,8 +375,7 @@ bool DatabaseManager::isFlightInfoEmpty() const {
     qDebug() << "查询 flight_info 表失败：" << query.lastError().text();
     return true; // 如果查询失败，默认认为为空，避免插入失败
 }
-
-
+// 插入样例航班
 void DatabaseManager::populateSampleFlights() {
     // 清空表格
     QSqlQuery queryClear;
@@ -350,7 +413,6 @@ void DatabaseManager::populateSampleFlights() {
         {"ZH1900", "上海", "西安", QDateTime::fromString("2024-12-09 09:00:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-12-09 11:00:00", "yyyy-MM-dd HH:mm:ss"), 1700.00, "上海浦东国际机场", "西安咸阳国际机场", QDateTime::fromString("2024-12-09 07:30:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-12-09 08:30:00", "yyyy-MM-dd HH:mm:ss"), "春秋航空", "On Time"},
         {"CA2000", "北京", "深圳", QDateTime::fromString("2024-12-09 10:00:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-12-09 12:00:00", "yyyy-MM-dd HH:mm:ss"), 1800.00, "北京首都国际机场", "深圳宝安国际机场", QDateTime::fromString("2024-12-09 08:30:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-12-09 09:30:00", "yyyy-MM-dd HH:mm:ss"), "中国国际航空", "Delayed"}
     };
-
 
     // 准备插入语句
     QSqlQuery queryInsert;
