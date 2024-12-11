@@ -1,9 +1,14 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
+import NetworkHandler 1.0
 
 Page {
     visible: true
+    NetworkHandler{
+
+    }
+
     // 登录框
     Rectangle {
         anchors.left: parent.left // 左边对齐到父元素的左边
