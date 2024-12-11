@@ -120,8 +120,8 @@ Item {
                         radius: 10  // 圆角
                     }
                     padding: 12  // 按钮内边距
-                    Layout.minimumWidth: parent.width - 20
-                    anchors.horizontalCenter: parent.horizontalCenter
+                    Layout.minimumWidth: parent.width
+                    // anchors.horizontalCenter: parent.horizontalCenter
 
 
                     // 按钮点击时，传递信息到上级组件
