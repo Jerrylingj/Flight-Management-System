@@ -41,6 +41,7 @@ qt_add_qml_module(appuntitled7
         figure/login-flight.png
         figure/editinfo.png
         figure/help-desk.png
+        figure/homepage-cover.png
     SOURCES
         api/networkhandler.h
         api/networkhandler.cpp
