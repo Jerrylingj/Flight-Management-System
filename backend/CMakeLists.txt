@@ -42,6 +42,7 @@ add_executable(QtHttpServer
     aichat/aichat.h aichat/aichat.cpp
     config/ai.qrc
     config/ai.json
+    dto/order_info_dto.cpp dto/order_info_dto.h
 
 )
 target_link_libraries(QtHttpServer PRIVATE

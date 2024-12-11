@@ -8,6 +8,7 @@
 #include "api/register/register.h"
 #include "api/flight/FlightApi.h"
 #include "api/order/CreateOrderApi.h"
+#include "api/order/OrderApi.h"
 #include "api/favorite/FavoritesApi.h"
 #include "aichat/aichat.h"
 
@@ -59,9 +60,9 @@ public:
         //     return CreateOrder(request, m_db);
         // });
 
-        // m_httpServer->route("/api/orders/get_all", QHttpServerRequest::Method::Get,[this](const QHttpServerRequest &request) -> QHttpServerResponse {
-        //     return getOrder(m_db);
-        // });
+        m_httpServer->route("/api/orders", QHttpServerRequest::Method::Get,[this](const QHttpServerRequest &request) -> QHttpServerResponse {
+            return getOrder(m_db);
+        });
 
         m_httpServer->route("/api/aichat",QHttpServerRequest::Method::Post,[this](const QHttpServerRequest& request){
             return ai->chat(request);

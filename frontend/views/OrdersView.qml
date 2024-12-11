@@ -1,6 +1,7 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
+import NetworkHandler 1.0
 
 import "../components/"
 
@@ -14,6 +15,7 @@ Page {
     property StackView stack: StackView.view
 
     // 模拟数据
+    /*
     property var orderData:[
         {
           "flightNumber": "CA123",
@@ -367,6 +369,63 @@ Page {
           "status": "OnTime"
         }
       ]
+    */
+
+    // 数据库传入的数据
+    property var orderData: []
+
+    // 创建 NetworkHandler 实例
+    NetworkHandler {
+        id: networkHandler
+
+        onRequestSuccess: function(responseData) {
+            var jsonString = JSON.stringify(responseData);
+            console.log("请求成功，返回数据：", jsonString); // 打印 JSON 字符串
+
+            // 检查 responseData 是否为数组
+            if (Array.isArray(responseData)) {
+                console.log("responseData 是一个数组，长度为:", responseData.length);
+                // 为每个航班添加 isBooked 和 isFaved 字段，初始化为 false
+                orderData = responseData.map(function(order) {
+                    // 需要根据航班号查询数据并加入
+                    return order;
+                });
+            } else {
+                console.log("responseData 不是一个数组，类型为:", typeof responseData);
+                // 如果 responseData 不是数组，检查是否包含数组字段
+                if (responseData.data && Array.isArray(responseData.data)) {
+                    console.log("responseData.data 是一个数组，长度为:", responseData.data.length);
+                    orderData = responseData.data.map(function(order) {
+                        // 需要根据航班号查询数据并加入
+                        return order;
+                    });
+
+                } else {
+                    console.log("无法识别的响应数据结构");
+                    flightData = [];
+                }
+            }
+
+            updateFilter();  // 重新更新筛选
+        }
+
+        onRequestFailed: function(errorMessage) {
+            console.log("请求失败：", errorMessage); // 打印失败的错误信息
+        }
+    }
+
+
+    // 调用网络请求
+    function fetchOrderData() {
+        var url = "http://127.0.0.1:8080/api/orders";  // 后端 API URL
+        console.log("发送获取全部订单信息的请求，URL:", url); // 打印请求的 URL
+        networkHandler.request(url, NetworkHandler.GET);  // 发送 GET 请求
+    }
+
+    // 在页面初始化时调用 fetchFlightData 获取航班数据
+    Component.onCompleted: {
+        fetchFlightData();  // 页面加载完毕后调用 fetchFlightData 方法获取数据
+    }
 
     // 筛选器
     property bool isAscending: true

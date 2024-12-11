@@ -44,7 +44,7 @@ public:
     /*** orders ***/
     // void createOrder(int userID, int flightID);
     // void queryOrder(int orderId, OrderInfo& order);
-    // void queryOrder(QJsonArray& orders);
+    void queryOrder(QJsonArray& orders);
 
     /*** flight_favorites ***/
     // 收藏

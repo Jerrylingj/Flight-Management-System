@@ -4,8 +4,8 @@ import QtQuick.Layouts
 import QtQuick.Window
 
 Window {
-    width: 1000 * 1.2
-    height: 618 * 1.2
+    width: 90 * 5
+    height: 160 * 5
     visible: true
     title: qsTr(pageName.nameText+"|航班信息管理系统")
 

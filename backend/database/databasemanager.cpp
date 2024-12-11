@@ -352,6 +352,42 @@ void DatabaseManager::queryFlight(QJsonArray& flights, QString departureCity, QS
 //     }
 // }
 
+void DatabaseManager :: queryOrder(QJsonArray & orders){
+    QString sql = "SELECT * FROM order_info";
+    qDebug() << "Executing SQL:" << sql;
+
+    QSqlQuery query;
+    if (!query.exec(sql)) {
+        qDebug() << "查询失败:" << query.lastError().text();
+        throw std::runtime_error("查询失败");
+    } else {
+        while (query.next()) {
+            OrderInfo order;
+            order.flightId = query.value("flight_id").toInt();
+            FlightInfo flight;
+            queryFlight(order.flightId,flight);
+            order.flightNumber = flight.flightNumber;
+            order.departure = flight.departureCity;
+            order.departureAirport = flight.departureAirport;
+            order.departureTime = flight.departureTime;
+            order.destination = flight.arrivalCity;
+            order.arrivalAirport = flight.arrivalAirport;
+            order.arrivalTime = flight.arrivalTime;
+            order.checkInStartTime = flight.checkinStartTime;
+            order.checkInEndTime = flight.checkinEndTime;
+            order.airlineCompany = flight.airlineCompany;
+            order.status = flight.status;
+
+            orders.append(order.toJson());
+        }
+    }
+
+    qDebug() << "Retrieved" << orders.size() << "orders.";
+    if(orders.isEmpty()){
+        throw std::runtime_error("没有数据");
+    }
+}
+
 /*** flight_favorites ***/
 // 添加收藏
 bool DatabaseManager::addFavorite(int userId, int flightId) {

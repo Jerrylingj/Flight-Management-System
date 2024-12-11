@@ -1,22 +1,22 @@
-// #include "OrderApi.h"
-// #include "dto/response_dto.h"
-// #include "dto/order_info_dto.h"
-// #include <QJsonArray>
+#include "OrderApi.h"
+#include "dto/response_dto.h"
+#include "dto/order_info_dto.h"
+#include <QJsonArray>
 
-// QJsonObject getOrder(DatabaseManager* m_db){
-//     try{
-//         QJsonArray orders;
-//         m_db->queryOrder(orders);
-//         auto response = success(orders);
-//         return response->toJson();
-//     }catch(const std::runtime_error& e){
-//         auto response = fail<QJsonObject>(QString::fromStdString(e.what()));
-//         return response->toJson();
-//     }catch(const std::exception& e){
-//         auto response = fail<QJsonObject>("失败");
-//         return response->toJson();
-//     }
-// }
+QJsonObject getOrder(DatabaseManager* m_db){
+    try{
+        QJsonArray orders;
+        m_db->queryOrder(orders);
+        auto response = success(orders);
+        return response->toJson();
+    }catch(const std::runtime_error& e){
+        auto response = fail<QJsonObject>(QString::fromStdString(e.what()));
+        return response->toJson();
+    }catch(const std::exception& e){
+        auto response = fail<QJsonObject>("在getOrder函数中获取数据失败");
+        return response->toJson();
+    }
+}
 
 // QJsonObject getOrder(int orderID, DatabaseManager* m_db){
 //     try{
