@@ -15,6 +15,7 @@ public:
     QString flightNumber;
     QString departure;
     QString destination;
+    QDateTime createdAt;
     QDateTime departureTime;
     QDateTime arrivalTime;
     QString departureAirport;
@@ -23,10 +24,6 @@ public:
     QDateTime checkInEndTime;
     QString airlineCompany;
     QString status;
-
-    QString orderDate;
-    double amount;
-
     OrderInfo();
 
     QJsonObject toJson() const;

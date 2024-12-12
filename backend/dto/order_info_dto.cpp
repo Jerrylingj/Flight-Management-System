@@ -1,7 +1,7 @@
 #include "order_info_dto.h"
 
 OrderInfo::OrderInfo()
-    : orderId(0), userId(0), flightId(0), amount(0.0)
+    : orderId(0), userId(0), flightId(0)
 {
     // 默认构造函数
     qDebug() << "创建了一个默认的 OrderInfo 对象。";
@@ -24,8 +24,6 @@ QJsonObject OrderInfo::toJson() const
     json["checkInEndTime"] = checkInEndTime.toString(Qt::ISODate);
     json["airlineCompany"] = airlineCompany;
     json["status"] = status;
-    json["orderDate"] = orderDate;
-    json["amount"] = amount;
 
     // 调试输出转换后的 JSON 数据
     qDebug() << "OrderInfo 转换为 JSON 数据：" << json;
@@ -76,12 +74,6 @@ void OrderInfo::fromJson(const QJsonObject& json)
     if (json.contains("status")) {
         status = json["status"].toString();
     }
-    if (json.contains("orderDate")) {
-        orderDate = json["orderDate"].toString();
-    }
-    if (json.contains("amount")) {
-        amount = json["amount"].toDouble();
-    }
 
     // 调试输出解析后的数据
     qDebug() << "从 JSON 数据解析 OrderInfo 对象，字段信息如下：";
@@ -99,6 +91,4 @@ void OrderInfo::fromJson(const QJsonObject& json)
     qDebug() << "检票结束时间:" << checkInEndTime.toString(Qt::ISODate);
     qDebug() << "航空公司:" << airlineCompany;
     qDebug() << "状态:" << status;
-    qDebug() << "订单日期:" << orderDate;
-    qDebug() << "金额:" << amount;
 }

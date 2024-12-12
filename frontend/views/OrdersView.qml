@@ -402,7 +402,7 @@ Page {
 
                 } else {
                     console.log("无法识别的响应数据结构");
-                    flightData = [];
+                    orderData = [];
                 }
             }
 
@@ -424,7 +424,7 @@ Page {
 
     // 在页面初始化时调用 fetchFlightData 获取航班数据
     Component.onCompleted: {
-        fetchFlightData();  // 页面加载完毕后调用 fetchFlightData 方法获取数据
+        fetchOrderData();  // 页面加载完毕后调用 fetchOrderData 方法获取数据
     }
 
     // 筛选器

@@ -21,7 +21,8 @@ public:
         m_db->createTable();
 
         /*** 测试函数 ***/
-        m_db->populateSampleFlights(); // 插入航班初始航班信息
+        m_db->populateSampleFlights(); // 插入初始航班信息
+        m_db->populateSampleOrders();  // 插入初始订单信息
 
         ai = new AIChat(m_db);
 

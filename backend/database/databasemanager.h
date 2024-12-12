@@ -58,7 +58,7 @@ public:
     /*** flight_info相关 ***/
     bool isFlightInfoEmpty() const; // 判断航班表是否为空
     void populateSampleFlights();   // 插入测试航班数据
-
+    void populateSampleOrders();
     ~DatabaseManager();
 
 private:
