@@ -6,7 +6,7 @@ import "../static/sites.js" as Site
 Flickable {
     id:flickableContainer
     contentWidth: width
-    contentHeight: Math.min(...yArray)
+    contentHeight: Math.min(...yArray) + homeViewImage.height
 
     property var yArray:[]
     property int column: 2 // 列数，默认为2
@@ -16,7 +16,6 @@ Flickable {
     property int cityID: 27 // 城市id, 默认珠海
 
     property int pageIndex: 1
-    // 允许接收一个函数，之后封装好后可以从外面传进来，或者就在这也行
 
     NetworkHandler{
         id:networkHandler
@@ -99,6 +98,15 @@ Flickable {
         }
     }
 
+
+    Image {
+        id:homeViewImage
+        source: "../figure/homepage-cover.png"
+        width: parent.width
+        height: 200
+        anchors.top: parent.top
+        anchors.horizontalCenter: parent.horizontalCenter
+    }
     Repeater {
         id: noteContainer
         model:ListModel{
@@ -113,7 +121,7 @@ Flickable {
             NoteCard {
                 id: card
                 Component.onCompleted: {
-                    curY = yArray[card.num]
+                    curY = yArray[card.num] + homeViewImage.height
                     yArray[card.num] += card.height + flickableContainer.spacing * 2
                     // 刷新数组, 触发yArray改变
                     yArray = [...yArray]

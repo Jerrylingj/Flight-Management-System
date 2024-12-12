@@ -9,19 +9,12 @@ Page {
 
     property StackView stack: StackView.view
 
-    Image {
-        source: "../figure/homepage-cover.png"
-        width: parent.width
-        height: 200
-        anchors.top: parent.top
-        anchors.horizontalCenter: parent.horizontalCenter
-    }
-
     Loader {
         source: "../components/NoteList.qml"
         width: parent.width
+        height: parent.height
         anchors.top: parent.top
-        anchors.topMargin: 200 + 16 // 设置与图片的间隔
+        // anchors.topMargin: 200 + 16 // 设置与图片的间隔
         property var selectedCity
         onSelectedCityChanged: {
             stack.changeTo("views/NoteDetailView.qml", selectedCity)
