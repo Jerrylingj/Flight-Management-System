@@ -20,7 +20,7 @@ int main(int argc, char *argv[])
 
     UserInfo userInfo;
     userInfo.setUserName("John Doe");
-    userInfo.setUserPersonalInfo("Some personal info about John.");
+    userInfo.setUserPersonalInfo("Some personal info about John");
     userInfo.setMyMoney(1000);
 
     // 将 UserInfo 对象暴露给 QML
