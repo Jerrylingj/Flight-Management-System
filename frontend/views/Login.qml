@@ -5,8 +5,31 @@ import NetworkHandler 1.0
 
 Page {
     visible: true
+    property StackView stack: StackView.view
     NetworkHandler{
+        id: networkHandler
 
+        onRequestSuccess: function(responseData) {
+            if(responseData["code"]!==200&&responseData["code"]!==500){
+                console.log("网络问题")
+            }
+            if(responseData["code"]===500){
+                console.log("用户不存在")
+                confirmationDialog.open()
+                return
+            }
+
+            userInfo.userName=userNameField.text
+            userInfo.userPersonalInfo="Some personal info about "+userInfo.userName+"."
+            console.log("登录成功")
+
+            userInfo.myToken=responseData["data"]["token"]
+            stack.changeTo('views/ProfileView.qml')
+        }
+
+        onRequestFailed: function(errorMessage) {
+            console.log("请求失败：", errorMessage); // 打印失败的错误信息
+        }
     }
 
     // 登录框
@@ -48,6 +71,20 @@ Page {
             // 用户名输入框
             TextField {
                 placeholderText: "Username"
+                id:userNameField
+                anchors.left: parent.left // 左边对齐到父元素的左边
+                anchors.leftMargin: parent.width * 0.1
+                width: parent.width * 0.8
+                font.pixelSize: 18
+                height: 40
+                padding: 10
+                color: "#00796b"
+            }
+
+            // 电话号码输入框
+            TextField {
+                placeholderText: "Telephone"
+                id:telephoneField
                 anchors.left: parent.left // 左边对齐到父元素的左边
                 anchors.leftMargin: parent.width * 0.1
                 width: parent.width * 0.8
@@ -60,6 +97,7 @@ Page {
             // 密码输入框
             TextField {
                 placeholderText: "Password"
+                id:userPssField
                 anchors.left: parent.left // 左边对齐到父元素的左边
                 anchors.leftMargin: parent.width * 0.1
                 width: parent.width * 0.8
@@ -83,9 +121,26 @@ Page {
                     radius: 8
                 }
                 onClicked: {
-                    // 登录逻辑
+                    networkHandler.request("http://127.0.0.1:8080/api/login",NetworkHandler.POST,{
+                                               "password":userPssField.text,
+                                               "telephone":telephoneField.text
+                                           })
                     console.log("Login clicked")
                 }
+            }
+
+            Dialog {
+                id: confirmationDialog
+                visible: false
+                standardButtons: Dialog.Yes
+                x: (parent.width - width) / 2
+                y: (parent.height - height) / 2
+                parent: Overlay.overlay
+                modal: true
+                Label {
+                    text: qsTr("用户不存在！")
+                }
+
             }
 
             // 忘记密码链接

@@ -4,11 +4,20 @@ import QtQuick.Layouts 1.15
 import NetworkHandler 1.0
 
 Page {
+    property StackView stack: StackView.view
     visible: true
-    property string userNmae: "none"
-    property string passWord: "none"
     NetworkHandler{
+        id: networkHandler
 
+        onRequestSuccess: function(responseData) {
+            if(responseData["code"]!==200){
+                console.log("网络问题")
+            }
+        }
+
+        onRequestFailed: function(errorMessage) {
+            console.log("请求失败：", errorMessage); // 打印失败的错误信息
+        }
     }
 
     // 登录框
@@ -16,7 +25,7 @@ Page {
         anchors.left: parent.left // 左边对齐到父元素的左边
         anchors.leftMargin: parent.width * 0.05
         width: parent.width * 0.9
-        height: 480
+        height: 580
         anchors.centerIn: parent
         radius: 15
         color: "white"
@@ -50,6 +59,20 @@ Page {
             // 用户名输入框
             TextField {
                 placeholderText: "Username"
+                id:usernameField
+                anchors.left: parent.left // 左边对齐到父元素的左边
+                anchors.leftMargin: parent.width * 0.1
+                width: parent.width * 0.8
+                font.pixelSize: 18
+                height: 40
+                padding: 10
+                color: "#00796b"
+            }
+
+            // 电话号码输入框
+            TextField {
+                placeholderText: "Telephone"
+                id:telephoneField
                 anchors.left: parent.left // 左边对齐到父元素的左边
                 anchors.leftMargin: parent.width * 0.1
                 width: parent.width * 0.8
@@ -63,7 +86,6 @@ Page {
             TextField {
                 placeholderText: "Password"
                 id: pssField
-
                 anchors.left: parent.left // 左边对齐到父元素的左边
                 anchors.leftMargin: parent.width * 0.1
                 width: parent.width * 0.8
@@ -105,11 +127,17 @@ Page {
                     if(pssField.text!=pssConirmField.text){
                         console.log("两次密码输入不同")
                         confirmationDialog.open()
-
                     }
                     else{
-                        passWord=pssField.text
-                        console.log("注册")
+                        userInfo.userName=usernameField.text
+                        userInfo.userPersonalInfo="Some personal info about "+userInfo.userName+"."
+                        networkHandler.request("http://127.0.0.1:8080/api/register",NetworkHandler.POST,{
+                                                   "username":userInfo.userName,
+                                                   "password":pssField.text,
+                                                   "telephone":telephoneField.text
+                                               })
+                        console.log("注册成功")
+                        stack.changeTo('views/ProfileView.qml')
                     }
                 }
                 Dialog {
