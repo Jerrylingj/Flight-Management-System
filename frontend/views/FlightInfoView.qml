@@ -15,10 +15,14 @@ Page {
 
         onRequestSuccess: function(responseData) {
             var jsonString = JSON.stringify(responseData);
-            console.log("请求成功，返回数据：", jsonString); // 打印 JSON 字符串
+            // console.log("请求成功，返回数据：", jsonString); // 打印 JSON 字符串
+            console.log(usrInfo.token)
+            console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
 
             // 检查 responseData 是否为数组
             if (Array.isArray(responseData)) {
+                console.log(usrInfo.token)
+                console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
                 console.log("responseData 是一个数组，长度为:", responseData.length);
                 // 为每个航班添加 isBooked 和 isFaved 字段，初始化为 false
                 flightData = responseData.map(function(flight) {
@@ -28,8 +32,11 @@ Page {
                     return flight;
                 });
             } else {
+                console.log(usrInfo.token)
+                console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
                 console.log("responseData 不是一个数组，类型为:", typeof responseData);
                 // 如果 responseData 不是数组，检查是否包含数组字段
+
                 if (responseData.data && Array.isArray(responseData.data)) {
                     console.log("responseData.data 是一个数组，长度为:", responseData.data.length);
                     flightData = responseData.data.map(function(flight) {
