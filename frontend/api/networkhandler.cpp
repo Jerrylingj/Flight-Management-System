@@ -5,9 +5,14 @@
 NetworkHandler::NetworkHandler(QObject *parent)
     : QObject(parent), m_NetworkHandler(new QNetworkAccessManager(this)) {
 }
-void NetworkHandler::request(const QString &url, RequestMethod method, const QJsonObject &data) {
+void NetworkHandler::request(const QString &url, RequestMethod method, const QJsonObject &data, const QString Token) {
     QNetworkRequest request;
     QNetworkReply *reply = nullptr;
+
+    // 如果 token 不为空，则将其添加到请求头的 Authorization 字段，格式为 Bearer <token>
+    if (!Token.isEmpty()) {
+        request.setRawHeader("Authorization", QString("Bearer %1").arg(Token).toUtf8());
+    }
 
     switch (method) {
     case GET: {

@@ -26,7 +26,8 @@ public:
     Q_INVOKABLE void request(
         const QString &url,
         RequestMethod method,
-        const QJsonObject &data = QJsonObject()
+        const QJsonObject &data = QJsonObject(),
+        const QString Token = ""
         );
 
 signals:
