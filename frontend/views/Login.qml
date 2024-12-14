@@ -121,7 +121,7 @@ Page {
                     radius: 8
                 }
                 onClicked: {
-                    networkHandler.request("http://127.0.0.1:8080/api/login",NetworkHandler.POST,{
+                    networkHandler.request("/api/login",NetworkHandler.POST,{
                                                "password":userPssField.text,
                                                "telephone":telephoneField.text
                                            })

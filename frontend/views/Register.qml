@@ -131,7 +131,7 @@ Page {
                     else{
                         userInfo.userName=usernameField.text
                         userInfo.userPersonalInfo="Some personal info about "+userInfo.userName+"."
-                        networkHandler.request("http://127.0.0.1:8080/api/register",NetworkHandler.POST,{
+                        networkHandler.request("/api/register",NetworkHandler.POST,{
                                                    "username":userInfo.userName,
                                                    "password":pssField.text,
                                                    "telephone":telephoneField.text

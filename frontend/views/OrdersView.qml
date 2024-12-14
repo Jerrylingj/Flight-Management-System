@@ -417,7 +417,7 @@ Page {
 
     // 调用网络请求
     function fetchOrderData() {
-        var url = "http://127.0.0.1:8080/api/orders";  // 后端 API URL
+        const url = "/api/orders";  // 后端 API URL
         console.log("发送获取全部订单信息的请求，URL:", url); // 打印请求的 URL
         networkHandler.request(url, NetworkHandler.GET);  // 发送 GET 请求
     }

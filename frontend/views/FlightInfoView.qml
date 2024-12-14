@@ -63,13 +63,13 @@ Page {
 
     // 查询航班信息
     function fetchFlightData() {
-        var url = "http://127.0.0.1:8080/api/flights";  // 后端 API URL
+        var url = "/api/flights";  // 后端 API URL
         // console.log("发送请求，URL:", url); // 打印请求的 URL
         flightInfoHandler.request(url, flightInfoHandler.GET);  // 发送 GET 请求
     }
     // 查询收藏信息
     function fetchFavoriteFlights() {
-        var url = "http://127.0.0.1:8080/api/favorites"; // 收藏信息 API URL
+        var url = "/api/favorites"; // 收藏信息 API URL
         console.log("发送收藏航班信息请求，URL:", url);
         console.log("token: ", userInfo.myToken)
         favoriteHandler.request(url, flightInfoHandler.POST, {}, userInfo.myToken);
