@@ -7,20 +7,7 @@
 #include <QRandomGenerator>
 #include <QString>
 #include <stdexcept>
-
-QString hashPassword(const QString& password) {
-    QString salt = "fixed_salt_value"; // 使用固定盐值
-    QString passwordWithSalt = password + salt;
-    QByteArray hash;
-    for (int i = 0; i < 10000; ++i) {
-        hash = QCryptographicHash::hash(
-            passwordWithSalt.toUtf8(),
-            QCryptographicHash::Sha256
-            );
-        passwordWithSalt = hash.toHex();
-    }
-    return salt + "$" + QString::fromUtf8(hash.toHex());
-}
+#include "util/easycrypt.h"
 
 DatabaseManager::DatabaseManager() {
     QFile configFile(":/config/database_config.json");
@@ -126,7 +113,7 @@ void DatabaseManager::createTable() {
 bool DatabaseManager::insertUser(const QString& username, const QString& telephone, const QString& password) {
     QSqlQuery query;
     query.prepare("INSERT INTO users (username, telephone, password) VALUES (:username, :telephone, :password)");
-    QString hashedPassword = hashPassword(password);
+    QString hashedPassword = hashText(password);
     query.bindValue(":username", username);
     query.bindValue(":telephone", telephone);
     query.bindValue(":password",hashedPassword);
@@ -163,7 +150,7 @@ int DatabaseManager::queryUsers(const QString& telephone, const QString& passwor
     QSqlQuery query;
     query.prepare("SELECT id FROM users WHERE telephone = :phone AND password = :pwd");
     query.bindValue(":phone", telephone);
-    QString hashedPassword = hashPassword(password);
+    QString hashedPassword = hashText(password);
     qDebug() << "login" << password << " " << hashedPassword;
     query.bindValue(":pwd", hashedPassword);
 

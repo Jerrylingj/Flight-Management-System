@@ -43,6 +43,8 @@ add_executable(QtHttpServer
     config/ai.qrc
     config/ai.json
     dto/order_info_dto.cpp dto/order_info_dto.h
+    dto/send_code.h dto/send_code.cpp
+    util/networkhandler.h util/networkhandler.cpp
 
 )
 target_link_libraries(QtHttpServer PRIVATE

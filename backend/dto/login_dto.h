@@ -3,11 +3,12 @@
 
 #include <QString>
 #include <QJsonObject>
+#include <QHttpServer>
 
 class LoginDTO
 {
 public:
-    LoginDTO(const QJsonObject& jsonObj);
+    LoginDTO(const QHttpServerRequest &request);
     QString getTelephone() const {
         return m_telephone;
     }

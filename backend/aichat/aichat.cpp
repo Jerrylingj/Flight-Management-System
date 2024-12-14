@@ -1,4 +1,5 @@
 #include "aichat.h"
+#include "util/networkhandler.h"
 
 #include <QFile>
 #include <QJsonDocument>
@@ -58,48 +59,26 @@ QJsonObject AIChat::chat(const QHttpServerRequest& request){
 }
 
 QJsonObject AIChat::sendToAI(QJsonArray& messages){
-    QNetworkAccessManager* networkManager = new QNetworkAccessManager();
-
-    QUrl url(api_base);
-
-    // 创建网络请求
-    QNetworkRequest request(url);
-    request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
-    request.setRawHeader("Authorization", QString("Bearer %1").arg(token).toUtf8());
-
     // 准备JSON请求体
     QJsonObject requestBody;
     requestBody["model"] = model;
     requestBody["messages"] = messages;
     requestBody["tools"] = tools;
-
-    // 发送POST请求
-    QNetworkReply* reply = networkManager->post(request, QJsonDocument(requestBody).toJson());
-
-    // 使用事件循环等待响应
-    QEventLoop loop;
-    QObject::connect(reply, &QNetworkReply::finished, &loop, &QEventLoop::quit);
-    loop.exec();
-
-    // 处理响应
+    QJsonObject resp = useNetwork(api_base, "POST", requestBody, token);
     QJsonObject message;
-    if (reply->error() == QNetworkReply::NoError) {
-        QByteArray responseData = reply->readAll();
-        QJsonDocument jsonResponse = QJsonDocument::fromJson(responseData);
-        message = jsonResponse.object().value("choices").toArray()[0].toObject().value("message").toObject();
+    // 如果没有错误
+    if((!resp.contains("error"))&&(resp.value("error").isNull()||resp.value("error").isUndefined())){
+        message = resp.value("choices").toArray()[0].toObject().value("message").toObject();
         if(message.value("content").isUndefined()){
             messages.append(message);
             QJsonObject result = useTools(message);
             messages.append(result);
             message = sendToAI(messages);
         }
-    } else {
-        message["error"] = reply->errorString();
+    }else{
+        message["error"] = resp.value("error").toString();
     }
 
-    // 清理
-    reply->deleteLater();
-    networkManager->deleteLater();
     return message;
 }
 

@@ -69,7 +69,7 @@ app.post('/api/send-code', async (req, res) => {
 
 	try {
 		await sendEmail(email, code);
-		res.status(200).json({ message: 'Email sent successfully.' });
+		res.status(200).json({ email, code });
 	} catch (error) {
 		res.status(500).json({
 			message: 'Failed to send email.',

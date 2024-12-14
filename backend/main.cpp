@@ -46,6 +46,10 @@ public:
             return registerUser(request, m_db);
         });
 
+        m_httpServer->route("/api/send-code",QHttpServerRequest::Method::Post,[this](const QHttpServerRequest &request){
+            return sendCode(request);
+        });
+
         /*** flight_info ***/
         // 获取所有航班信息
         m_httpServer->route("/api/flights", QHttpServerRequest::Method::Get, [this](const QHttpServerRequest &request) -> QHttpServerResponse {
