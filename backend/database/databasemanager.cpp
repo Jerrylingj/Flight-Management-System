@@ -58,7 +58,7 @@ void DatabaseManager::createTable() {
     if (!query.exec("CREATE TABLE IF NOT EXISTS users ("
                     "id INT AUTO_INCREMENT PRIMARY KEY, "
                     "username VARCHAR(50) NOT NULL, "
-                    "telephone VARCHAR(15) NOT NULL, "
+                    "email VARCHAR(225) NOT NULL, "
                     "password VARCHAR(100) NOT NULL, "
                     "avartar_url VARCHAR(255), "
                     "balance DECIMAL(10, 2) DEFAULT 0.00, "
@@ -110,12 +110,12 @@ void DatabaseManager::createTable() {
 /*** 表的增删改查 ***/
 /*** users ***/
 // 添加用户
-bool DatabaseManager::insertUser(const QString& username, const QString& telephone, const QString& password) {
+bool DatabaseManager::insertUser(const QString& username, const QString& email, const QString& password) {
     QSqlQuery query;
-    query.prepare("INSERT INTO users (username, telephone, password) VALUES (:username, :telephone, :password)");
+    query.prepare("INSERT INTO users (username, email, password) VALUES (:username, :email, :password)");
     QString hashedPassword = hashText(password);
     query.bindValue(":username", username);
-    query.bindValue(":telephone", telephone);
+    query.bindValue(":email", email);
     query.bindValue(":password",hashedPassword);
 
     if(!query.exec()) {
@@ -135,10 +135,10 @@ double DatabaseManager::getUserBalance(int userID){
     throw std::runtime_error("无法获取用户余额");
 }
 // 查询用户
-bool DatabaseManager::queryUsers(const QString& telephone){
+bool DatabaseManager::queryUsers(const QString& email){
     QSqlQuery query;
-    query.prepare("SELECT COUNT(*) FROM users WHERE telephone = :phone");
-    query.bindValue(":phone", telephone);
+    query.prepare("SELECT COUNT(*) FROM users WHERE email = :email");
+    query.bindValue(":email", email);
 
     if (query.exec() && query.next()) {
         return query.value(0).toInt() > 0;
@@ -146,10 +146,10 @@ bool DatabaseManager::queryUsers(const QString& telephone){
 
     return false;
 }
-int DatabaseManager::queryUsers(const QString& telephone, const QString& password) {
+int DatabaseManager::queryUsers(const QString& email, const QString& password) {
     QSqlQuery query;
-    query.prepare("SELECT id FROM users WHERE telephone = :phone AND password = :pwd");
-    query.bindValue(":phone", telephone);
+    query.prepare("SELECT id FROM users WHERE email = :email AND password = :pwd");
+    query.bindValue(":email", email);
     QString hashedPassword = hashText(password);
     qDebug() << "login" << password << " " << hashedPassword;
     query.bindValue(":pwd", hashedPassword);
