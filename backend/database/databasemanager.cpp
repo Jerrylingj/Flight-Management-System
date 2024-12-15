@@ -135,7 +135,7 @@ double DatabaseManager::getUserBalance(int userID){
     throw std::runtime_error("无法获取用户余额");
 }
 // 查询用户
-bool DatabaseManager::queryUsers(const QString& email){
+bool DatabaseManager::queryUser(const QString& email){
     QSqlQuery query;
     query.prepare("SELECT COUNT(*) FROM users WHERE email = :email");
     query.bindValue(":email", email);
@@ -146,7 +146,7 @@ bool DatabaseManager::queryUsers(const QString& email){
 
     return false;
 }
-int DatabaseManager::queryUsers(const QString& email, const QString& password) {
+int DatabaseManager::queryUser(const QString& email, const QString& password) {
     QSqlQuery query;
     query.prepare("SELECT id FROM users WHERE email = :email AND password = :pwd");
     query.bindValue(":email", email);

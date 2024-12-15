@@ -7,7 +7,7 @@
 QJsonObject registerUser(const QHttpServerRequest &request, DatabaseManager* m_db){
     try{
         RegisterRequest req(request);
-        if(m_db->queryUsers(req.getEmail())){
+        if(m_db->queryUser(req.getEmail())){
             auto response = fail<QJsonObject>(QString("该账号已注册过"));
             return response->toJson();
         }else {
