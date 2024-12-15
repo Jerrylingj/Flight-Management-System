@@ -74,3 +74,23 @@ int getUserID(const QHttpServerRequest &request){
         return userInfo.value("userID").toInt();
     }
 }
+
+QString hashText(const QString& text) {
+    QString salt = "fixed_salt_value"; // 使用固定盐值
+    QString passwordWithSalt = text + salt;
+    QByteArray hash;
+    for (int i = 0; i < 10000; ++i) {
+        hash = QCryptographicHash::hash(
+            passwordWithSalt.toUtf8(),
+            QCryptographicHash::Sha256
+            );
+        passwordWithSalt = hash.toHex();
+    }
+    return salt + "$" + QString::fromUtf8(hash.toHex());
+}
+
+QString hashText(const QJsonObject& jsonData){
+    QJsonDocument jsonDoc(jsonData);
+    QString jsonString = jsonDoc.toJson(QJsonDocument::Compact);
+    return hashText(jsonString);
+}

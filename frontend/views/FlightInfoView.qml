@@ -7,46 +7,25 @@ Page {
     id: flightInfoView
 
     property string viewName: "航班信息"
+    property bool favorite: true // 先定义为true便于测试
     property var flightData: []
 
-    // 创建 NetworkHandler 实例
     NetworkHandler {
-        id: networkHandler
+        id: flightInfoHandler
 
         onRequestSuccess: function(responseData) {
             var jsonString = JSON.stringify(responseData);
-            console.log("请求成功，返回数据：", jsonString); // 打印 JSON 字符串
+            // console.log("请求成功，返回数据：", jsonString); // 打印 JSON 字符串
 
-            // 检查 responseData 是否为数组
-            if (Array.isArray(responseData)) {
-                console.log("responseData 是一个数组，长度为:", responseData.length);
-                // 为每个航班添加 isBooked 和 isFaved 字段，初始化为 false
-                flightData = responseData.map(function(flight) {
-                    flight.isBooked = false;
-                    flight.isFaved = false;
-                    flight.remainingSeats = 10;
-                    return flight;
-                });
-            } else {
-                console.log("responseData 不是一个数组，类型为:", typeof responseData);
-                // 如果 responseData 不是数组，检查是否包含数组字段
-                if (responseData.data && Array.isArray(responseData.data)) {
-                    console.log("responseData.data 是一个数组，长度为:", responseData.data.length);
-                    flightData = responseData.data.map(function(flight) {
-                        /*** 初始化数据 ***/
-                        flight.isBooked = false;
-                        flight.isFaved = false;
-                        flight.remainingSeats = 10;
-                        return flight;
-                    });
+            flightData = responseData.data.map(function(flight) {
+                /*** 初始化数据 ***/
+                flight.isBooked = false;
+                flight.isFaved = false;
+                flight.remainingSeats = 10;
+                return flight;
+            });
 
-                } else {
-                    console.log("无法识别的响应数据结构");
-                    flightData = [];
-                }
-            }
-
-            updateFilter();  // 重新更新筛选
+            // updateFilter();  // 重新更新筛选
         }
 
         onRequestFailed: function(errorMessage) {
@@ -54,17 +33,58 @@ Page {
         }
     }
 
+    // 获取收藏航班信息
+    NetworkHandler {
+        id: favoriteHandler
 
-    // 调用网络请求
+        onRequestSuccess: function(responseData) {
+            console.log("收藏航班请求成功，返回数据：", JSON.stringify(responseData));
+
+            if (Array.isArray(responseData)) {
+                const favoriteFlightIds = responseData.map(favorite => favorite.flightId);
+
+                // 更新 flightData，标记 isFaved 属性
+                flightData = flightData.map(function(flight) {
+                    flight.isFaved = favoriteFlightIds.includes(flight.flightId);
+                    return flight;
+                });
+
+                console.log("更新后的航班数据：", JSON.stringify(flightData));
+            } else {
+                console.log("收藏航班数据格式错误，无法解析");
+            }
+        }
+
+        onRequestFailed: function(errorMessage) {
+            console.log("收藏航班请求失败：", errorMessage);
+        }
+    }
+
+
+    // 查询航班信息
     function fetchFlightData() {
-        var url = "http://127.0.0.1:8080/api/flights";  // 后端 API URL
+        var url = "/api/flights";  // 后端 API URL
         // console.log("发送请求，URL:", url); // 打印请求的 URL
-        networkHandler.request(url, NetworkHandler.GET);  // 发送 GET 请求
+        flightInfoHandler.request(url, flightInfoHandler.GET);  // 发送 GET 请求
+    }
+    // 查询收藏信息
+    function fetchFavoriteFlights() {
+        var url = "/api/favorites"; // 收藏信息 API URL
+        console.log("发送收藏航班信息请求，URL:", url);
+        console.log("token: ", userInfo.myToken)
+        favoriteHandler.request(url, flightInfoHandler.POST, {}, userInfo.myToken);
     }
 
     // 在页面初始化时调用 fetchFlightData 获取航班数据
     Component.onCompleted: {
-        fetchFlightData();  // 页面加载完毕后调用 fetchFlightData 方法获取数据
+        fetchFlightData();
+
+        // 如果需要展示收藏界面
+        if (favorite)
+        {
+            fetchFavoriteFlights();
+            console.log("展示收藏页面");
+        }
     }
 
     // 跟踪当前的排序方法和排序方向
@@ -93,7 +113,7 @@ Page {
                 border.width: 1
                 width: parent.width - 40
                 height: 80
-                anchors.horizontalCenter: parent.horizontalCenter // 居中
+                Layout.alignment: Qt.AlignHCenter // 居中
 
                 RowLayout {
                     anchors.fill: parent
@@ -186,7 +206,7 @@ Page {
                 border.width: 1
                 width: parent.width - 40
                 height: 80
-                anchors.horizontalCenter: parent.horizontalCenter // 居中
+                Layout.alignment: Qt.AlignHCenter // 居中
 
                 RowLayout {
                     anchors.fill: parent
@@ -253,19 +273,19 @@ Page {
                         source: "../components/FlightInfoCard.qml"
                         property var flightInfo: modelData // 传递每条航班的数据
                         onLoaded: {
-                            // 打印所有的航班信息
-                            console.log("flightId: " + flightInfo.flightId);
-                            console.log("flightNumber: " + flightInfo.flightNumber);
-                            console.log("departureTime: " + flightInfo.departureTime);
-                            console.log("arrivalTime: " + flightInfo.arrivalTime);
-                            console.log("departureAirport: " + flightInfo.departureAirport);
-                            console.log("arrivalAirport: " + flightInfo.arrivalAirport);
-                            console.log("price: " + flightInfo.price);
-                            console.log("airlineCompany: " + flightInfo.airlineCompany);
-                            console.log("status: " + flightInfo.status);
-                            console.log("isBooked: " + flightInfo.isBooked);
-                            console.log("isFaved: " + flightInfo.isFaved);
-                            console.log("remainingSeats: " + flightInfo.remainingSeats);
+                            // // 打印所有的航班信息
+                            // console.log("flightId: " + flightInfo.flightId);
+                            // console.log("flightNumber: " + flightInfo.flightNumber);
+                            // console.log("departureTime: " + flightInfo.departureTime);
+                            // console.log("arrivalTime: " + flightInfo.arrivalTime);
+                            // console.log("departureAirport: " + flightInfo.departureAirport);
+                            // console.log("arrivalAirport: " + flightInfo.arrivalAirport);
+                            // console.log("price: " + flightInfo.price);
+                            // console.log("airlineCompany: " + flightInfo.airlineCompany);
+                            // console.log("status: " + flightInfo.status);
+                            // console.log("isBooked: " + flightInfo.isBooked);
+                            // console.log("isFaved: " + flightInfo.isFaved);
+                            // console.log("remainingSeats: " + flightInfo.remainingSeats);
 
                             item.flightId = flightInfo.flightId;
                             item.flightNumber = flightInfo.flightNumber;

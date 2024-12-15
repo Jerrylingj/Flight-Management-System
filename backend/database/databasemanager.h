@@ -23,10 +23,11 @@ public:
     /*** user表 ***/
     // 插入用户，传入的密码应该是原文
     bool insertUser(const QString& username, const QString& telephone, const QString& password);
-    // 根据手机号找用户，存在返回true，不存在返回false
-    bool queryUsers(const QString& telephone);
-    // 根据手机号和密码找用户，存在返回用户id，不存在返回-1
-    int queryUsers(const QString& telephone, const QString& password);
+    // 根据邮箱找用户，存在返回true，不存在返回false
+    bool queryUser(const QString& email);
+    // 根据邮箱和密码找用户，存在返回用户id，不存在返回-1
+    int queryUser(const QString& email, const QString& password);
+    void queryUser(const int userId, QJsonObject& userInfo);
     // 获取余额
     double getUserBalance(int userID);
 

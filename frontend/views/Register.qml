@@ -4,19 +4,58 @@ import QtQuick.Layouts 1.15
 import NetworkHandler 1.0
 
 Page {
+    property string viewName: "注册"
     property StackView stack: StackView.view
     visible: true
+    property string myValue: ""
     NetworkHandler{
         id: networkHandler
 
         onRequestSuccess: function(responseData) {
             if(responseData["code"]!==200){
-                console.log("网络问题")
+                console.log(responseData["message"])
+                return
+            }
+            if(responseData["data"].length> 10){
+                myValue = responseData["data"];
+                console.log(myValue);
+            }else{
+                userInfo.userName=usernameField.text
+                userInfo.userPersonalInfo="Some personal info about "+userInfo.userName+"."
+                stack.changeTo('views/ProfileView.qml')
             }
         }
 
         onRequestFailed: function(errorMessage) {
             console.log("请求失败：", errorMessage); // 打印失败的错误信息
+
+        }
+    }
+
+    function useDiolog(msg){
+        failDiolog.msg = msg
+        failDiolog.open()
+    }
+
+    Dialog {
+        id: failDiolog
+        standardButtons: Dialog.Yes
+        x: (parent.width - width) / 2
+        y: (parent.height - height) / 2
+        parent: Overlay.overlay
+        property string msg
+
+        modal: true
+        Column {
+            spacing: 20
+            anchors.fill: parent
+            Label {
+                text: qsTr(failDiolog.msg)
+            }
+            CheckBox {
+                text: qsTr("Do not ask again")
+                anchors.right: parent.right
+            }
         }
     }
 
@@ -71,8 +110,8 @@ Page {
 
             // 电话号码输入框
             TextField {
-                placeholderText: "Telephone"
-                id:telephoneField
+                placeholderText: "Email"
+                id:emailField
                 anchors.left: parent.left // 左边对齐到父元素的左边
                 anchors.leftMargin: parent.width * 0.1
                 width: parent.width * 0.8
@@ -110,6 +149,44 @@ Page {
                 color: "#00796b"
             }
 
+            TextField {
+                placeholderText: "code"
+                id: codeField
+                anchors.left: parent.left // 左边对齐到父元素的左边
+                anchors.leftMargin: parent.width * 0.1
+                width: parent.width * 0.8
+                font.pixelSize: 18
+                height: 40
+                padding: 10
+                color: "#00796b"
+            }
+
+            Button {
+                text: "发送验证码"
+                anchors.left: parent.left // 左边对齐到父元素的左边
+                anchors.leftMargin: parent.width * 0.1
+                width: parent.width * 0.8
+                height: 40
+                font.pixelSize: 18
+                background: Rectangle {
+                    color: "#00bcd4"
+                    radius: 8
+                }
+                onClicked: {
+                    // 注册逻辑
+                    if(emailField.text.length === 0){
+                        useDiolog("请输入邮箱")
+                    }
+                    else{
+                        networkHandler.request("/api/send-code",NetworkHandler.POST,{
+                                                   "email":emailField.text
+                                               })
+                        console.log("发送验证码")
+                    }
+                }
+            }
+
+
             // 登录按钮
             Button {
                 text: "注册"
@@ -125,39 +202,16 @@ Page {
                 onClicked: {
                     // 注册逻辑
                     if(pssField.text!=pssConirmField.text){
-                        console.log("两次密码输入不同")
-                        confirmationDialog.open()
+                        useDiolog("两次密码不一致")
                     }
                     else{
-                        userInfo.userName=usernameField.text
-                        userInfo.userPersonalInfo="Some personal info about "+userInfo.userName+"."
-                        networkHandler.request("http://127.0.0.1:8080/api/register",NetworkHandler.POST,{
+                        networkHandler.request("/api/register",NetworkHandler.POST,{
                                                    "username":userInfo.userName,
                                                    "password":pssField.text,
-                                                   "telephone":telephoneField.text
+                                                   "email":emailField.text,
+                                                   "code":codeField.text,
+                                                   "value":myValue
                                                })
-                        console.log("注册成功")
-                        stack.changeTo('views/ProfileView.qml')
-                    }
-                }
-                Dialog {
-                    id: confirmationDialog
-                    standardButtons: Dialog.Yes
-                    x: (parent.width - width) / 2
-                    y: (parent.height - height) / 2
-                    parent: Overlay.overlay
-
-                    modal: true
-                    Column {
-                        spacing: 20
-                        anchors.fill: parent
-                        Label {
-                            text: qsTr("两次密码输入不同！")
-                        }
-                        CheckBox {
-                            text: qsTr("Do not ask again")
-                            anchors.right: parent.right
-                        }
                     }
                 }
             }
