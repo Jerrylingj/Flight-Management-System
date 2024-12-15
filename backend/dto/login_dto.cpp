@@ -24,13 +24,11 @@ LoginDTO::LoginDTO(const QHttpServerRequest &request){
 }
 
 LoginReturnDTO::LoginReturnDTO(const QJsonObject& jsonObj){
-    m_email = jsonObj.value("email").toString();
     m_token = encrypt(jsonObj);
 }
 
 QJsonObject LoginReturnDTO::toJson() const {
     QJsonObject obj;
-    obj["email"] = m_email;
     obj["token"] = m_token;
     return obj;
 }

@@ -24,15 +24,11 @@ class LoginReturnDTO
 {
 public:
     LoginReturnDTO(const QJsonObject& jsonObj);
-    QString getTelephone() const {
-        return m_email;
-    }
     QString getToken() const {
         return m_token;
     }
     QJsonObject toJson() const;
 private:
-    QString m_email;
     QString m_token;
 };
 
