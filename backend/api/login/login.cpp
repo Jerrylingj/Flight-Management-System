@@ -7,11 +7,11 @@
 QJsonObject login(const QHttpServerRequest &request, DatabaseManager* m_db){
     try {
         LoginDTO info(request);
-        int id = m_db->queryUsers(info.getTelephone(),info.getPassword());
+        int id = m_db->queryUsers(info.getEmail(),info.getPassword());
         if(id != -1){
             QJsonObject userInfo;
             userInfo["userID"] = id;
-            userInfo["telephone"] = info.getTelephone();
+            userInfo["email"] = info.getEmail();
             LoginReturnDTO loginReturn(userInfo);
             auto response = success<QJsonObject>(loginReturn.toJson());
             return response->toJson();

@@ -10,12 +10,8 @@ Page {
         id: networkHandler
 
         onRequestSuccess: function(responseData) {
-            if(responseData["code"]!==200&&responseData["code"]!==500){
-                console.log("网络问题")
-            }
-            if(responseData["code"]===500){
-                console.log("用户不存在")
-                confirmationDialog.open()
+            if(responseData["code"]!==200){
+                console.log(responseData['message'])
                 return
             }
 
@@ -68,23 +64,10 @@ Page {
                 height: width
             }
 
-            // 用户名输入框
+            // 邮箱输入框
             TextField {
-                placeholderText: "Username"
-                id:userNameField
-                anchors.left: parent.left // 左边对齐到父元素的左边
-                anchors.leftMargin: parent.width * 0.1
-                width: parent.width * 0.8
-                font.pixelSize: 18
-                height: 40
-                padding: 10
-                color: "#00796b"
-            }
-
-            // 电话号码输入框
-            TextField {
-                placeholderText: "Telephone"
-                id:telephoneField
+                placeholderText: "Email"
+                id:emailField
                 anchors.left: parent.left // 左边对齐到父元素的左边
                 anchors.leftMargin: parent.width * 0.1
                 width: parent.width * 0.8
@@ -123,7 +106,7 @@ Page {
                 onClicked: {
                     networkHandler.request("/api/login",NetworkHandler.POST,{
                                                "password":userPssField.text,
-                                               "telephone":telephoneField.text
+                                               "email":emailField.text
                                            })
                     console.log("Login clicked")
                 }

@@ -9,14 +9,14 @@ class LoginDTO
 {
 public:
     LoginDTO(const QHttpServerRequest &request);
-    QString getTelephone() const {
-        return m_telephone;
+    QString getEmail() const {
+        return m_email;
     }
     QString getPassword() const {
         return m_password;
     }
 private:
-    QString m_telephone;
+    QString m_email;
     QString m_password;
 };
 
@@ -25,14 +25,14 @@ class LoginReturnDTO
 public:
     LoginReturnDTO(const QJsonObject& jsonObj);
     QString getTelephone() const {
-        return m_telephone;
+        return m_email;
     }
     QString getToken() const {
         return m_token;
     }
     QJsonObject toJson() const;
 private:
-    QString m_telephone;
+    QString m_email;
     QString m_token;
 };
 
