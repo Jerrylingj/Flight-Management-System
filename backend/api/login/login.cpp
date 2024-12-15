@@ -7,7 +7,7 @@
 QJsonObject login(const QHttpServerRequest &request, DatabaseManager* m_db){
     try {
         LoginDTO info(request);
-        int id = m_db->queryUsers(info.getEmail(),info.getPassword());
+        int id = m_db->queryUser(info.getEmail(),info.getPassword());
         if(id != -1){
             QJsonObject userInfo;
             userInfo["userID"] = id;

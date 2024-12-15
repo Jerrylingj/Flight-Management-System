@@ -4,6 +4,7 @@
 #include <QJsonArray>
 #include <QObject>
 #include "database/databasemanager.h"
+#include "api/user/user.h"
 #include "api/login/login.h"
 #include "api/register/register.h"
 #include "api/flight/FlightApi.h"
@@ -37,6 +38,10 @@ public:
 
         /***  API ***/
         /*** users ***/
+        // 获取用户信息
+        m_httpServer->route("/api/user", QHttpServerRequest::Method::Get,[this](const QHttpServerRequest &request){
+            return getUserInfo(request, m_db);
+        });
         // 登录
         m_httpServer->route("/api/login",QHttpServerRequest::Method::Post,[this](const QHttpServerRequest &request){
             return login(request, m_db);

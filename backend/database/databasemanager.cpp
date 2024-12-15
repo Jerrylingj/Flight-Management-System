@@ -151,7 +151,6 @@ int DatabaseManager::queryUser(const QString& email, const QString& password) {
     query.prepare("SELECT id FROM users WHERE email = :email AND password = :pwd");
     query.bindValue(":email", email);
     QString hashedPassword = hashText(password);
-    qDebug() << "login" << password << " " << hashedPassword;
     query.bindValue(":pwd", hashedPassword);
 
     if (query.exec() && query.next()) {
@@ -161,6 +160,23 @@ int DatabaseManager::queryUser(const QString& email, const QString& password) {
 
     return -1;
 }
+
+void DatabaseManager::queryUser(const int userId, QJsonObject& userInfo){
+    QSqlQuery query;
+    query.prepare("SELECT username, email, avartar_url, balance, created_at FROM users WHERE id = :id");
+    query.bindValue(":id", userId);
+    if(query.exec() && query.next()){
+        // 正确的字段对应关系
+        userInfo.insert("username", query.value("username").toString());
+        userInfo.insert("email", query.value("email").toString());
+        userInfo.insert("avatar_url", query.value("avartar_url").toString());
+        userInfo.insert("balance", query.value("balance").toDouble());
+        userInfo.insert("created_at", query.value("created_at").toString());
+        return;
+    }
+    throw std::runtime_error("error!");
+}
+
 
 /*** flight_info ***/
 // 添加航班

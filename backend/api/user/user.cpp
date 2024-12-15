@@ -20,5 +20,6 @@ QJsonObject getUserInfo(const QHttpServerRequest &request, DatabaseManager* m_db
 }
 
 QJsonObject updateUserInfo(const QHttpServerRequest &request, DatabaseManager* m_db){
-
+    auto resp = success(QString("success"));
+    return resp->toJson();
 }
