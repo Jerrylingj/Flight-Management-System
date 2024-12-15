@@ -44,7 +44,7 @@ Page{
             onClicked: {
                 // 打开人工客服页面逻辑
                 viewName = viewName === "人工客服"? "AI客服":"人工客服"
-                clientType=viewName === "人工客服"?"AI":"people"
+                clientType = viewName === "人工客服"?"people":"AI"
                 console.log(`进入${viewName}`)
             }
         }
@@ -120,6 +120,7 @@ Page{
 
             onClicked: {
                 // 发送消息逻辑
+                console.log(clientType)
                 if(clientType === 'AI'){
                     const msg = {
                         "role":"user",
