@@ -249,29 +249,34 @@ void DatabaseManager::queryFlight(QJsonArray& flights){
     } else {
         while (query.next()) {
             FlightInfo flight;
-            flight.flightId = query.value("flight_id").toInt();
-            flight.flightNumber = query.value("flight_number").toString();
-            flight.departureCity = query.value("departure_city").toString();
-            flight.arrivalCity = query.value("arrival_city").toString();
-            flight.departureTime = query.value("departure_time").toDateTime();
-            flight.arrivalTime = query.value("arrival_time").toDateTime();
-            flight.departureAirport = query.value("departure_airport").toString();
-            flight.arrivalAirport = query.value("arrival_airport").toString();
-            flight.checkinStartTime = query.value("checkin_start_time").toDateTime();
-            flight.checkinEndTime = query.value("checkin_end_time").toDateTime();
-            flight.price = query.value("price").toDouble();
-            flight.airlineCompany = query.value("airline_company").toString();
-            flight.status = query.value("status").toString();
 
+            // 检查每个字段是否有效，如果无效则赋默认值
+            flight.flightId = query.value("flight_id").isNull() ? 0 : query.value("flight_id").toInt();
+            flight.flightNumber = query.value("flight_number").isNull() ? "Unknown" : query.value("flight_number").toString();
+            flight.departureCity = query.value("departure_city").isNull() ? "Unknown" : query.value("departure_city").toString();
+            flight.arrivalCity = query.value("arrival_city").isNull() ? "Unknown" : query.value("arrival_city").toString();
+            flight.departureTime = query.value("departure_time").isNull() ? QDateTime() : query.value("departure_time").toDateTime();
+            flight.arrivalTime = query.value("arrival_time").isNull() ? QDateTime() : query.value("arrival_time").toDateTime();
+            flight.departureAirport = query.value("departure_airport").isNull() ? "Unknown" : query.value("departure_airport").toString();
+            flight.arrivalAirport = query.value("arrival_airport").isNull() ? "Unknown" : query.value("arrival_airport").toString();
+            flight.checkinStartTime = query.value("checkin_start_time").isNull() ? QDateTime() : query.value("checkin_start_time").toDateTime();
+            flight.checkinEndTime = query.value("checkin_end_time").isNull() ? QDateTime() : query.value("checkin_end_time").toDateTime();
+            flight.price = query.value("price").isNull() ? 0.0 : query.value("price").toDouble();
+            flight.airlineCompany = query.value("airline_company").isNull() ? "Unknown" : query.value("airline_company").toString();
+            flight.status = query.value("status").isNull() ? "Unknown" : query.value("status").toString();
+
+            // 确保航班信息有效，添加到 JSON 数组
             flights.append(flight.toJson());
         }
     }
 
     qDebug() << "Retrieved" << flights.size() << "flights.";
-    if(flights.isEmpty()){
+    if (flights.isEmpty()) {
+        qDebug() << "没有数据";
         throw std::runtime_error("没有数据");
     }
 }
+
 void DatabaseManager::queryFlight(QJsonArray& flights, QString departureCity, QString arrivalCity){
     QString sql = "SELECT * FROM flight_info WHERE departure_city = :departureCity AND arrival_city = :arrivalCity";
     qDebug() << "Executing SQL:" << sql;
