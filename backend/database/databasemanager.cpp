@@ -177,6 +177,89 @@ void DatabaseManager::queryUser(const int userId, QJsonObject& userInfo){
     throw std::runtime_error("error!");
 }
 
+void putUser(const int userId, const double balance){
+    QSqlQuery query;
+    query.prepare("SELECT balance FROM users WHERE id = :id");
+    query.bindValue(":id", userId);
+    double bal;
+    if(query.exec() && query.next()){
+        bal = query.value("balance").toDouble();
+    }else{
+        throw std::runtime_error("error!");
+    }
+    QSqlQuery newQuery;
+    const double newBal = bal + balance;
+    newQuery.prepare("UPDATE users SET balance = :balance WHERE id = :id");
+    newQuery.bindValue(":balance", newBal);
+    newQuery.bindValue(":id", userId);
+
+    if (!newQuery.exec()) {
+        throw std::runtime_error("Error updating user balance!");
+    }
+}
+
+/// 感觉在这用枚举变量有点怪，可能文件夹设置的还是不好吧
+/// 如果mode为0，说明要修改用户名
+/// 如果mode为1，说明要修改头像地址
+void putUser(const int userId, const int mode, const QString str){
+    QSqlQuery query;
+    switch(mode){
+    case 0:{
+        query.prepare("UPDATE users SET username = :username WHERE id = :id");
+        query.bindValue(":id", userId);
+        query.bindValue(":username",str);
+        break;
+    }
+    case 1:{
+        query.prepare("UPDATE users SET avatar_url = :avatar_url WHERE id = :id");
+        query.bindValue(":id", userId);
+        query.bindValue(":avatar_url",str);
+        break;
+    }
+    default:{
+        throw std::invalid_argument("Mode out of range: " + std::to_string(mode));
+    }
+    }
+    if(!query.exec()){
+        throw std::runtime_error("SQL Error: " + query.lastError().text().toStdString());
+    }
+}
+
+void deleteUser(const int userId) {
+    // 获取数据库连接
+    QSqlDatabase db = QSqlDatabase::database();
+
+    // 检查数据库连接
+    if (!db.isOpen()) {
+        throw std::runtime_error("Database is not open");
+    }
+
+    QSqlQuery query;
+    query.prepare("DELETE FROM users WHERE id = :id");
+    query.bindValue(":id", userId);
+
+    // 开始事务
+    db.transaction();
+
+    try {
+        if (!query.exec()) {
+            // 执行失败，回滚事务
+            db.rollback();
+            throw std::runtime_error("SQL Error: " + query.lastError().text().toStdString() +
+                                     ", Query: " + query.lastQuery().toStdString());
+        }
+
+        // 提交事务
+        db.commit();
+    } catch (const std::exception& e) {
+        // 捕获异常并回滚事务
+        db.rollback();
+        throw;  // 重新抛出异常
+    }
+}
+
+
+
 
 /*** flight_info ***/
 // 添加航班
@@ -316,7 +399,7 @@ void DatabaseManager::queryFlight(QJsonArray& flights, QString departureCity, QS
 /*** order ***/
 // 创建订单
 // void DatabaseManager::createOrder(int userID, int flightID){
-//     // 如果要一次执行多次数据库操作需要这样子做
+//     // 如果要进行增删改需要这样子做
 //     QSqlDatabase db = QSqlDatabase::database();
 //     if(!db.transaction()){
 //         throw std::runtime_error("无法开始事务");

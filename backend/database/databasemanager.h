@@ -28,6 +28,15 @@ public:
     // 根据邮箱和密码找用户，存在返回用户id，不存在返回-1
     int queryUser(const QString& email, const QString& password);
     void queryUser(const int userId, QJsonObject& userInfo);
+
+    void putUser(const int userId, const double balance);
+
+    /// 感觉在这用枚举变量有点怪，可能文件夹设置的还是不好吧
+    /// 如果mode为0，说明要修改用户名
+    /// 如果mode为1，说明要修改头像地址
+    void putUser(const int userId, const int mode, const QString str);
+
+    void deleteUser(const int userId);
     // 获取余额
     double getUserBalance(int userID);
 
