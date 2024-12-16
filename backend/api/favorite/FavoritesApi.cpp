@@ -47,3 +47,4 @@ QJsonObject getFavorites(DatabaseManager* m_db, int userId) {
 
     return response;
 }
+

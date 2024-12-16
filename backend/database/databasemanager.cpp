@@ -582,6 +582,7 @@ QList<QJsonObject> DatabaseManager::queryFavorites(int userId) {
 
 
 
+
 /*** 测试函数 ***/
 /*** flight_info ***/
 // 判断是否空
