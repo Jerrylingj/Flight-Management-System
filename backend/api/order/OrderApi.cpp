@@ -3,20 +3,41 @@
 #include "dto/order_info_dto.h"
 #include <QJsonArray>
 
-QJsonObject getOrder(DatabaseManager* m_db){
+// // 已经有了处理token的函数，所以该函数不应当被调用
+// // 如果后续增加管理员端，可以启用该函数
+// QJsonObject getOrder(DatabaseManager* m_db){
+//     try{
+//         QJsonArray orders;
+//         m_db->queryOrder(orders);
+//         auto response = success(orders);
+//         return response->toJson();
+//     }catch(const std::runtime_error& e){
+//         auto response = fail<QJsonObject>(QString::fromStdString(e.what()));
+//         return response->toJson();
+//     }catch(const std::exception& e){
+//         auto response = fail<QJsonObject>("在getOrder函数中获取数据失败");
+//         return response->toJson();
+//     }
+// }
+
+QJsonObject getOrder(DatabaseManager* m_db, int userId){
+    if (!m_db) {
+        auto response = fail<QJsonObject>("[错误] getORder 函数异常: DatabaseManager 指针为空");
+        return response->toJson();
+    }
+
     try{
         QJsonArray orders;
-        m_db->queryOrder(orders);
-        auto response = success(orders);
-        return response->toJson();
-    }catch(const std::runtime_error& e){
+        m_db->queryOrder(orders, userId);
+        return success(orders)->toJson();
+    }
+    catch(const std::exception& e){
+        qDebug() << "[错误] getOrder 函数异常: " << e.what();
         auto response = fail<QJsonObject>(QString::fromStdString(e.what()));
-        return response->toJson();
-    }catch(const std::exception& e){
-        auto response = fail<QJsonObject>("在getOrder函数中获取数据失败");
         return response->toJson();
     }
 }
+
 
 // QJsonObject getOrder(int orderID, DatabaseManager* m_db){
 //     try{

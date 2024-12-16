@@ -77,8 +77,24 @@ public:
         //     return CreateOrder(request, m_db);
         // });
 
-        m_httpServer->route("/api/orders", QHttpServerRequest::Method::Get,[this](const QHttpServerRequest &request) -> QHttpServerResponse {
-            return getOrder(m_db);
+        m_httpServer->route("/api/orders", QHttpServerRequest::Method::Post,[this](const QHttpServerRequest &request) -> QHttpServerResponse {
+            qDebug() << "[调试] main.cpp - 收到 Post 请求 /api/orders";
+
+            int userId;
+            try {
+                userId = getUserID(request);
+                qDebug() << "[调试] main.cpp - 获取的用户ID：" << userId;
+            } catch (std::invalid_argument &e) {
+                qWarning() << "[错误] main.cpp - 无法提取用户ID：" << e.what();
+                return QJsonObject{
+                    {"success", false},
+                    {"message", "无效的用户token"}
+                };
+            }
+
+            QJsonObject result = getOrder(m_db, userId);
+            qDebug() << "[调试] main.cpp - 当前用户的订单：" << QJsonDocument(result).toJson(QJsonDocument::Compact);
+            return result;
         });
 
         m_httpServer->route("/api/aichat",QHttpServerRequest::Method::Post,[this](const QHttpServerRequest& request){
