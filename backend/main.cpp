@@ -42,6 +42,12 @@ public:
         m_httpServer->route("/api/user", QHttpServerRequest::Method::Get,[this](const QHttpServerRequest &request){
             return getUserInfo(request, m_db);
         });
+        m_httpServer->route("/api/user", QHttpServerRequest::Method::Put,[this](const QHttpServerRequest &request){
+            return updateUserInfo(request, m_db);
+        });
+        m_httpServer->route("/api/user", QHttpServerRequest::Method::Delete,[this](const QHttpServerRequest &request){
+            return delUser(request, m_db);
+        });
         // 登录
         m_httpServer->route("/api/login",QHttpServerRequest::Method::Post,[this](const QHttpServerRequest &request){
             return login(request, m_db);

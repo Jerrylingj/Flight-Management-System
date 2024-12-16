@@ -47,6 +47,8 @@ add_executable(QtHttpServer
     util/networkhandler.h util/networkhandler.cpp
     dto/register_dto.h dto/register_dto.cpp
     api/user/user.h api/user/user.cpp
+    dto/update_user_dto.h dto/update_user_dto.cpp
+    dto/get_flights_dto.h dto/get_flights_dto.cpp
 
 )
 target_link_libraries(QtHttpServer PRIVATE
