@@ -60,7 +60,7 @@ void DatabaseManager::createTable() {
                     "username VARCHAR(50) NOT NULL, "
                     "email VARCHAR(225) NOT NULL, "
                     "password VARCHAR(100) NOT NULL, "
-                    "avartar_url VARCHAR(255), "
+                    "avatar_url VARCHAR(255), "
                     "balance DECIMAL(10, 2) DEFAULT 0.00, "
                     "created_at DATETIME DEFAULT CURRENT_TIMESTAMP)")){
         qDebug() << "create users error: " << query.lastError().text();
@@ -163,13 +163,13 @@ int DatabaseManager::queryUser(const QString& email, const QString& password) {
 
 void DatabaseManager::queryUser(const int userId, QJsonObject& userInfo){
     QSqlQuery query;
-    query.prepare("SELECT username, email, avartar_url, balance, created_at FROM users WHERE id = :id");
+    query.prepare("SELECT username, email, avatar_url, balance, created_at FROM users WHERE id = :id");
     query.bindValue(":id", userId);
     if(query.exec() && query.next()){
         // 正确的字段对应关系
         userInfo.insert("username", query.value("username").toString());
         userInfo.insert("email", query.value("email").toString());
-        userInfo.insert("avatar_url", query.value("avartar_url").toString());
+        userInfo.insert("avatar_url", query.value("avatar_url").toString());
         userInfo.insert("balance", query.value("balance").toDouble());
         userInfo.insert("created_at", query.value("created_at").toString());
         return;
@@ -177,7 +177,7 @@ void DatabaseManager::queryUser(const int userId, QJsonObject& userInfo){
     throw std::runtime_error("error!");
 }
 
-void putUser(const int userId, const double balance){
+void DatabaseManager::putUser(const int userId, const double balance){
     QSqlQuery query;
     query.prepare("SELECT balance FROM users WHERE id = :id");
     query.bindValue(":id", userId);
@@ -201,7 +201,7 @@ void putUser(const int userId, const double balance){
 /// 感觉在这用枚举变量有点怪，可能文件夹设置的还是不好吧
 /// 如果mode为0，说明要修改用户名
 /// 如果mode为1，说明要修改头像地址
-void putUser(const int userId, const int mode, const QString str){
+void DatabaseManager::putUser(const int userId, const int mode, const QString str){
     QSqlQuery query;
     switch(mode){
     case 0:{
@@ -225,7 +225,7 @@ void putUser(const int userId, const int mode, const QString str){
     }
 }
 
-void deleteUser(const int userId) {
+void DatabaseManager::deleteUser(const int userId) {
     // 获取数据库连接
     QSqlDatabase db = QSqlDatabase::database();
 
