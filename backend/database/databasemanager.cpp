@@ -506,21 +506,42 @@ bool DatabaseManager::removeFavorite(int userId, int flightId) {
 }
 
 // 查询我的收藏
-QList<int> DatabaseManager::queryFavorites(int userId) {
-    QSqlQuery query;
-    query.prepare("SELECT flight_id FROM flight_favorites WHERE user_id = :user_id");
-    query.bindValue(":user_id", userId);
+QList<QJsonObject> DatabaseManager::queryFavorites(int userId) {
+    QList<QJsonObject> flightDetails;
 
-    QList<int> favoriteList;
+    QSqlQuery query;
+    query.prepare(R"(
+        SELECT f.flight_id, f.flight_number, f.departure_time, f.arrival_time,
+               f.departure_airport, f.arrival_airport, f.price,
+               f.airline_company, f.status
+        FROM flight_favorites AS fav
+        JOIN flight_info AS f ON fav.flight_id = f.flight_id
+        WHERE fav.user_id = :userId
+    )");
+    query.bindValue(":userId", userId);
+
     if (query.exec()) {
         while (query.next()) {
-            favoriteList.append(query.value("flight_id").toInt());
+            QJsonObject flight;
+            flight["flightId"] = query.value("flight_id").toInt();
+            flight["flightNumber"] = query.value("flight_number").toString();
+            flight["departureTime"] = query.value("departure_time").toString();
+            flight["arrivalTime"] = query.value("arrival_time").toString();
+            flight["departureAirport"] = query.value("departure_airport").toString();
+            flight["arrivalAirport"] = query.value("arrival_airport").toString();
+            flight["price"] = query.value("price").toDouble();
+            flight["airlineCompany"] = query.value("airline_company").toString();
+            flight["status"] = query.value("status").toString();
+
+            flightDetails.append(flight);
         }
     } else {
-        qDebug() << "Error querying favorites:" << query.lastError().text();
+        qWarning() << "Failed to query favorites:" << query.lastError() << "Query:" << query.lastQuery();
     }
-    return favoriteList;
+
+    return flightDetails;
 }
+
 
 
 /*** 测试函数 ***/

@@ -35,14 +35,15 @@ QJsonObject removeFavorite(DatabaseManager* m_db, int userId, int flightId) {
 QJsonObject getFavorites(DatabaseManager* m_db, int userId) {
     QJsonObject response;
 
-    QList<int> favorites = m_db->queryFavorites(userId);
-    QJsonArray flightIds;
-    for (int id : favorites) {
-        flightIds.append(id);
+    QList<QJsonObject> favoriteFlights = m_db->queryFavorites(userId);
+    QJsonArray flights;
+
+    for (const QJsonObject& flight : favoriteFlights) {
+        flights.append(flight);
     }
 
     response["success"] = true;
-    response["favorites"] = flightIds;
+    response["favorites"] = flights;
 
     return response;
 }

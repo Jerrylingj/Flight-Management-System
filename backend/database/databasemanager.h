@@ -62,7 +62,7 @@ public:
     // 取消收藏
     bool removeFavorite(int userId, int flightId);
     // 查询我的收藏
-    QList<int> queryFavorites(int userId);
+    QList<QJsonObject> queryFavorites(int userId);
 
     /*** 测试函数 ***/
     /*** flight_info相关 ***/
