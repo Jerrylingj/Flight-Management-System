@@ -35,3 +35,18 @@ QJsonObject getFlight(int flightID,DatabaseManager* m_db){
         return response->toJson();
     }
 }
+
+QJsonObject getFlight(const QHttpServerRequest &request, DatabaseManager* m_db){
+    try{
+        QJsonArray flights;
+        m_db->queryFlight(flights);
+        auto response = success(flights);
+        return response->toJson();
+    }catch(const std::runtime_error& e){
+        auto response = fail<QJsonObject>(QString::fromStdString(e.what()));
+        return response->toJson();
+    }catch(const std::exception& e){
+        auto response = fail<QJsonObject>("失败");
+        return response->toJson();
+    }
+}
