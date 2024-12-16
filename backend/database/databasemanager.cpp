@@ -90,7 +90,8 @@ void DatabaseManager::createTable() {
                     "id INT AUTO_INCREMENT PRIMARY KEY, "               // 订单ID
                     "user_id INT NOT NULL, "                            // 用户ID
                     "flight_id INT NOT NULL, "                          // 航班ID
-                    "order_time DATETIME DEFAULT CURRENT_TIMESTAMP, "   // 订单创建时间
+                    "total_change_count INT NOT NULL, "                 // 总改签次数
+                    "payment_status BOOLEAN NOT NULL, "                 // 支付状态
                     "FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE, "
                     "FOREIGN KEY (flight_id) REFERENCES flight_info(flight_id) ON DELETE CASCADE)")){
         qDebug() << "create order_info error: " << query.lastError().text();
@@ -360,40 +361,72 @@ void DatabaseManager::queryFlight(QJsonArray& flights, QString departureCity, QS
 //     }
 // }
 
-void DatabaseManager :: queryOrder(QJsonArray & orders){
-    QString sql = "SELECT * FROM order_info";
-    qDebug() << "Executing SQL:" << sql;
+void DatabaseManager::queryOrder(QJsonArray &orders, int userId) {
+    QString sql = R"(
+        SELECT
+            o.id,
+            o.user_id,
+            o.flight_id,
+            o.total_change_count,
+            o.payment_status,
+            f.flight_number,
+            f.airline_company,
+            f.price,
+            f.status,
+            f.departure_city,
+            f.arrival_city,
+            f.departure_time,
+            f.arrival_time,
+            f.departure_airport,
+            f.arrival_airport,
+            f.checkin_start_time,
+            f.checkin_end_time
+        FROM order_info o
+        JOIN flight_info f ON o.flight_id = f.flight_id
+        WHERE o.user_id = :user_id
+    )";
 
     QSqlQuery query;
-    if (!query.exec(sql)) {
-        qDebug() << "查询失败:" << query.lastError().text();
-        throw std::runtime_error("查询失败");
-    } else {
-        while (query.next()) {
-            OrderInfo order;
-            order.flightId = query.value("flight_id").toInt();
-            order.orderId = query.value("id").toInt();
-            order.userId = query.value("user_id").toInt();
-            order.createdAt = query.value("order_time").toDateTime();
-            FlightInfo flight;
-            queryFlight(order.flightId,flight);
-            order.flightNumber = flight.flightNumber;
-            order.departure = flight.departureCity;
-            order.departureAirport = flight.departureAirport;
-            order.departureTime = flight.departureTime;
-            order.destination = flight.arrivalCity;
-            order.arrivalAirport = flight.arrivalAirport;
-            order.arrivalTime = flight.arrivalTime;
-            order.checkInStartTime = flight.checkinStartTime;
-            order.checkInEndTime = flight.checkinEndTime;
-            order.airlineCompany = flight.airlineCompany;
-            order.status = flight.status;
-            orders.append(order.toJson());
-        }
+    query.prepare(sql);
+    query.bindValue(":user_id", userId);
+
+    qDebug() << "[调试] DatabaseManager::queryOrder - 执行 SQL 语句:" << sql;
+
+    if (!query.exec()) {
+        QString errorMsg = QString("[错误] DatabaseManager::queryOrder - 查询失败: %1").arg(query.lastError().text());
+        qDebug() << errorMsg;
+        throw std::runtime_error(errorMsg.toStdString());
+    }
+
+    while (query.next()) {
+        OrderInfo order;
+        // 订单信息
+        order.orderId = query.value("id").toInt();
+        order.userId = query.value("user_id").toInt();
+        order.flightId = query.value("flight_id").toInt();
+        order.totalChangeCount = query.value("total_change_count").toInt();
+        order.paymentStatus = query.value("payment_status").toBool();
+
+        // 航班信息
+        order.flightNumber = query.value("flight_number").toString();
+        order.airlineCompany = query.value("airline_company").toString();
+        order.price = query.value("price").toDouble();
+        order.flightStatus = query.value("status").toString();
+        order.departure = query.value("departure_city").toString();
+        order.destination = query.value("arrival_city").toString();
+        order.departureTime = query.value("departure_time").toDateTime();
+        order.arrivalTime = query.value("arrival_time").toDateTime();
+        order.departureAirport = query.value("departure_airport").toString();
+        order.arrivalAirport = query.value("arrival_airport").toString();
+        order.checkInStartTime = query.value("checkin_start_time").toDateTime();
+        order.checkInEndTime = query.value("checkin_end_time").toDateTime();
+
+        orders.append(order.toJson());
     }
 
     qDebug() << "Retrieved" << orders.size() << "orders.";
-    if(orders.isEmpty()){
+
+    if (orders.isEmpty()) {
         throw std::runtime_error("没有数据");
     }
 }
@@ -560,11 +593,14 @@ void DatabaseManager::populateSampleFlights() {
 
 void DatabaseManager::populateSampleOrders(){
     QSqlQuery queryClear;
-    // if (!queryClear.exec("DELETE FROM order_info")) {
-    //     qDebug() << "Failed to clear order_info table:" << queryClear.lastError();
-    //     return;
-    // }
-    // qDebug() << "order_info 表已清空。";
+    // 如果需要清空表，可以取消注释以下代码
+    /*
+    if (!queryClear.exec("DELETE FROM order_info")) {
+        qDebug() << "Failed to clear order_info table:" << queryClear.lastError();
+        return;
+    }
+    qDebug() << "order_info 表已清空。";
+    */
 
     // 开始事务
     if (!QSqlDatabase::database().transaction()) {
@@ -572,18 +608,25 @@ void DatabaseManager::populateSampleOrders(){
         return;
     }
 
+    // 准备要插入的样本数据
+    // 每个 QVariantList 包含：user_id, flight_id, total_change_count, payment_status
     QList<QVariantList> orders = {
-        {1, 1, QDateTime::fromString("2024-12-01 08:00:00", "yyyy-MM-dd HH:mm:ss")},
-        {2, 2, QDateTime::fromString("2024-12-01 09:00:00", "yyyy-MM-dd HH:mm:ss")},
-        {3, 3, QDateTime::fromString("2024-12-01 10:00:00", "yyyy-MM-dd HH:mm:ss")},
-        {4, 4, QDateTime::fromString("2024-12-01 11:00:00", "yyyy-MM-dd HH:mm:ss")},
-        {1, 5, QDateTime::fromString("2024-12-01 12:00:00", "yyyy-MM-dd HH:mm:ss")},
+        {1, 1, 0, true},
+        {1, 2, 1, false},
+        {1, 3, 2, true},
+        {1, 4, 0, true},
+        {1, 5, 1, false},
+        {1, 6, 3, true},
+        {1, 7, 1, true},
+        {1, 8, 2, false},
+        {1, 9, 0, true},
+        {1, 10, 1, true}
     };
 
     // 准备插入语句
     QSqlQuery queryInsert;
-    const QString insertStmt = "INSERT INTO order_info (user_id, flight_id, order_time) "
-                               "VALUES (:user_id, :flight_id, :order_time)";
+    const QString insertStmt = "INSERT INTO order_info (user_id, flight_id, total_change_count, payment_status) "
+                               "VALUES (:user_id, :flight_id, :total_change_count, :payment_status)";
     if (!queryInsert.prepare(insertStmt)) {
         qDebug() << "Failed to prepare insert statement:" << queryInsert.lastError();
         QSqlDatabase::database().rollback();
@@ -592,7 +635,7 @@ void DatabaseManager::populateSampleOrders(){
 
     for (const QVariant &order : orders) {
         QVariantList orderList = order.toList();
-        if (orderList.size() != 3) {
+        if (orderList.size() != 4) {
             qDebug() << "Invalid order data size:" << orderList;
             continue;
         }
@@ -600,25 +643,29 @@ void DatabaseManager::populateSampleOrders(){
         // 绑定参数
         queryInsert.bindValue(":user_id", orderList.at(0).toInt());
         queryInsert.bindValue(":flight_id", orderList.at(1).toInt());
-        queryInsert.bindValue(":order_time", orderList.at(2).toDateTime());
+        queryInsert.bindValue(":total_change_count", orderList.at(2).toInt());
+        queryInsert.bindValue(":payment_status", orderList.at(3).toBool());
 
         // 执行插入
         if (!queryInsert.exec()) {
-            qDebug() << "Failed to insert order:" << orderList.at(0).toInt() << " Error:" << queryInsert.lastError();
+            qDebug() << "Failed to insert order for user_id:" << orderList.at(0).toInt()
+            << " flight_id:" << orderList.at(1).toInt()
+            << " Error:" << queryInsert.lastError();
             QSqlDatabase::database().rollback();
             return;
         }
-        // 调用 finish() 确保资源被正确释放
+        // 重置查询以准备下一次绑定
         queryInsert.finish();
+        queryInsert.prepare(insertStmt);
     }
 
     // 提交事务
     if (!QSqlDatabase::database().commit()) {
-        qDebug() << "Failed to commit transaction";
+        qDebug() << "Failed to commit transaction:" << QSqlDatabase::database().lastError();
         return;
     }
 
-    qDebug() << "Sample orders population completed.";
+    qDebug() << "Sample orders population completed successfully.";
 }
 
 

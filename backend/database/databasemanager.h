@@ -45,7 +45,7 @@ public:
     /*** orders ***/
     // void createOrder(int userID, int flightID);
     // void queryOrder(int orderId, OrderInfo& order);
-    void queryOrder(QJsonArray& orders);
+    void queryOrder(QJsonArray& orders, int userId);
 
     /*** flight_favorites ***/
     // 收藏
@@ -59,7 +59,7 @@ public:
     /*** flight_info相关 ***/
     bool isFlightInfoEmpty() const; // 判断航班表是否为空
     void populateSampleFlights();   // 插入测试航班数据
-    void populateSampleOrders();
+    void populateSampleOrders();    // 插入测试订单数据
     ~DatabaseManager();
 
 private:

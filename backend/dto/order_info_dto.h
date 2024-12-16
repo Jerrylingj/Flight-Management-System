@@ -12,18 +12,26 @@ public:
     int orderId;
     int userId;
     int flightId;
+    int totalChangeCount;
+    bool paymentStatus;
+
     QString flightNumber;
+    QString airlineCompany;
+    double price;
+    QString flightStatus;
+
+
     QString departure;
     QString destination;
-    QDateTime createdAt;
     QDateTime departureTime;
     QDateTime arrivalTime;
     QString departureAirport;
     QString arrivalAirport;
+
     QDateTime checkInStartTime;
     QDateTime checkInEndTime;
-    QString airlineCompany;
-    QString status;
+
+
     OrderInfo();
 
     QJsonObject toJson() const;

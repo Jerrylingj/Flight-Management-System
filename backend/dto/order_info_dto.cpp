@@ -13,17 +13,23 @@ QJsonObject OrderInfo::toJson() const
     json["orderId"] = orderId;
     json["userId"] = userId;
     json["flightId"] = flightId;
+    json["totalChangeCount"] = totalChangeCount;
+    json["paymentStatus"] = paymentStatus; // 注意此处，QJsonObject会自动处理bool值
+
     json["flightNumber"] = flightNumber;
+    json["airlineCompany"] = airlineCompany;
+    json["price"] = price;
+    json["flightStatus"] = flightStatus;
+
     json["departure"] = departure;
     json["destination"] = destination;
     json["departureTime"] = departureTime.toString(Qt::ISODate);
     json["arrivalTime"] = arrivalTime.toString(Qt::ISODate);
     json["departureAirport"] = departureAirport;
     json["arrivalAirport"] = arrivalAirport;
+
     json["checkInStartTime"] = checkInStartTime.toString(Qt::ISODate);
     json["checkInEndTime"] = checkInEndTime.toString(Qt::ISODate);
-    json["airlineCompany"] = airlineCompany;
-    json["status"] = status;
 
     // 调试输出转换后的 JSON 数据
     qDebug() << "OrderInfo 转换为 JSON 数据：" << json;
@@ -41,8 +47,23 @@ void OrderInfo::fromJson(const QJsonObject& json)
     if (json.contains("flightId")) {
         flightId = json["flightId"].toInt();
     }
+    if (json.contains("totalChangeCount")) {
+        totalChangeCount = json["totalChangeCount"].toInt();
+    }
+    if (json.contains("paymentStatus")) {
+        paymentStatus = json["paymentStatus"].toBool(); // 注意此处，QJsonObject会正确处理bool值
+    }
     if (json.contains("flightNumber")) {
         flightNumber = json["flightNumber"].toString();
+    }
+    if (json.contains("airlineCompany")) {
+        airlineCompany = json["airlineCompany"].toString();
+    }
+    if (json.contains("price")) {
+        price = json["price"].toDouble();
+    }
+    if (json.contains("flightStatus")) {
+        flightStatus = json["flightStatus"].toString();
     }
     if (json.contains("departure")) {
         departure = json["departure"].toString();
@@ -68,19 +89,18 @@ void OrderInfo::fromJson(const QJsonObject& json)
     if (json.contains("checkInEndTime")) {
         checkInEndTime = QDateTime::fromString(json["checkInEndTime"].toString(), Qt::ISODate);
     }
-    if (json.contains("airlineCompany")) {
-        airlineCompany = json["airlineCompany"].toString();
-    }
-    if (json.contains("status")) {
-        status = json["status"].toString();
-    }
 
     // 调试输出解析后的数据
     qDebug() << "从 JSON 数据解析 OrderInfo 对象，字段信息如下：";
     qDebug() << "订单 ID:" << orderId;
     qDebug() << "用户 ID:" << userId;
     qDebug() << "航班 ID:" << flightId;
+    qDebug() << "总改签次数:" << totalChangeCount;
+    qDebug() << "支付状态:" << paymentStatus;
     qDebug() << "航班号:" << flightNumber;
+    qDebug() << "航空公司:" << airlineCompany;
+    qDebug() << "票价:" << price;
+    qDebug() << "航班状态:" << flightStatus;
     qDebug() << "出发地:" << departure;
     qDebug() << "目的地:" << destination;
     qDebug() << "出发时间:" << departureTime.toString(Qt::ISODate);
@@ -89,6 +109,4 @@ void OrderInfo::fromJson(const QJsonObject& json)
     qDebug() << "到达机场:" << arrivalAirport;
     qDebug() << "检票开始时间:" << checkInStartTime.toString(Qt::ISODate);
     qDebug() << "检票结束时间:" << checkInEndTime.toString(Qt::ISODate);
-    qDebug() << "航空公司:" << airlineCompany;
-    qDebug() << "状态:" << status;
 }
