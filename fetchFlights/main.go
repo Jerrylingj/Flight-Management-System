@@ -73,7 +73,7 @@ func main() {
 		return
 	}
     // 如果不存在就建表
-	_, err = db.Exec("CREATE TABLE IF NOT EXISTS flight_info (flight_id INTEGER PRIMARY KEY AUTO_INCREMENT, flight_number VARCHAR(10) NOT NULL, departure_city VARCHAR(20) NOT NULL, arrival_city VARCHAR(20) NOT NULL, departure_time DATETIME NOT NULL, arrival_time DATETIME NOT NULL, price DECIMAL(10,2) NOT NULL, departure_airport VARCHAR(20) NOT NULL, arrival_airport VARCHAR(20) NOT NULL, airline_company VARCHAR(20) NOT NULL, checkin_start_time DATETIME NOT NULL, checkin_end_time DATETIME NOT NULL, status VARCHAR(10) NOT NULL, UNIQUE(flight_number) )")
+	_, err = db.Exec("CREATE TABLE IF NOT EXISTS flight_info (flight_id INTEGER PRIMARY KEY AUTO_INCREMENT, flight_number VARCHAR(10) NOT NULL, departure_city VARCHAR(20) NOT NULL, arrival_city VARCHAR(20) NOT NULL, departure_time DATETIME NOT NULL, arrival_time DATETIME NOT NULL, price DECIMAL(10,2) DEFAULT 700, departure_airport VARCHAR(20) NOT NULL, arrival_airport VARCHAR(20) NOT NULL, airline_company VARCHAR(20) NOT NULL, checkin_start_time DATETIME NOT NULL, checkin_end_time DATETIME NOT NULL, status VARCHAR(10) NOT NULL, UNIQUE(flight_number) )")
 	if err != nil {
         fmt.Println(err)
         return
