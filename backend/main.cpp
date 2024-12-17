@@ -103,12 +103,12 @@ public:
 
 
         // 支付订单
-        m_httpServer->route("/api/orders/pay", QHttpServerRequest::Method::POST, [this](const QHttpServerRequest & request) -> QHttpServerResponse{
+        m_httpServer->route("/api/orders/pay", QHttpServerRequest::Method::Post, [this](const QHttpServerRequest & request) -> QHttpServerResponse{
             QJsonDocument body = QJsonDocument::fromJson(request.body());
             qDebug() << "[调试] main.cpp - 收到 Post 请求 /api/orders";
-            QJsonObject result = payOrder(m_db, orderId);
-            return result;
-        }
+            // QJsonObject result = payOrder(m_db, orderId);
+            // return result;
+        });
 
         // 删除订单(退签)
 
