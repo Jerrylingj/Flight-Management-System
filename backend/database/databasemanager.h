@@ -55,9 +55,10 @@ public:
 
     // void queryOrder(int orderId, OrderInfo& order);
     void queryOrder(QJsonArray& orders, int userId);
-    // void createOrder(int userID, int flightID);
-    // void deleteOrder(int orderId);
-    // void updateOrder(int orderId);
+    void insertOrder(const OrderInfo& orderInfo);
+    void deleteOrder(int orderId);
+    void updatePaymentStatus(int orderId, bool paymentStatus);
+    void updateFlightNumber(int flightId, const QString& newFlightNumber);
 
     /*** flight_favorites ***/
     // 收藏

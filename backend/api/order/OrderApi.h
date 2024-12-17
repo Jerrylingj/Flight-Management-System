@@ -22,6 +22,6 @@ QJsonObject payOrder(int orderId, DatabaseManager* m_db);
 QJsonObject deleteOrder(int orderId, DatabaseManager* m_db);
 
 // 改签功能
-QJsonObject rebookOrder(const OrderInfo& orderInfo, DatabaseManager* m_db);
+QJsonObject rebookOrder(int orderId, int flightId, DatabaseManager* m_db);
 
 #endif // ORDERAPI_H

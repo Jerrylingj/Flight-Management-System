@@ -444,6 +444,8 @@ void DatabaseManager::queryFlight(QJsonArray& flights, QString departureCity, QS
 //     }
 // }
 
+
+// 查询一个用户所有订单信息
 void DatabaseManager::queryOrder(QJsonArray &orders, int userId) {
     QString sql = R"(
         SELECT
@@ -512,6 +514,127 @@ void DatabaseManager::queryOrder(QJsonArray &orders, int userId) {
     if (orders.isEmpty()) {
         throw std::runtime_error("没有数据");
     }
+}
+
+// 创建订单（林国佳来调用，有问题找YPX）
+void DatabaseManager::insertOrder(const OrderInfo& orderInfo) {
+    QString sql = R"(
+        INSERT INTO order_info (
+            user_id,
+            flight_id,
+            total_change_count,
+            payment_status
+        ) VALUES (
+            :user_id,
+            :flight_id,
+            :total_change_count,
+            :payment_status
+        )
+    )";
+
+    QSqlQuery query;
+    query.prepare(sql);
+
+    // 绑定参数值
+    query.bindValue(":user_id", orderInfo.userId);
+    query.bindValue(":flight_id", orderInfo.flightId);
+    query.bindValue(":total_change_count", orderInfo.totalChangeCount);
+    query.bindValue(":payment_status", orderInfo.paymentStatus);
+
+    qDebug() << "[调试] DatabaseManager::insertOrder - 执行 SQL 语句:" << sql;
+
+    if (!query.exec()) {
+        QString errorMsg = QString("[错误] DatabaseManager::insertOrder - 插入失败: %1").arg(query.lastError().text());
+        qDebug() << errorMsg;
+        throw std::runtime_error(errorMsg.toStdString());
+    }
+
+    qDebug() << "Successfully inserted new order.";
+}
+
+// 删除订单
+void DatabaseManager::deleteOrder(int orderId) {
+    QString sql = "DELETE FROM order_info WHERE id = :order_id";
+
+    QSqlQuery query;
+    query.prepare(sql);
+    query.bindValue(":order_id", orderId);
+
+    qDebug() << "[调试] DatabaseManager::deleteOrder - 执行 SQL 语句:" << sql;
+
+    if (!query.exec()) {
+        QString errorMsg = QString("[错误] DatabaseManager::deleteOrder - 删除失败: %1").arg(query.lastError().text());
+        qDebug() << errorMsg;
+        throw std::runtime_error(errorMsg.toStdString());
+    }
+
+    if (query.numRowsAffected() == 0) {
+        throw std::runtime_error("未找到要删除的订单");
+    }
+
+    qDebug() << "Successfully deleted order with ID:" << orderId;
+}
+
+// 修改特定订单的支付状态字段的函数
+void DatabaseManager::updatePaymentStatus(int orderId, bool paymentStatus) {
+    QString sql = R"(
+        UPDATE order_info
+        SET payment_status = :payment_status
+        WHERE id = :order_id
+    )";
+
+    QSqlQuery query;
+    query.prepare(sql);
+
+    // 绑定参数值
+    query.bindValue(":order_id", orderId);
+    query.bindValue(":payment_status", paymentStatus);
+
+    qDebug() << "[调试] DatabaseManager::updatePaymentStatus - 执行 SQL 语句:" << sql;
+    qDebug() << "[调试] 绑定的 payment_status:" << paymentStatus;
+
+    if (!query.exec()) {
+        QString errorMsg = QString("[错误] DatabaseManager::updatePaymentStatus - 更新失败: %1").arg(query.lastError().text());
+        qDebug() << errorMsg;
+        throw std::runtime_error(errorMsg.toStdString());
+    }
+
+    if (query.numRowsAffected() == 0) {
+        throw std::runtime_error("未找到要更新的订单");
+    }
+
+    qDebug() << "成功更新订单 ID:" << orderId << "的 payment_status";
+}
+
+// 修改特定订单的航班编号字段的函数，注意这时支付状态应设置为已支付
+void DatabaseManager::updateFlightNumber(int orderId, const QString &flightNumber) {
+    QString sql = R"(
+        UPDATE order_info
+        SET flight_number = :flight_number
+        WHERE id = :order_id
+    )";
+
+    QSqlQuery query;
+    query.prepare(sql);
+
+    // 绑定参数值
+    query.bindValue(":order_id", orderId);
+    query.bindValue(":flight_number", flightNumber);
+
+    qDebug() << "[调试] DatabaseManager::updateFlightNumber - 执行 SQL 语句:" << sql;
+    qDebug() << "[调试] 绑定的 flight_number:" << flightNumber;
+
+    if (!query.exec()) {
+        QString errorMsg = QString("[错误] DatabaseManager::updateFlightNumber - 更新失败: %1").arg(query.lastError().text());
+        qDebug() << errorMsg;
+        throw std::runtime_error(errorMsg.toStdString());
+    }
+
+    if (query.numRowsAffected() == 0) {
+        throw std::runtime_error("未找到要更新的订单");
+    }
+
+    qDebug() << "成功更新订单 ID:" << orderId << "的 flight_number";
 }
 
 /*** flight_favorites ***/

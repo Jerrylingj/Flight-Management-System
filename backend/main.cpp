@@ -100,20 +100,130 @@ public:
         });
 
         // 添加订单
-
-
+        
         // 支付订单
-        m_httpServer->route("/api/orders/pay", QHttpServerRequest::Method::POST, [this](const QHttpServerRequest & request) -> QHttpServerResponse{
+        m_httpServer->route("/api/orders/pay", QHttpServerRequest::Method::Post, [this](const QHttpServerRequest & request) -> QHttpServerResponse{
             QJsonDocument body = QJsonDocument::fromJson(request.body());
-            qDebug() << "[调试] main.cpp - 收到 Post 请求 /api/orders";
-            QJsonObject result = payOrder(m_db, orderId);
-            return result;
-        }
+            QJsonObject json = body.object();
+        
+            qDebug() << json;
+            qDebug() << "[调试] main.cpp - 收到 Post 请求 /api/orders/pay";
+            qDebug() << "[调试] 请求内容：" << QString::fromUtf8(request.body());
+        
+            int userId;
+            try {
+                userId = getUserID(request);
+                qDebug() << "[调试] 提取的用户ID：" << userId;
+            } catch (std::invalid_argument &e) {
+                qWarning() << "[错误] 无法提取用户ID：" << e.what();
+                QJsonObject response;
+                response["success"] = false;
+                response["code"] = 401;
+                response["message"] = "无效的授权令牌";
+                return response;
+            }
+        
+            int orderId = json["orderId"].toInt();
+            qDebug() << "[调试] 提取的orderID：" << orderId;
+            if (orderId == 0) {
+                qWarning() << "[警告] 请求体缺少或包含无效的 orderId";
+                QJsonObject response;
+                response["success"] = false;
+                response["code"] = 400;
+                response["message"] = "无效或缺少 orderId";
+                return response;
+            }
+        
+            QJsonObject result = payOrder(orderId, m_db); // 调用 payOrder
+            qDebug() << "[调试] 支付订单结果：" << QJsonDocument(result).toJson(QJsonDocument::Compact);
+            return QHttpServerResponse(result);
+        });
 
         // 删除订单(退签)
 
-        // 改签订单
+        m_httpServer->route("/api/orders/delete", QHttpServerRequest::Method::Post, [this](const QHttpServerRequest & request) -> QHttpServerResponse{
+            QJsonDocument body = QJsonDocument::fromJson(request.body());
+            QJsonObject json = body.object();
 
+            qDebug() << json;
+            qDebug() << "[调试] main.cpp - 收到 Post 请求 /api/orders/pay";
+            qDebug() << "[调试] 请求内容：" << QString::fromUtf8(request.body());
+
+            int userId;
+            try {
+                userId = getUserID(request);
+                qDebug() << "[调试] 提取的 userId：" << userId;
+            } catch (std::invalid_argument &e) {
+                qWarning() << "[错误] 无法提取 userId：" << e.what();
+                return QJsonObject{
+                    {"success", false},
+                    {"message", "无效的 token"}
+                };
+            }
+
+            int orderId = json["orderId"].toInt();
+            qDebug() << "[调试] 提取的orderID：" << orderId;
+            if (orderId == 0) {
+                qWarning() << "[警告] 请求体缺少或包含无效的 orderId";
+                return QJsonObject{
+                    {"success", false},
+                    {"message", "无效或缺少 orderId"}
+                };
+            }
+
+            QJsonObject result = deleteOrder(orderId, m_db);
+            qDebug() << "[调试] 删除订单结果：" << QJsonDocument(result).toJson(QJsonDocument::Compact);
+            return result;
+        });
+
+
+        // // 改签订单
+        // m_httpServer->route("/api/orders/delete", QHttpServerRequest::Method::Post, [this](const QHttpServerRequest & request) -> QHttpServerResponse{
+        //     QJsonDocument body = QJsonDocument::fromJson(request.body());
+        //     QJsonObject json = body.object();
+
+        //     qDebug() << json;
+        //     qDebug() << "[调试] main.cpp - 收到 Post 请求 /api/orders/pay";
+        //     qDebug() << "[调试] 请求内容：" << QString::fromUtf8(request.body());
+
+        //     int userId;
+        //     try {
+        //         userId = getUserID(request);
+        //         qDebug() << "[调试] 提取的userId：" << userId;
+        //     } catch (std::invalid_argument &e) {
+        //         qWarning() << "[错误] 无法提取userId：" << e.what();
+        //         return QJsonObject{
+        //             {"success", false},
+        //             {"message", "无效的 token"}
+        //         };
+        //     }
+
+        //     int orderId = json["orderId"].toInt();
+        //     qDebug() << "[调试] 提取的orderID：" << orderId;
+        //     if (orderId == 0) {
+        //         qWarning() << "[警告] 请求体缺少或包含无效的 orderId";
+        //         return QJsonObject{
+        //             {"success", false},
+        //             {"message", "无效或缺少 orderId"}
+        //         };
+        //     }
+
+        //     int flightId = json["flightId"].toInt();
+        //     qDebug() << "[调试] 提取的 flightId：" << flightId;
+        //     if (flightId == 0) {
+        //         qWarning() << "[警告] 请求体缺少或包含无效的 flightId";
+        //         return QJsonObject{
+        //             {"success", false},
+        //             {"message", "无效或缺少 flightId"}
+        //         };
+        //     }
+
+        //     QJsonObject result = rebookOrder(orderId, flightId, m_db);
+        //     qDebug() << "[调试] 修改订单结果：" << QJsonDocument(result).toJson(QJsonDocument::Compact);
+        //     return result;
+        // });
+
+        // AI客服
         m_httpServer->route("/api/aichat",QHttpServerRequest::Method::Post,[this](const QHttpServerRequest& request){
             return ai->chat(request);
         });
