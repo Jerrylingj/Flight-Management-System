@@ -5,15 +5,23 @@
 #include "dto/order_info_dto.h"
 
 // // 已经有了处理token的函数，所以该函数不应当被调用
-// // 如果后续增加管理员端，可以启用该函数
-// QJsonObject getOrder(DatabaseManager* m_db);
+// // 如果后续增加管理员端，可以启用下列函数
+// QJsonObject getOrder(DatabaseManager* m_db);、
+// QJsonObject getOrder(int orderID, DatabaseManager* m_db);
 
+// 获取当前用户的所有航班信息
 QJsonObject getOrder(DatabaseManager* m_db, int userId);
 
-QJsonObject getOrder(int orderID, DatabaseManager* m_db);
-
+// 预定功能
 QJsonObject createOrder(const OrderInfo& orderInfo, DatabaseManager* m_db);
 
-QJsonObject deleteOrder(int orderID, DatabaseManager* m_db);
+// 支付功能
+QJsonObject payOrder(int orderId, DatabaseManager* m_db);
+
+// 退签功能
+QJsonObject deleteOrder(int orderId, DatabaseManager* m_db);
+
+// 改签功能
+QJsonObject rebookOrder(const OrderInfo& orderInfo, DatabaseManager* m_db);
 
 #endif // ORDERAPI_H

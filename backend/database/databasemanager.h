@@ -52,9 +52,12 @@ public:
     void queryFlight(QJsonArray& flights, QString departureCity, QString arrivalCity);
 
     /*** orders ***/
-    // void createOrder(int userID, int flightID);
+
     // void queryOrder(int orderId, OrderInfo& order);
     void queryOrder(QJsonArray& orders, int userId);
+    // void createOrder(int userID, int flightID);
+    // void deleteOrder(int orderId);
+    // void updateOrder(int orderId);
 
     /*** flight_favorites ***/
     // 收藏

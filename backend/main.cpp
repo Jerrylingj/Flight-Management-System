@@ -71,12 +71,14 @@ public:
             return getFlight(flightId, m_db);
         });
 
-        /*** order ***/
+        /*** order_info ***/
+
         // 创建订单
         // m_httpServer->route("/api/orders/create",QHttpServerRequest::Method::Post,[this](const QHttpServerRequest &request){
         //     return CreateOrder(request, m_db);
         // });
 
+        // 查询当前用户所有订单
         m_httpServer->route("/api/orders", QHttpServerRequest::Method::Post,[this](const QHttpServerRequest &request) -> QHttpServerResponse {
             qDebug() << "[调试] main.cpp - 收到 Post 请求 /api/orders";
 
@@ -96,6 +98,21 @@ public:
             qDebug() << "[调试] main.cpp - 当前用户的订单：" << QJsonDocument(result).toJson(QJsonDocument::Compact);
             return result;
         });
+
+        // 添加订单
+
+
+        // 支付订单
+        m_httpServer->route("/api/orders/pay", QHttpServerRequest::Method::POST, [this](const QHttpServerRequest & request) -> QHttpServerResponse{
+            QJsonDocument body = QJsonDocument::fromJson(request.body());
+            qDebug() << "[调试] main.cpp - 收到 Post 请求 /api/orders";
+            QJsonObject result = payOrder(m_db, orderId);
+            return result;
+        }
+
+        // 删除订单(退签)
+
+        // 改签订单
 
         m_httpServer->route("/api/aichat",QHttpServerRequest::Method::Post,[this](const QHttpServerRequest& request){
             return ai->chat(request);
