@@ -517,39 +517,27 @@ void DatabaseManager::queryOrder(QJsonArray &orders, int userId) {
 }
 
 // 创建订单（林国佳来调用，有问题找YPX）
-void DatabaseManager::insertOrder(const OrderInfo& orderInfo) {
-    QString sql = R"(
-        INSERT INTO order_info (
-            user_id,
-            flight_id,
-            total_change_count,
-            payment_status
-        ) VALUES (
-            :user_id,
-            :flight_id,
-            :total_change_count,
-            :payment_status
-        )
-    )";
-
+void DatabaseManager::insertOrder(int userId, int flightId) {
+    // 创建QSqlQuery对象
     QSqlQuery query;
-    query.prepare(sql);
 
-    // 绑定参数值
-    query.bindValue(":user_id", orderInfo.userId);
-    query.bindValue(":flight_id", orderInfo.flightId);
-    query.bindValue(":total_change_count", orderInfo.totalChangeCount);
-    query.bindValue(":payment_status", orderInfo.paymentStatus);
+    // 准备SQL语句
+    query.prepare("INSERT INTO order_info (user_id, flight_id, total_change_count, payment_status) "
+                  "VALUES (:user_id, :flight_id, :total_change_count, :payment_status)");
 
-    qDebug() << "[调试] DatabaseManager::insertOrder - 执行 SQL 语句:" << sql;
+    // 绑定参数
+    query.bindValue(":user_id", userId);
+    query.bindValue(":flight_id", flightId);
+    query.bindValue(":total_change_count", 0); // 初始改签次数为0
+    query.bindValue(":payment_status", false); // 初始支付状态为false
 
+    // 执行查询
     if (!query.exec()) {
-        QString errorMsg = QString("[错误] DatabaseManager::insertOrder - 插入失败: %1").arg(query.lastError().text());
-        qDebug() << errorMsg;
-        throw std::runtime_error(errorMsg.toStdString());
+        // 如果插入失败，输出错误信息
+        qDebug() << "insert order_info error: " << query.lastError().text();
+    } else {
+        qDebug() << "Order inserted successfully!";
     }
-
-    qDebug() << "Successfully inserted new order.";
 }
 
 // 删除订单

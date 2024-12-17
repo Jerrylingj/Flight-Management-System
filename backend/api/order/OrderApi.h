@@ -13,7 +13,7 @@
 QJsonObject getOrder(DatabaseManager* m_db, int userId);
 
 // 预定功能
-QJsonObject createOrder(const OrderInfo& orderInfo, DatabaseManager* m_db);
+QJsonObject createOrder(int userId, int flightId, DatabaseManager* m_db);
 
 // 支付功能
 QJsonObject payOrder(int orderId, DatabaseManager* m_db);

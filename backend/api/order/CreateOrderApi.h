@@ -5,6 +5,6 @@
 // #include <QHttpServer>
 // #include <QJsonObject>
 
-// QJsonObject CreateOrder(const QHttpServerRequest &request, DatabaseManager* m_db);
+// QJsonObject createOrder(const QHttpServerRequest &request, DatabaseManager* m_db);
 
 // #endif // CREATE_ORDER_H

@@ -55,7 +55,7 @@ public:
 
     // void queryOrder(int orderId, OrderInfo& order);
     void queryOrder(QJsonArray& orders, int userId);
-    void insertOrder(const OrderInfo& orderInfo);
+    void insertOrder(int userId, int flightId);
     void deleteOrder(int orderId);
     void updatePaymentStatus(int orderId, bool paymentStatus);
     void updateFlightNumber(int flightId, const QString& newFlightNumber);

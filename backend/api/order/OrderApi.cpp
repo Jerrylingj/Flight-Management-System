@@ -1,4 +1,5 @@
 #include "OrderApi.h"
+#include "api/flight/FlightApi.h"
 #include "dto/response_dto.h"
 #include "dto/order_info_dto.h"
 #include <QJsonArray>
@@ -59,6 +60,34 @@ QJsonObject getOrder(DatabaseManager* m_db, int userId){
         auto response = fail<QJsonObject>(QString::fromStdString(e.what()));
         return response->toJson();
     }
+}
+
+// 创建订单函数
+QJsonObject createOrder(int userId, int flightId, DatabaseManager* m_db) {
+    QJsonObject response;
+
+    if (!m_db) {
+        response["success"] = false;
+        response["message"] = "[错误] createOrder 函数异常: DatabaseManager 指针为空";
+        return response;
+    }
+
+    try {
+        // 调用 DatabaseManager 的 insertOrder 方法
+        m_db->insertOrder(userId, flightId);
+
+        // 构造成功的响应
+        response["success"] = true;
+        response["message"] = "Order created successfully";
+        response["user_id"] = userId;
+        response["flight_id"] = flightId;
+    } catch (const std::exception &e) {
+        // 捕获异常并返回错误信息
+        response["success"] = false;
+        response["message"] = QString("[错误] createOrder 函数异常: %1").arg(e.what());
+    }
+
+    return response;
 }
 
 // 支付功能
@@ -148,58 +177,6 @@ QJsonObject payOrder(int orderId, DatabaseManager* m_db) {
 //         return response->toJson();
 //     }
 // }
-
-
-// 预定功能
-QJsonObject createOrder(const OrderInfo& orderInfo, DatabaseManager* m_db) {
-    if (!m_db) {
-        auto response = fail<QJsonObject>("[错误] createOrder 函数异常: DatabaseManager 指针为空");
-        return response->toJson();
-    }
-
-    try {
-        // 验证基本参数
-        if (orderInfo.userId <= 0) {
-            throw std::invalid_argument("无效的用户ID");
-        }
-        if (orderInfo.flightId <= 0) {
-            throw std::invalid_argument("无效的航班ID");
-        }
-
-        // 创建新的订单对象
-        OrderInfo newOrder = orderInfo;
-        // 设置初始状态
-        newOrder.totalChangeCount = 0;        // 初始改签次数为0
-        newOrder.paymentStatus = false;       // 初始支付状态为未支付
-
-        // 插入订单
-        m_db->insertOrder(newOrder);
-
-        // 构造成功响应
-        QJsonObject responseData;
-        responseData["message"] = "订单创建成功";
-        responseData["orderId"] = newOrder.orderId;
-        responseData["flightNumber"] = newOrder.flightNumber;
-        responseData["price"] = newOrder.price;
-
-        auto response = success(responseData);
-        return response->toJson();
-    }
-    catch (const std::invalid_argument& e) {
-        auto response = fail<QJsonObject>(QString::fromStdString(e.what()));
-        return response->toJson();
-    }
-    catch (const std::runtime_error& e) {
-        qDebug() << "[错误] 创建订单时发生运行时错误: " << e.what();
-        auto response = fail<QJsonObject>(QString::fromStdString(e.what()));
-        return response->toJson();
-    }
-    catch (const std::exception& e) {
-        qDebug() << "[错误] 创建订单时发生未知错误: " << e.what();
-        auto response = fail<QJsonObject>("创建订单失败");
-        return response->toJson();
-    }
-}
 
 // 退签功能
 QJsonObject deleteOrder(int orderId, DatabaseManager* m_db) {

@@ -4,7 +4,7 @@
 // #include "dto/create_order.h"
 // #include "util/easycrypt.h"
 
-// QJsonObject CreateOrder(const QHttpServerRequest &request, DatabaseManager* m_db){
+// QJsonObject createOrder(const QHttpServerRequest &request, DatabaseManager* m_db){
 //     int userID;
 //     try {
 //         userID = getUserID(request);
