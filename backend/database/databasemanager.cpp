@@ -74,7 +74,7 @@ void DatabaseManager::createTable() {
                     "arrival_city VARCHAR(20) NOT NULL, "              // 终点城市
                     "departure_time DATETIME NOT NULL, "               // 出发时间
                     "arrival_time DATETIME NOT NULL, "                 // 到达时间
-                    "price DECIMAL(10,2) NOT NULL, "                   // 票价（最多10位数字，两位小数）
+                    "price DECIMAL(10,2) DEFAULT 700, "                   // 票价（最多10位数字，两位小数）
                     "departure_airport VARCHAR(20) NOT NULL, "         // 起点机场
                     "arrival_airport VARCHAR(20) NOT NULL, "           // 终点机场
                     "airline_company VARCHAR(20) NOT NULL, "           // 航空公司
