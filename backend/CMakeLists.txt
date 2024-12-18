@@ -49,6 +49,10 @@ add_executable(QtHttpServer
     api/user/user.h api/user/user.cpp
     dto/update_user_dto.h dto/update_user_dto.cpp
     dto/get_flights_dto.h dto/get_flights_dto.cpp
+    dto/flight_del_dto.h
+    dto/flight_del_dto.cpp
+    dto/flight_update_dto.cpp
+    dto/flight_update_dto.h
 
 )
 target_link_libraries(QtHttpServer PRIVATE

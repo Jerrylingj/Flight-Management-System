@@ -41,8 +41,9 @@ public:
     double getUserBalance(int userID);
 
     /*** flight_info表 ***/
-    // 插入航班信息
-    bool insertFlight(const QString& flightNumber, const QString& departureCity, const QString& arrivalCity,const QDateTime& departureTime, const QDateTime& arrivalTime,
+    // 插入航班
+    bool insertFlight(const QString& flightNumber, const QString& departureCity, const QString& arrivalCity,
+                      const QDateTime& departureTime, const QDateTime& arrivalTime,
                       double price, const QString& departureAirport, const QString& arrivalAirport,
                       const QString& airlineCompany, const QDateTime& checkinStartTime,
                       const QDateTime& checkinEndTime, const QString& status);
@@ -50,6 +51,14 @@ public:
     void queryFlight(int flightID,FlightInfo& flight);
     void queryFlight(QJsonArray& flights);
     void queryFlight(QJsonArray& flights, QString departureCity, QString arrivalCity);
+    // 删除航班
+    bool deleteFlight(int flightId);
+    // 更新航班状态
+    bool updateFlightInfo(int flightId,const QString& flightNumber,const QString& departureCity,const QString& arrivalCity,
+                        const QDateTime& departureTime,const QDateTime& arrivalTime,
+                        double price,const QString& departureAirport,const QString& arrivalAirport,
+                        const QString& airlineCompany, const QDateTime& checkinStartTime,
+                          const QDateTime& checkinEndTime, const QString& status);
 
     /*** orders ***/
 
@@ -72,6 +81,13 @@ public:
     /*** flight_info相关 ***/
     bool isFlightInfoEmpty() const; // 判断航班表是否为空
     void populateSampleFlights();   // 插入测试航班数据
+    // 判断输入航班状态是否合法
+    bool validateFlightInput(const QString& flightNumber, const QString& departureCity, const QString& arrivalCity,
+                            const QDateTime& departureTime, const QDateTime& arrivalTime,
+                            double price, const QString& departureAirport, const QString& arrivalAirport,
+                            const QString& airlineCompany, const QDateTime& checkinStartTime,
+                            const QDateTime& checkinEndTime,
+                            const QString& status);
     void populateSampleOrders();    // 插入测试订单数据
     ~DatabaseManager();
 

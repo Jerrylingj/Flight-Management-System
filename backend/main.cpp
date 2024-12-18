@@ -66,9 +66,17 @@ public:
         m_httpServer->route("/api/flights", QHttpServerRequest::Method::Get, [this](const QHttpServerRequest &request) -> QHttpServerResponse {
             return getFlight(m_db);
         });
-        // 获取特定订单
+        // 获取特定航班
         m_httpServer->route("/api/flights/<arg>", QHttpServerRequest::Method::Get, [this](const int flightId) -> QHttpServerResponse {
             return getFlight(flightId, m_db);
+        });
+        // 删除特定航班
+        m_httpServer->route("/api/flights/del", QHttpServerRequest::Method::Post, [this](const QHttpServerRequest &request) {
+            return deleteFlight(request, m_db);
+        });
+        // 更新航班状态
+        m_httpServer->route("/api/flights/update", QHttpServerRequest::Method::Post, [this](const QHttpServerRequest &request) {
+            return updateFlight(request, m_db);
         });
 
         /*** order_info ***/

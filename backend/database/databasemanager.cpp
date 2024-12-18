@@ -74,14 +74,13 @@ void DatabaseManager::createTable() {
                     "arrival_city VARCHAR(20) NOT NULL, "              // 终点城市
                     "departure_time DATETIME NOT NULL, "               // 出发时间
                     "arrival_time DATETIME NOT NULL, "                 // 到达时间
-                    "price DECIMAL(10,2) DEFAULT 700, "                   // 票价（最多10位数字，两位小数）
+                    "price DECIMAL(10,2) DEFAULT 700, "                // 票价（最多10位数字，两位小数）
                     "departure_airport VARCHAR(20) NOT NULL, "         // 起点机场
                     "arrival_airport VARCHAR(20) NOT NULL, "           // 终点机场
                     "airline_company VARCHAR(20) NOT NULL, "           // 航空公司
                     "checkin_start_time DATETIME NOT NULL, "           // 检票开始时间
                     "checkin_end_time DATETIME NOT NULL, "             // 检票结束时间
-                    "status VARCHAR(10) NOT NULL, "                    // 航班状态
-                    "UNIQUE(flight_number) )")) {                      // 确保航班号唯一
+                    "status VARCHAR(10) NOT NULL")) {                  // 航班状态
         qDebug() << "create flight_info error: " << query.lastError().text();
     }
 
@@ -401,6 +400,99 @@ void DatabaseManager::queryFlight(QJsonArray& flights, QString departureCity, QS
         throw std::runtime_error("没有数据");
     }
 }
+// 删除航班
+bool DatabaseManager::deleteFlight(int flightId) {
+    QString sql = "DELETE FROM flight_info WHERE flight_id = :flight_id";
+    qDebug() << "Preparing SQL:" << sql << "with flight_id =" << flightId;
+
+    QSqlQuery query;
+    query.prepare(sql);
+    query.bindValue(":flight_id", flightId);
+
+    if (!query.exec()) {
+        qDebug() << "删除失败:" << query.lastError().text();
+        return false;
+    }
+
+    if (query.numRowsAffected() == 0) {
+        qDebug() << "No flight found with flight_id =" << flightId;
+        return false;
+    }
+
+    qDebug() << "Flight deleted successfully with flight_id =" << flightId;
+    return true;
+}
+// 更新航班状态
+bool DatabaseManager::updateFlightInfo(int flightId,
+                                       const QString& flightNumber,
+                                       const QString& departureCity,
+                                       const QString& arrivalCity,
+                                       const QDateTime& departureTime,
+                                       const QDateTime& arrivalTime,
+                                       double price,
+                                       const QString& departureAirport,
+                                       const QString& arrivalAirport,
+                                       const QString& airlineCompany,
+                                       const QDateTime& checkinStartTime,
+                                       const QDateTime& checkinEndTime,
+                                       const QString& status) {
+    // 调用字段校验函数
+    if (!validateFlightInput(flightNumber, departureCity, arrivalCity,
+                             departureTime, arrivalTime, price,
+                             departureAirport, arrivalAirport, airlineCompany,
+                             checkinStartTime, checkinEndTime, status)) {
+        qDebug() << "Flight input validation failed.";
+        return false;
+    }
+
+    QString sql = R"(
+        UPDATE flight_info
+        SET flight_number = :flight_number,
+            departure_city = :departure_city,
+            arrival_city = :arrival_city,
+            departure_time = :departure_time,
+            arrival_time = :arrival_time,
+            price = :price,
+            departure_airport = :departure_airport,
+            arrival_airport = :arrival_airport,
+            airline_company = :airline_company,
+            checkin_start_time = :checkin_start_time,
+            checkin_end_time = :checkin_end_time,
+            status = :status
+        WHERE flight_id = :flight_id
+    )";
+    QSqlQuery query;
+    query.prepare(sql);
+
+    query.bindValue(":flight_id", flightId);
+    query.bindValue(":flight_number", flightNumber);
+    query.bindValue(":departure_city", departureCity);
+    query.bindValue(":arrival_city", arrivalCity);
+    query.bindValue(":departure_time", departureTime.toString("yyyy-MM-dd HH:mm:ss"));
+    query.bindValue(":arrival_time", arrivalTime.toString("yyyy-MM-dd HH:mm:ss"));
+    query.bindValue(":price", price);
+    query.bindValue(":departure_airport", departureAirport);
+    query.bindValue(":arrival_airport", arrivalAirport);
+    query.bindValue(":airline_company", airlineCompany);
+    query.bindValue(":checkin_start_time", checkinStartTime.toString("yyyy-MM-dd HH:mm:ss"));
+    query.bindValue(":checkin_end_time", checkinEndTime.toString("yyyy-MM-dd HH:mm:ss"));
+    query.bindValue(":status", status);
+
+    if (!query.exec()) {
+        qDebug() << "Failed to update flight info:" << query.lastError().text();
+        return false;
+    }
+
+    if (query.numRowsAffected() == 0) {
+        qDebug() << "No flight found with flight_id =" << flightId;
+        return false;
+    }
+
+    qDebug() << "Flight info updated successfully for flight_id =" << flightId;
+    return true;
+}
+
+
 
 /*** order ***/
 // 创建订单
@@ -883,6 +975,50 @@ void DatabaseManager::populateSampleOrders(){
 
     qDebug() << "已成功生成模拟的订单数据.";
 }
+
+bool DatabaseManager::validateFlightInput(const QString& flightNumber,
+                                          const QString& departureCity,
+                                          const QString& arrivalCity,
+                                          const QDateTime& departureTime,
+                                          const QDateTime& arrivalTime,
+                                          double price,
+                                          const QString& departureAirport,
+                                          const QString& arrivalAirport,
+                                          const QString& airlineCompany,
+                                          const QDateTime& checkinStartTime,
+                                          const QDateTime& checkinEndTime,
+                                          const QString& status) {
+    if (flightNumber.isEmpty() || departureCity.isEmpty() || arrivalCity.isEmpty() ||
+        departureAirport.isEmpty() || arrivalAirport.isEmpty() || airlineCompany.isEmpty() ||
+        status.isEmpty()) {
+        qDebug() << "Error: One or more required fields are empty.";
+        return false;
+    }
+
+    if (!departureTime.isValid() || !arrivalTime.isValid() ||
+        !checkinStartTime.isValid() || !checkinEndTime.isValid()) {
+        qDebug() << "Error: One or more datetime fields are invalid.";
+        return false;
+    }
+
+    if (price < 0) {
+        qDebug() << "Error: Price cannot be negative.";
+        return false;
+    }
+
+    if (departureTime >= arrivalTime) {
+        qDebug() << "Error: Departure time must be earlier than arrival time.";
+        return false;
+    }
+
+    if (checkinStartTime >= checkinEndTime) {
+        qDebug() << "Error: Check-in start time must be earlier than check-in end time.";
+        return false;
+    }
+
+    return true;
+}
+
 
 
 DatabaseManager::~DatabaseManager() {
