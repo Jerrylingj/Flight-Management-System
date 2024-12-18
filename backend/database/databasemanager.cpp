@@ -709,13 +709,13 @@ bool DatabaseManager::isFlightInfoEmpty() const {
 }
 // 插入样例航班
 void DatabaseManager::populateSampleFlights() {
-    // 清空表格
-    QSqlQuery queryClear;
-    if (!queryClear.exec("DELETE FROM flight_info")) {
-        qDebug() << "Failed to clear flight_info table:" << queryClear.lastError();
-        return;
-    }
-    qDebug() << "flight_info 表已清空。";
+    // 删除 // 清空表格
+    // QSqlQuery queryClear;
+    // if (!queryClear.exec("DELETE FROM flight_info")) {
+    //     qDebug() << "Failed to clear flight_info table:" << queryClear.lastError();
+    //     return;
+    // }
+    // qDebug() << "flight_info 表已清空。";
 
     // 开始事务
     if (!QSqlDatabase::database().transaction()) {

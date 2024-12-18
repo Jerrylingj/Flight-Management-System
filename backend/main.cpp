@@ -254,27 +254,18 @@ public:
         //     return result;
         // });
 
-        // AI客服
-        m_httpServer->route("/api/aichat",QHttpServerRequest::Method::Post,[this](const QHttpServerRequest& request){
-            return ai->chat(request);
-        });
-
         /*** flight_favorites ***/
         // 添加收藏
         m_httpServer->route("/api/favorites/add", QHttpServerRequest::Method::Post, [this](const QHttpServerRequest &request) {
             QJsonDocument body = QJsonDocument::fromJson(request.body());
             QJsonObject json = body.object();
 
-            qDebug() << json;
-            qDebug() << "[调试] 收到 POST 请求 /api/favorites/add";
-            qDebug() << "[调试] 请求内容：" << QString::fromUtf8(request.body());
-
+            // 根据token获取用户ID
             int userId;
             try {
                 userId = getUserID(request);
-                qDebug() << "[调试] 提取的用户ID：" << userId;
+                // qDebug() << "[调试] 提取的用户ID：" << userId;
             } catch (std::invalid_argument &e) {
-                qWarning() << "[错误] 无法提取用户ID：" << e.what();
                 return QJsonObject{
                     {"success", false},
                     {"message", "无效的授权令牌"}
@@ -282,20 +273,14 @@ public:
             }
 
             int flightId = json["flightId"].toInt();
-            qDebug() << "flightId: " << flightId;
             if (flightId == 0) {
-                qWarning() << "[警告] 请求体缺少或包含无效的 flightId";
                 return QJsonObject{
                     {"success", false},
                     {"message", "无效或缺少 flightId"}
                 };
             }
 
-            qDebug() << "[调试] 提取的航班ID：" << flightId;
-
-            QJsonObject result = addFavorite(m_db, userId, flightId);
-            qDebug() << "[调试] 添加收藏结果：" << QJsonDocument(result).toJson(QJsonDocument::Compact);
-            return result;
+            return addFavorite(m_db, userId, flightId);
         });
 
         // 取消收藏
@@ -303,15 +288,12 @@ public:
             QJsonDocument body = QJsonDocument::fromJson(request.body());
             QJsonObject json = body.object();
 
-            qDebug() << "[调试] 收到 POST 请求 /api/favorites/remove";
-            qDebug() << "[调试] 请求内容：" << QString::fromUtf8(request.body());
-
+            // 根据token获取用户ID
             int userId;
             try {
                 userId = getUserID(request);
-                qDebug() << "[调试] 提取的用户ID：" << userId;
+                // qDebug() << "[调试] 提取的用户ID：" << userId;
             } catch (std::invalid_argument &e) {
-                qWarning() << "[错误] 无法提取用户ID：" << e.what();
                 return QJsonObject{
                     {"success", false},
                     {"message", "无效的授权令牌"}
@@ -319,30 +301,22 @@ public:
             }
 
             int flightId = json["flightId"].toInt();
-            qDebug() << "flightId: " << flightId;
             if (flightId == 0) {
-                qWarning() << "[警告] 请求体缺少或包含无效的 flightId";
                 return QJsonObject{
                     {"success", false},
                     {"message", "无效或缺少 flightId"}
                 };
             }
 
-            qDebug() << "[调试] 提取的航班ID：" << flightId;
-
-            QJsonObject result = removeFavorite(m_db, userId, flightId);
-            qDebug() << "[调试] 取消收藏结果：" << QJsonDocument(result).toJson(QJsonDocument::Compact);
-            return result;
+            return removeFavorite(m_db, userId, flightId);
         });
 
         // 查询收藏
         m_httpServer->route("/api/favorites", QHttpServerRequest::Method::Post, [this](const QHttpServerRequest &request) {
-            qDebug() << "[调试] 收到 POST 请求 /api/favorites";
-
+            // 根据token获取用户ID
             int userId;
             try {
                 userId = getUserID(request);
-                qDebug() << "[调试] 提取的用户ID：" << userId;
             } catch (std::invalid_argument &e) {
                 qWarning() << "[错误] 无法提取用户ID：" << e.what();
                 return QJsonObject{
@@ -351,11 +325,14 @@ public:
                 };
             }
 
-            QJsonObject result = getFavorites(m_db, userId);
-            qDebug() << "[调试] 查询收藏结果：" << QJsonDocument(result).toJson(QJsonDocument::Compact);
-            return result;
+            return getFavorites(m_db, userId);
         });
 
+
+        // AI客服
+        m_httpServer->route("/api/aichat",QHttpServerRequest::Method::Post,[this](const QHttpServerRequest& request){
+            return ai->chat(request);
+        });
 
         // 监听端口
         if (m_httpServer->listen(QHostAddress::Any, 8080)) {
