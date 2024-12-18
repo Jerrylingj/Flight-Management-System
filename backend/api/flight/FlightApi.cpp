@@ -1,6 +1,8 @@
 #include "FlightApi.h"
 #include "dto/response_dto.h"
 #include "dto/flight_info_dto.h"
+#include "dto/flight_del_dto.h"
+#include "dto/flight_update_dto.h"
 #include <QJsonArray>
 
 QJsonObject getFlight(DatabaseManager* m_db){
@@ -85,6 +87,7 @@ QJsonObject getFlight(const QHttpServerRequest &request, DatabaseManager* m_db){
         return response->toJson();
     }
 }
+<<<<<<< HEAD
 
 // 用于改签：获取和flightId所指向的航班相同出发地和目的地的、出发时间晚于flightId所指向的航班，同时时间距离最近的那一个航班的航班信息，转化为QJsonObject，返还给Controller层
 QJsonObject getNextFlight(int flightId, DatabaseManager* m_db){
@@ -125,3 +128,110 @@ QJsonObject getNextFlight(int flightId, DatabaseManager* m_db){
         return response;
     }
 }
+=======
+QJsonObject deleteFlight(const QHttpServerRequest &request, DatabaseManager *m_db) {
+    try {
+        // 使用 FlightDelDTO 解析请求
+        FlightDelDTO flightDelDTO(request);
+
+        // 校验 authCode
+        if (flightDelDTO.getAuthCode() != "123") {
+            throw std::invalid_argument("Invalid authCode");
+        }
+
+        // 调用数据库删除函数
+        if (!m_db->deleteFlight(flightDelDTO.getFlightId())) {
+            throw std::runtime_error("Failed to delete flight");
+        }
+
+        // 返回成功响应
+        QJsonObject response;
+        response["success"] = true;
+        response["message"] = "Flight deleted successfully";
+        return response;
+
+    } catch (const std::invalid_argument &e) {
+        qWarning() << "Invalid argument error:" << e.what();
+        QJsonObject response;
+        response["success"] = false;
+        response["message"] = QString("Invalid input: %1").arg(e.what());
+        return response;
+
+    } catch (const std::runtime_error &e) {
+        qWarning() << "Runtime error:" << e.what();
+        QJsonObject response;
+        response["success"] = false;
+        response["message"] = QString("Error: %1").arg(e.what());
+        return response;
+
+    } catch (const std::exception &e) {
+        qWarning() << "Unexpected error:" << e.what();
+        QJsonObject response;
+        response["success"] = false;
+        response["message"] = "An unexpected error occurred";
+        return response;
+    }
+}
+QJsonObject updateFlight(const QHttpServerRequest &request, DatabaseManager *m_db) {
+    try {
+        // 使用 FlightUpdateDTO 解析请求
+        FlightUpdateDTO flightUpdateDTO(request);
+
+        // 校验 authCode
+        if (flightUpdateDTO.authCode != "123") {
+            throw std::invalid_argument("Invalid authCode");
+        }
+
+        // 调用数据库更新函数
+        bool success = m_db->updateFlightInfo(
+            flightUpdateDTO.flightId,
+            flightUpdateDTO.flightNumber,
+            flightUpdateDTO.departureCity,
+            flightUpdateDTO.arrivalCity,
+            flightUpdateDTO.departureTime,
+            flightUpdateDTO.arrivalTime,
+            flightUpdateDTO.price,
+            flightUpdateDTO.departureAirport,
+            flightUpdateDTO.arrivalAirport,
+            flightUpdateDTO.airlineCompany,
+            flightUpdateDTO.checkinStartTime,
+            flightUpdateDTO.checkinEndTime,
+            flightUpdateDTO.status
+            );
+
+        if (!success) {
+            throw std::runtime_error("Failed to update flight information");
+        }
+
+        // 返回成功响应
+        QJsonObject response;
+        response["success"] = true;
+        response["message"] = "Flight updated successfully";
+        return response;
+
+    } catch (const std::invalid_argument &e) {
+        qWarning() << "Invalid argument error:" << e.what();
+        QJsonObject response;
+        response["success"] = false;
+        response["message"] = QString("Invalid input: %1").arg(e.what());
+        return response;
+
+    } catch (const std::runtime_error &e) {
+        qWarning() << "Runtime error:" << e.what();
+        QJsonObject response;
+        response["success"] = false;
+        response["message"] = QString("Error: %1").arg(e.what());
+        return response;
+
+    } catch (const std::exception &e) {
+        qWarning() << "Unexpected error:" << e.what();
+        QJsonObject response;
+        response["success"] = false;
+        response["message"] = "An unexpected error occurred";
+        return response;
+    }
+}
+
+
+
+>>>>>>> b07b36a9bd323100ba8d95e5e1a181e8410a2294
