@@ -17,38 +17,31 @@ qt_add_resources(PROJECT_SOURCES
 add_executable(QtHttpServer
     ${PROJECT_SOURCES}
     main.cpp
-    database/databasemanager.cpp
-    database/databasemanager.h
+    util/easycrypt.h util/easycrypt.cpp
+    util/networkhandler.h util/networkhandler.cpp
+    aichat/aichat.h aichat/aichat.cpp
+
+    database/databasemanager.cpp database/databasemanager.h
+
     config/database_config.json
     config/database_config.qrc
     config/database_config.template.json
+
     dto/response_dto.h dto/response_dto.cpp
+    dto/flight_dto.h dto/flight_dto.cpp
+    dto/order_dto.cpp dto/order_dto.h
+    dto/user_dto.h dto/user_dto.cpp
+    dto/send_code.h dto/send_code.cpp
+
     api/login/login.h api/login/login.cpp
     api/register/register.h api/register/register.cpp
-
     api/flight/FlightApi.h api/flight/FlightApi.cpp
-    dto/login_dto.h dto/login_dto.cpp
-    api/order/OrderApi.h
-
-    api/order/OrderApi.cpp
-
-    util/easycrypt.h util/easycrypt.cpp
-    # dto/create_order.h dto/create_order.cpp
-    api/order/CreateOrderApi.h api/order/CreateOrderApi.cpp
     api/favorite/FavoritesApi.cpp api/favorite/FavoritesApi.h
-    aichat/aichat.h aichat/aichat.cpp
-    config/ai.qrc
-    config/ai.json
-    # dto/order_info_dto.cpp dto/order_info_dto.h
-    dto/send_code.h dto/send_code.cpp
-    util/networkhandler.h util/networkhandler.cpp
-    dto/register_dto.h dto/register_dto.cpp
+    api/order/OrderApi.h api/order/OrderApi.cpp
+    api/order/CreateOrderApi.h api/order/CreateOrderApi.cpp
     api/user/user.h api/user/user.cpp
-    dto/update_user_dto.h dto/update_user_dto.cpp
-    dto/flight_dto.h dto/flight_dto.cpp
-    dto/order_dto.cpp
-    dto/order_dto.h
 
+    config/ai.qrc config/ai.json
 )
 target_link_libraries(QtHttpServer PRIVATE
     Qt6::Core

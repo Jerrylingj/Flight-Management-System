@@ -1,9 +1,11 @@
-#include "register_dto.h"
-
+#include "user_dto.h"
+#include "util/easycrypt.h"
 #include <QJsonDocument>
 #include <QJsonObject>
-#include "util/easycrypt.h"
+#include <QDebug>
 
+
+/*** 用户注册 ***/
 RegisterRequest::RegisterRequest(const QHttpServerRequest &request){
     QByteArray body = request.body();
     QJsonDocument jsonDoc = QJsonDocument::fromJson(body);
@@ -53,3 +55,58 @@ RegisterRequest::RegisterRequest(const QHttpServerRequest &request){
         }
     }
 }
+
+
+/*** 用户登录 ***/
+LoginDTO::LoginDTO(const QHttpServerRequest &request){
+    QByteArray body = request.body();
+    QJsonDocument jsonDoc = QJsonDocument::fromJson(body);
+    if(!jsonDoc.isNull()&&jsonDoc.isObject()){
+        QJsonObject jsonObj = jsonDoc.object();
+        if (!jsonObj.contains("email") || !jsonObj["email"].isString()) {
+            throw std::invalid_argument("Invalid or missing email");
+        }
+        m_email = jsonObj["email"].toString();
+
+        if (!jsonObj.contains("password") || !jsonObj["password"].isString()) {
+            throw std::invalid_argument("Invalid or missing password");
+        }
+        m_password = jsonObj["password"].toString();
+    }else{
+        throw std::invalid_argument("错误的请求体");
+    }
+}
+LoginReturnDTO::LoginReturnDTO(const QJsonObject& jsonObj){
+    m_token = encrypt(jsonObj);
+}
+QJsonObject LoginReturnDTO::toJson() const {
+    QJsonObject obj;
+    obj["token"] = m_token;
+    return obj;
+}
+
+
+/*** 用户信息更新 ***/
+UpdateUserRequest::UpdateUserRequest(const QHttpServerRequest &request){
+    QByteArray body = request.body();
+    QJsonDocument jsonDoc = QJsonDocument::fromJson(body);
+    if(!jsonDoc.isNull()&&jsonDoc.isObject()){
+        QJsonObject jsonObj = jsonDoc.object();
+        if (jsonObj.contains("balance") && jsonObj["balance"].isDouble()) {
+            balance = jsonObj.value("balance").toDouble();
+            return;
+        }
+        if (jsonObj.contains("avatar_url") && jsonObj["avatar_url"].isString()) {
+            avatar_url = jsonObj.value("avatar_url").toString();
+            return;
+        }
+        if (jsonObj.contains("username") && jsonObj["username"].isString()) {
+            username = jsonObj.value("username").toString();
+            return;
+        }
+        throw std::invalid_argument("缺少需要的参数");
+    }else{
+        throw std::invalid_argument("错误的请求体");
+    }
+}
+
