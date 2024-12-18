@@ -53,7 +53,10 @@ QJsonObject getOrder(DatabaseManager* m_db, int userId){
     try{
         QJsonArray orders;
         m_db->queryOrder(orders, userId);
-        return success(orders)->toJson();
+        QJsonObject resp;
+        resp["success"] = true;
+        resp["data"] = orders;
+        return resp;
     }
     catch(const std::exception& e){
         qDebug() << "[错误] getOrder 函数异常: " << e.what();

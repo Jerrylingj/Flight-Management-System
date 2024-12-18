@@ -881,7 +881,7 @@ void DatabaseManager::populateSampleOrders(){
         return;
     }
 
-    qDebug() << "Sample orders population completed successfully.";
+    qDebug() << "已成功生成模拟的订单数据.";
 }
 
 
