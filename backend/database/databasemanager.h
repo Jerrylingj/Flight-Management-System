@@ -86,8 +86,7 @@ public:
                             const QDateTime& departureTime, const QDateTime& arrivalTime,
                             double price, const QString& departureAirport, const QString& arrivalAirport,
                             const QString& airlineCompany, const QDateTime& checkinStartTime,
-                            const QDateTime& checkinEndTime,
-                            const QString& status);
+                            const QDateTime& checkinEndTime,const QString& status);
     void populateSampleOrders();    // 插入测试订单数据
     ~DatabaseManager();
 

@@ -67,20 +67,22 @@ void DatabaseManager::createTable() {
     }
 
     // 航班信息
-    if(!query.exec("CREATE TABLE IF NOT EXISTS flight_info ("
-                    "flight_id INTEGER PRIMARY KEY AUTO_INCREMENT, "   // 航班ID，自增主键
-                    "flight_number VARCHAR(10) NOT NULL, "             // 航班号
-                    "departure_city VARCHAR(20) NOT NULL, "            // 起点城市
-                    "arrival_city VARCHAR(20) NOT NULL, "              // 终点城市
-                    "departure_time DATETIME NOT NULL, "               // 出发时间
-                    "arrival_time DATETIME NOT NULL, "                 // 到达时间
-                    "price DECIMAL(10,2) DEFAULT 700, "                // 票价（最多10位数字，两位小数）
-                    "departure_airport VARCHAR(20) NOT NULL, "         // 起点机场
-                    "arrival_airport VARCHAR(20) NOT NULL, "           // 终点机场
-                    "airline_company VARCHAR(20) NOT NULL, "           // 航空公司
-                    "checkin_start_time DATETIME NOT NULL, "           // 检票开始时间
-                    "checkin_end_time DATETIME NOT NULL, "             // 检票结束时间
-                    "status VARCHAR(10) NOT NULL")) {                  // 航班状态
+    if (!query.exec(
+            "CREATE TABLE IF NOT EXISTS flight_info ("
+            "flight_id INTEGER PRIMARY KEY AUTO_INCREMENT, "   // 航班ID，自增主键
+            "flight_number VARCHAR(10) NOT NULL, "             // 航班号
+            "departure_city VARCHAR(20) NOT NULL, "            // 起点城市
+            "arrival_city VARCHAR(20) NOT NULL, "              // 终点城市
+            "departure_time DATETIME NOT NULL, "               // 出发时间
+            "arrival_time DATETIME NOT NULL, "                 // 到达时间
+            "price DECIMAL(10,2) DEFAULT 700.00, "             // 票价（最多10位数字，两位小数）
+            "departure_airport VARCHAR(20) NOT NULL, "         // 起点机场
+            "arrival_airport VARCHAR(20) NOT NULL, "           // 终点机场
+            "airline_company VARCHAR(20) NOT NULL, "           // 航空公司
+            "checkin_start_time DATETIME NOT NULL, "           // 检票开始时间
+            "checkin_end_time DATETIME NOT NULL, "             // 检票结束时间
+            "status VARCHAR(10) NOT NULL"
+            ");")) {                                           // 航班状态
         qDebug() << "create flight_info error: " << query.lastError().text();
     }
 
@@ -801,7 +803,7 @@ bool DatabaseManager::isFlightInfoEmpty() const {
 }
 // 插入样例航班
 void DatabaseManager::populateSampleFlights() {
-    // 删除 // 清空表格
+    // // 清空表格
     // QSqlQuery queryClear;
     // if (!queryClear.exec("DELETE FROM flight_info")) {
     //     qDebug() << "Failed to clear flight_info table:" << queryClear.lastError();
@@ -809,6 +811,8 @@ void DatabaseManager::populateSampleFlights() {
     // }
     // qDebug() << "flight_info 表已清空。";
 
+    if (!isFlightInfoEmpty()) return; // 如果已有航班信息,就返回
+    qDebug() << "航班信息表不为空,插入数据！";
     // 开始事务
     if (!QSqlDatabase::database().transaction()) {
         qDebug() << "Failed to start transaction";
