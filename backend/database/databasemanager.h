@@ -7,7 +7,7 @@
 #include <QDebug>
 #include <QList>
 #include "dto/flight_dto.h"
-#include "dto/order_info_dto.h"
+#include "dto/order_dto.h"
 
 class DatabaseManager {
 public:

@@ -1,5 +1,6 @@
-#include "order_info_dto.h"
+#include "order_dto.h"
 
+/*** 订单信息 ***/
 OrderInfo::OrderInfo()
     : orderId(0), userId(0), flightId(0)
 {
@@ -35,7 +36,6 @@ QJsonObject OrderInfo::toJson() const
     qDebug() << "OrderInfo 转换为 JSON 数据：" << json;
     return json;
 }
-
 void OrderInfo::fromJson(const QJsonObject& json)
 {
     if (json.contains("orderId")) {
@@ -110,3 +110,13 @@ void OrderInfo::fromJson(const QJsonObject& json)
     qDebug() << "检票开始时间:" << checkInStartTime.toString(Qt::ISODate);
     qDebug() << "检票结束时间:" << checkInEndTime.toString(Qt::ISODate);
 }
+
+/*** 订单创建 ***/
+CreateOrderRequest::CreateOrderRequest(QJsonObject& obj){
+    if(obj.contains("flightID")){
+        flightID = obj.value("flightID").toInt();
+    }else {
+        throw std::invalid_argument("缺少参数flightID");
+    }
+}
+

@@ -1,12 +1,12 @@
-#ifndef ORDER_INFO_DTO_H
-#define ORDER_INFO_DTO_H
+#ifndef ORDER_DTO_H
+#define ORDER_DTO_H
 
 #include <QString>
 #include <QDateTime>
 #include <QJsonObject>
 #include <QDebug>
 
-
+// 订单信息
 class OrderInfo {
 public:
     int orderId;
@@ -38,4 +38,19 @@ public:
     void fromJson(const QJsonObject& json);
 };
 
-#endif // ORDER_INFO_DTO_H
+// 创建订单
+class CreateOrderRequest
+{
+public:
+    CreateOrderRequest(QJsonObject& obj);
+    int getFlightID() const {
+        return flightID;
+    }
+private:
+    int flightID;
+};
+
+
+
+
+#endif // ORDER_DTO_H

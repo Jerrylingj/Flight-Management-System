@@ -33,19 +33,21 @@ add_executable(QtHttpServer
     api/order/OrderApi.cpp
 
     util/easycrypt.h util/easycrypt.cpp
-    dto/create_order.h dto/create_order.cpp
+    # dto/create_order.h dto/create_order.cpp
     api/order/CreateOrderApi.h api/order/CreateOrderApi.cpp
     api/favorite/FavoritesApi.cpp api/favorite/FavoritesApi.h
     aichat/aichat.h aichat/aichat.cpp
     config/ai.qrc
     config/ai.json
-    dto/order_info_dto.cpp dto/order_info_dto.h
+    # dto/order_info_dto.cpp dto/order_info_dto.h
     dto/send_code.h dto/send_code.cpp
     util/networkhandler.h util/networkhandler.cpp
     dto/register_dto.h dto/register_dto.cpp
     api/user/user.h api/user/user.cpp
     dto/update_user_dto.h dto/update_user_dto.cpp
     dto/flight_dto.h dto/flight_dto.cpp
+    dto/order_dto.cpp
+    dto/order_dto.h
 
 )
 target_link_libraries(QtHttpServer PRIVATE
