@@ -43,7 +43,7 @@
 //     }
 // }
 
-// 获取当前用户的所有航班信息
+// 获取当前用户的所有订单信息
 QJsonObject getOrder(DatabaseManager* m_db, int userId){
     if (!m_db) {
         auto response = fail<QJsonObject>("[错误] getORder 函数异常: DatabaseManager 指针为空");
@@ -135,51 +135,45 @@ QJsonObject payOrder(int orderId, DatabaseManager* m_db) {
 }
 
 // 改签功能
-// QJsonObject rebookOrder(int orderID, int flightId, DatabaseManager* m_db){
-//     if (!m_db) {
-//         auto response = fail<QJsonObject>("[错误] reboogOrder 函数异常: DatabaseManager 指针为空");
-//         return response->toJson();
-//     }
+QJsonObject rebookOrder(int orderId, int flightId, DatabaseManager* m_db) {
+    QJsonObject response;
 
-//     try {
-//         // 创建OrderInfo对象来更新订单信息
-//         OrderInfo orderInfo;
-//         orderInfo.orderId = orderID;
-//         orderInfo.flightId = flightId;  // 更新为新的航班ID
+    if (!m_db) {
+        response["success"] = false;
+        response["code"] = 500;
+        response["message"] = "改签失败：DatabaseManager 指针为空";
+        return response;
+    }
 
-//         // 需要增加改签次数
-//         // 先查询当前订单信息
-//         QJsonArray orders;
-//         m_db->queryOrder(orders, orderInfo.userId);
+    try {
+        // 更新订单的 flight_id
+        m_db->updateFlightId(orderId, flightId);
 
-//         // 遍历找到对应订单
-//         for (const auto& order : orders) {
-//             QJsonObject orderObj = order.toObject();
-//             if (orderObj["orderId"].toInt() == orderID) {
-//                 orderInfo.totalChangeCount = orderObj["totalChangeCount"].toInt() + 1;
-//                 break;
-//             }
-//         }
-
-//         // 更新订单信息
-//         m_db->updateOrder(orderInfo);
-
-//         auto response = success<QString>("改签成功");
-//         return response->toJson();
-//     }
-//     catch (const std::invalid_argument& e) {
-//         auto response = fail<QJsonObject>(QString::fromStdString(e.what()));
-//         return response->toJson();
-//     }
-//     catch (const std::runtime_error& e) {
-//         auto response = fail<QJsonObject>(QString::fromStdString(e.what()));
-//         return response->toJson();
-//     }
-//     catch (const std::exception& e) {
-//         auto response = fail<QJsonObject>("改签失败");
-//         return response->toJson();
-//     }
-// }
+        response["success"] = true;
+        response["code"] = 200;
+        response["data"] = "订单改签成功";
+        response["message"] = "操作成功";
+        return response;
+    }
+    catch (const std::invalid_argument& e) {
+        response["success"] = false;
+        response["code"] = 400;
+        response["message"] = QString::fromStdString(e.what());
+        return response;
+    }
+    catch (const std::runtime_error& e) {
+        response["success"] = false;
+        response["code"] = 500;
+        response["message"] = QString::fromStdString(e.what());
+        return response;
+    }
+    catch (const std::exception& e) {
+        response["success"] = false;
+        response["code"] = 500;
+        response["message"] = "改签失败";
+        return response;
+    }
+}
 
 // 退签功能
 QJsonObject deleteOrder(int orderId, DatabaseManager* m_db) {

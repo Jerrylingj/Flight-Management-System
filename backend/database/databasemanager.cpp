@@ -264,10 +264,7 @@ void DatabaseManager::deleteUser(const int userId) {
 
 /*** flight_info ***/
 // 添加航班
-bool DatabaseManager::insertFlight(const QString& flightNumber, const QString& departureCity, const QString& arrivalCity,const QDateTime& departureTime, const QDateTime& arrivalTime,
-                                   double price, const QString& departureAirport, const QString& arrivalAirport,
-                                   const QString& airlineCompany, const QDateTime& checkinStartTime,
-                                   const QDateTime& checkinEndTime, const QString& status) {
+bool DatabaseManager::insertFlight(const QString& flightNumber, const QString& departureCity, const QString& arrivalCity,const QDateTime& departureTime, const QDateTime& arrivalTime, double price, const QString& departureAirport, const QString& arrivalAirport,const QString& airlineCompany, const QDateTime& checkinStartTime, const QDateTime& checkinEndTime, const QString& status) {
     QSqlQuery query;
     query.prepare("INSERT INTO flight_info (flight_number, departure_city, arrival_city, departure_time, arrival_time, price, departure_airport, arrival_airport, checkin_start_time, checkin_end_time, airline_company, status) "
                   "VALUES (:flight_number, :departure_city, :arrival_city, :departure_time, :arrival_time, :price, :departure_airport, :arrival_airport, :checkin_start_time, :checkin_end_time, :airline_company, :status)");
@@ -290,6 +287,7 @@ bool DatabaseManager::insertFlight(const QString& flightNumber, const QString& d
     }
     return true;
 }
+
 // 查询航班
 void DatabaseManager::queryFlight(int flightId,FlightInfo& flight){
     QString sql = "SELECT * FROM flight_info WHERE flight_id = :flight_id";
@@ -325,6 +323,7 @@ void DatabaseManager::queryFlight(int flightId,FlightInfo& flight){
         throw std::invalid_argument("无效的id");
     }
 }
+
 void DatabaseManager::queryFlight(QJsonArray& flights){
     QString sql = "SELECT * FROM flight_info";
     qDebug() << "Executing SQL:" << sql;
@@ -402,48 +401,63 @@ void DatabaseManager::queryFlight(QJsonArray& flights, QString departureCity, QS
     }
 }
 
-/*** order ***/
-// 创建订单
-// void DatabaseManager::createOrder(int userID, int flightID){
-//     // 如果要进行增删改需要这样子做
-//     QSqlDatabase db = QSqlDatabase::database();
-//     if(!db.transaction()){
-//         throw std::runtime_error("无法开始事务");
-//     }
-//     try{
-//         double balance = getUserBalance(userID);
-//         FlightInfo flight;
-//         queryFlight(flightID,flight);
-//         if(flight.price > balance) {
-//             throw std::invalid_argument("没钱了");
-//         }
-//         QSqlQuery query;
-//         query.prepare("INSERT INTO order_info (user_id, flight_id) "
-//                       "VALUES (:userid, :flightid) ");
-//         query.bindValue(":userid",userID);
-//         query.bindValue(":flightid",flightID);
-//         if(!query.exec()){
-//             throw std::runtime_error("插入失败");
-//         }
-//         double newBalance = balance - flight.price;
-//         QSqlQuery updateQuery;
-//         updateQuery.prepare("UPDATE users SET balance = :balance WHERE id = :userid");
-//         updateQuery.bindValue(":balance", newBalance);
-//         updateQuery.bindValue(":userid", userID);
-//         if(!updateQuery.exec()){
-//             throw std::runtime_error("更新用户余额失败");
-//         }
-//         // 提交事件
-//         if(!db.commit()){
-//             throw std::runtime_error("事务提交失败");
-//         }
-//     }catch(const std::exception& e){
-//         // 发生错误就回滚数据库，避免票没订但是钱扣了
-//         db.rollback();
-//         throw;
-//     }
-// }
+// 用于改签：获取和flightId所指向的航班相同出发地和目的地的、出发时间晚于flightId所指向的航班，同时时间距离最近的那一个航班
+void DatabaseManager::queryNextFlight(int flightId, FlightInfo & flightInfo){
+    // 通过 flightId 获取出发城市、到达城市和出发时间
+    QString sql = "SELECT departure_city, arrival_city, departure_time FROM flight_info WHERE flight_id = :flightId";
+    QSqlQuery query;
+    query.prepare(sql);
+    query.bindValue(":flightId", flightId);
 
+    if (!query.exec() || !query.next()) {
+        qDebug() << "无法找到指定的航班:" << query.lastError().text();
+        flightInfo = FlightInfo();
+        throw std::runtime_error("无法找到指定的航班");
+    }
+
+    QString departureCity = query.value("departure_city").toString();
+    QString arrivalCity = query.value("arrival_city").toString();
+    QDateTime departureTime = query.value("departure_time").toDateTime();
+
+    // 查询下一趟航班
+    QString nextFlightSql = "SELECT * FROM flight_info WHERE departure_city = :departureCity AND arrival_city = :arrivalCity AND departure_time > :departureTime ORDER BY departure_time ASC LIMIT 1";
+    QSqlQuery nextFlightQuery;
+    nextFlightQuery.prepare(nextFlightSql);
+    nextFlightQuery.bindValue(":departureCity", departureCity);
+    nextFlightQuery.bindValue(":arrivalCity", arrivalCity);
+    nextFlightQuery.bindValue(":departureTime", departureTime);
+
+    if (!nextFlightQuery.exec()) {
+        qDebug() << "查询错误:" << nextFlightQuery.lastError().text();
+        // 清空 flightInfo
+        flightInfo = FlightInfo();
+        return;
+    }
+
+    if (!nextFlightQuery.next()) {
+        // 没有找到下一趟航班
+        qDebug() << "没有找到下一趟航班";
+        // 清空 flightInfo
+        flightInfo = FlightInfo();
+        return;
+    }
+
+    // 将查询结果填充到 flightInfo
+    flightInfo.flightId = nextFlightQuery.value("flight_id").toInt();
+    flightInfo.flightNumber = nextFlightQuery.value("flight_number").toString();
+    flightInfo.departureCity = nextFlightQuery.value("departure_city").toString();
+    flightInfo.arrivalCity = nextFlightQuery.value("arrival_city").toString();
+    flightInfo.departureTime = nextFlightQuery.value("departure_time").toDateTime();
+    flightInfo.arrivalTime = nextFlightQuery.value("arrival_time").toDateTime();
+    flightInfo.departureAirport = nextFlightQuery.value("departure_airport").toString();
+    flightInfo.arrivalAirport = nextFlightQuery.value("arrival_airport").toString();
+    flightInfo.checkinStartTime = nextFlightQuery.value("checkin_start_time").toDateTime();
+    flightInfo.checkinEndTime = nextFlightQuery.value("checkin_end_time").toDateTime();
+    flightInfo.price = nextFlightQuery.value("price").toDouble();
+    flightInfo.airlineCompany = nextFlightQuery.value("airline_company").toString();
+    flightInfo.status = nextFlightQuery.value("status").toString();
+}
+/*** order ***/
 
 // 查询一个用户所有订单信息
 void DatabaseManager::queryOrder(QJsonArray &orders, int userId) {
@@ -511,12 +525,12 @@ void DatabaseManager::queryOrder(QJsonArray &orders, int userId) {
 
     qDebug() << "Retrieved" << orders.size() << "orders.";
 
-    if (orders.isEmpty()) {
-        throw std::runtime_error("没有数据");
-    }
+    // if (orders.isEmpty()) {
+    //     throw std::runtime_error("没有数据");
+    // }
 }
 
-// 创建订单（林国佳来调用，有问题找YPX）
+// 创建订单
 void DatabaseManager::insertOrder(int userId, int flightId) {
     // 创建QSqlQuery对象
     QSqlQuery query;
@@ -595,10 +609,10 @@ void DatabaseManager::updatePaymentStatus(int orderId, bool paymentStatus) {
 }
 
 // 修改特定订单的航班编号字段的函数，注意这时支付状态应设置为已支付
-void DatabaseManager::updateFlightNumber(int orderId, const QString &flightNumber) {
+void DatabaseManager::updateFlightId(int orderId, int flightId) {
     QString sql = R"(
         UPDATE order_info
-        SET flight_number = :flight_number
+        SET flight_id = :flight_id
         WHERE id = :order_id
     )";
 
@@ -607,13 +621,13 @@ void DatabaseManager::updateFlightNumber(int orderId, const QString &flightNumbe
 
     // 绑定参数值
     query.bindValue(":order_id", orderId);
-    query.bindValue(":flight_number", flightNumber);
+    query.bindValue(":flight_id", flightId);
 
-    qDebug() << "[调试] DatabaseManager::updateFlightNumber - 执行 SQL 语句:" << sql;
-    qDebug() << "[调试] 绑定的 flight_number:" << flightNumber;
+    qDebug() << "[调试] DatabaseManager::updateFlightId - 执行 SQL 语句:" << sql;
+    qDebug() << "[调试] 绑定的 flight_id:" << flightId;
 
     if (!query.exec()) {
-        QString errorMsg = QString("[错误] DatabaseManager::updateFlightNumber - 更新失败: %1").arg(query.lastError().text());
+        QString errorMsg = QString("[错误] DatabaseManager::updateFlightId - 更新失败: %1").arg(query.lastError().text());
         qDebug() << errorMsg;
         throw std::runtime_error(errorMsg.toStdString());
     }
@@ -622,7 +636,7 @@ void DatabaseManager::updateFlightNumber(int orderId, const QString &flightNumbe
         throw std::runtime_error("未找到要更新的订单");
     }
 
-    qDebug() << "成功更新订单 ID:" << orderId << "的 flight_number";
+    qDebug() << "成功更新订单 ID:" << orderId << "的 flight_id";
 }
 
 /*** flight_favorites ***/

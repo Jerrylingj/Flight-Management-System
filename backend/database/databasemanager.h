@@ -51,6 +51,9 @@ public:
     void queryFlight(QJsonArray& flights);
     void queryFlight(QJsonArray& flights, QString departureCity, QString arrivalCity);
 
+    // 用于改签：获取和flightId所指向的航班相同出发地和目的地的、出发时间晚于flightId所指向的航班，同时时间距离最近的那一个航班
+    void queryNextFlight(int flightId, FlightInfo& flight);
+
     /*** orders ***/
 
     // void queryOrder(int orderId, OrderInfo& order);
@@ -58,7 +61,7 @@ public:
     void insertOrder(int userId, int flightId);
     void deleteOrder(int orderId);
     void updatePaymentStatus(int orderId, bool paymentStatus);
-    void updateFlightNumber(int flightId, const QString& newFlightNumber);
+    void updateFlightId(int orderId, int flightId);
 
     /*** flight_favorites ***/
     // 收藏

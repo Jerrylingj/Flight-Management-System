@@ -85,3 +85,43 @@ QJsonObject getFlight(const QHttpServerRequest &request, DatabaseManager* m_db){
         return response->toJson();
     }
 }
+
+// 用于改签：获取和flightId所指向的航班相同出发地和目的地的、出发时间晚于flightId所指向的航班，同时时间距离最近的那一个航班的航班信息，转化为QJsonObject，返还给Controller层
+QJsonObject getNextFlight(int flightId, DatabaseManager* m_db){
+    QJsonObject response;
+
+    if (!m_db) {
+        response["success"] = false;
+        response["code"] = 500;
+        response["message"] = "获取下一趟航班失败：DatabaseManager 指针为空";
+        return response;
+    }
+
+    try {
+        QJsonArray flights;
+        FlightInfo flightInfo;
+        m_db->queryNextFlight(flightId, flightInfo);
+
+        if (flightInfo.flightId != 0) {
+            // 找到了下一趟航班，添加到 flights 数组
+            flights.append(flightInfo.toJson());
+        }
+
+        response["success"] = true;
+        response["code"] = 200;
+        response["data"] = flights;
+        response["message"] = "操作成功";
+        return response;
+
+    } catch(const std::runtime_error& e){
+        response["success"] = false;
+        response["code"] = 500;
+        response["message"] = QString::fromStdString(e.what());
+        return response;
+    } catch(const std::exception& e){
+        response["success"] = false;
+        response["code"] = 500;
+        response["message"] = "获取下一趟航班失败";
+        return response;
+    }
+}
