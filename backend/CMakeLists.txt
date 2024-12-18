@@ -23,7 +23,6 @@ add_executable(QtHttpServer
     config/database_config.qrc
     config/database_config.template.json
     dto/response_dto.h dto/response_dto.cpp
-    dto/flight_info_dto.h dto/flight_info_dto.cpp
     api/login/login.h api/login/login.cpp
     api/register/register.h api/register/register.cpp
 
@@ -37,8 +36,6 @@ add_executable(QtHttpServer
     dto/create_order.h dto/create_order.cpp
     api/order/CreateOrderApi.h api/order/CreateOrderApi.cpp
     api/favorite/FavoritesApi.cpp api/favorite/FavoritesApi.h
-    dto/flight_favorite_dto.h
-    dto/flight_favorite_dto.cpp
     aichat/aichat.h aichat/aichat.cpp
     config/ai.qrc
     config/ai.json
@@ -48,11 +45,7 @@ add_executable(QtHttpServer
     dto/register_dto.h dto/register_dto.cpp
     api/user/user.h api/user/user.cpp
     dto/update_user_dto.h dto/update_user_dto.cpp
-    dto/get_flights_dto.h dto/get_flights_dto.cpp
-    dto/flight_del_dto.h
-    dto/flight_del_dto.cpp
-    dto/flight_update_dto.cpp
-    dto/flight_update_dto.h
+    dto/flight_dto.h dto/flight_dto.cpp
 
 )
 target_link_libraries(QtHttpServer PRIVATE

@@ -6,7 +6,7 @@
 #include <QSqlError>
 #include <QDebug>
 #include <QList>
-#include "dto/flight_info_dto.h"
+#include "dto/flight_dto.h"
 #include "dto/order_info_dto.h"
 
 class DatabaseManager {
