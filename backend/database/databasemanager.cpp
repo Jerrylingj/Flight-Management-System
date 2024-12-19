@@ -742,6 +742,26 @@ void DatabaseManager::updateFlightId(int orderId, int flightId) {
     qDebug() << "成功更新订单 ID:" << orderId << "的 flight_id";
 }
 
+void DatabaseManager::getOrderDetails(int orderId, int& flightId, int& userId) {
+    QString sql = "SELECT flight_id, user_id FROM order_info WHERE id = :order_id";
+    QSqlQuery query;
+    query.prepare(sql);
+    query.bindValue(":order_id", orderId);
+
+    if (!query.exec()) {
+        QString errorMsg = QString("[错误] DatabaseManager::getOrderDetails - 查询失败: %1").arg(query.lastError().text());
+        qDebug() << errorMsg;
+        throw std::runtime_error(errorMsg.toStdString());
+    }
+
+    if (query.next()) {
+        flightId = query.value("flight_id").toInt();
+        userId = query.value("user_id").toInt();
+    } else {
+        throw std::runtime_error("未找到指定的订单");
+    }
+}
+
 /*** flight_favorites ***/
 // 添加收藏
 bool DatabaseManager::addFavorite(int userId, int flightId) {

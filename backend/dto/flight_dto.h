@@ -74,6 +74,7 @@ private:
     QString authCode;
     int flightId;
 };
+
 // 航班添加
 class FlightAddDTO {
 public:

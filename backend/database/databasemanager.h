@@ -71,7 +71,7 @@ public:
     void deleteOrder(int orderId);
     void updatePaymentStatus(int orderId, bool paymentStatus);
     void updateFlightId(int orderId, int flightId);
-
+    void getOrderDetails(int orderId, int& flightId, int& userId);
     /*** flight_favorites ***/
     // 收藏
     bool addFavorite(int userId, int flightId);

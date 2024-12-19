@@ -4,7 +4,6 @@
 #include "database/databasemanager.h"
 #include "dto/order_dto.h"
 
-// // 已经有了处理token的函数，所以该函数不应当被调用
 // // 如果后续增加管理员端，可以启用下列函数
 // QJsonObject getOrder(DatabaseManager* m_db);、
 // QJsonObject getOrder(int orderID, DatabaseManager* m_db);

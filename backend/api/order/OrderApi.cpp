@@ -7,8 +7,8 @@
 #include <QJsonDocument>
 #include <QDebug>
 
-// // 已经有了处理token的函数，所以该函数不应当被调用
-// // 如果后续增加管理员端，可以启用下列函数
+// 如果后续增加管理员端，可以启用下列函数
+/*
 // QJsonObject getOrder(DatabaseManager* m_db){
 //     try{
 //         QJsonArray orders;
@@ -42,6 +42,7 @@
 //         return response->toJson();
 //     }
 // }
+*/
 
 // 获取当前用户的所有订单信息
 QJsonObject getOrder(DatabaseManager* m_db, int userId){
@@ -93,6 +94,7 @@ QJsonObject createOrder(int userId, int flightId, DatabaseManager* m_db) {
     return response;
 }
 
+
 // 支付功能
 QJsonObject payOrder(int orderId, DatabaseManager* m_db) {
     QJsonObject response;
@@ -105,7 +107,20 @@ QJsonObject payOrder(int orderId, DatabaseManager* m_db) {
     }
 
     try {
-        // 仅更新 payment_status
+        // 根据 orderId 获取 flight_id 和 user_id
+        int flightId;
+        int userId;
+        m_db->getOrderDetails(orderId, flightId, userId);
+
+        // 根据 flight_id 获取 price
+        FlightInfo flightInfo;
+        m_db->queryFlight(flightId, flightInfo);
+        double price = flightInfo.price;
+
+        // 扣除用户余额
+        m_db->putUser(userId, -price); // 扣除金额
+
+        // 更新支付状态
         m_db->updatePaymentStatus(orderId, true);  // 设置支付状态为已支付
 
         response["success"] = true;
@@ -116,23 +131,25 @@ QJsonObject payOrder(int orderId, DatabaseManager* m_db) {
     }
     catch (const std::invalid_argument& e) {
         response["success"] = false;
-        response["code"] = 400; // 根据需要设置合适的状态码
+        response["code"] = 400;
         response["message"] = QString::fromStdString(e.what());
         return response;
     }
     catch (const std::runtime_error& e) {
         response["success"] = false;
-        response["code"] = 500; // 根据需要设置合适的状态码
+        response["code"] = 500;
         response["message"] = QString::fromStdString(e.what());
         return response;
     }
     catch (const std::exception& e) {
         response["success"] = false;
-        response["code"] = 500; // 根据需要设置合适的状态码
+        response["code"] = 500;
         response["message"] = "支付失败";
         return response;
     }
 }
+// ...existing code...
+
 
 // 改签功能
 QJsonObject rebookOrder(int orderId, int flightId, DatabaseManager* m_db) {
@@ -175,6 +192,8 @@ QJsonObject rebookOrder(int orderId, int flightId, DatabaseManager* m_db) {
     }
 }
 
+
+
 // 退签功能
 QJsonObject deleteOrder(int orderId, DatabaseManager* m_db) {
     QJsonObject response;
@@ -215,3 +234,4 @@ QJsonObject deleteOrder(int orderId, DatabaseManager* m_db) {
         return response;
     }
 }
+

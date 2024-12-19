@@ -51,6 +51,4 @@ private:
 };
 
 
-
-
 #endif // ORDER_DTO_H
