@@ -1,7 +1,7 @@
 #include "register.h"
 #include "dto/response_dto.h"
 #include "dto/send_code.h"
-#include "dto/register_dto.h"
+#include "dto/user_dto.h"
 #include "util/networkhandler.h"
 
 QJsonObject registerUser(const QHttpServerRequest &request, DatabaseManager* m_db){

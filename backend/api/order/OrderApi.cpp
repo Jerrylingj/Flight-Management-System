@@ -1,7 +1,7 @@
 #include "OrderApi.h"
 #include "api/flight/FlightApi.h"
 #include "dto/response_dto.h"
-#include "dto/order_info_dto.h"
+#include "dto/order_dto.h"
 #include <QJsonArray>
 #include <QJsonObject>
 #include <QJsonDocument>

@@ -1,7 +1,7 @@
 #include "user.h"
 #include "util/easycrypt.h"
 #include "dto/response_dto.h"
-#include "dto/update_user_dto.h"
+#include "dto/user_dto.h"
 
 QJsonObject getUserInfo(const QHttpServerRequest &request, DatabaseManager* m_db){
     try{

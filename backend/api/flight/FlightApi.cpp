@@ -1,8 +1,6 @@
 #include "FlightApi.h"
 #include "dto/response_dto.h"
-#include "dto/flight_info_dto.h"
-#include "dto/flight_del_dto.h"
-#include "dto/flight_update_dto.h"
+#include "dto/flight_dto.h"
 #include <QJsonArray>
 
 QJsonObject getFlight(DatabaseManager* m_db){
@@ -146,6 +144,64 @@ QJsonObject deleteFlight(const QHttpServerRequest &request, DatabaseManager *m_d
         QJsonObject response;
         response["success"] = true;
         response["message"] = "Flight deleted successfully";
+        return response;
+
+    } catch (const std::invalid_argument &e) {
+        qWarning() << "Invalid argument error:" << e.what();
+        QJsonObject response;
+        response["success"] = false;
+        response["message"] = QString("Invalid input: %1").arg(e.what());
+        return response;
+
+    } catch (const std::runtime_error &e) {
+        qWarning() << "Runtime error:" << e.what();
+        QJsonObject response;
+        response["success"] = false;
+        response["message"] = QString("Error: %1").arg(e.what());
+        return response;
+
+    } catch (const std::exception &e) {
+        qWarning() << "Unexpected error:" << e.what();
+        QJsonObject response;
+        response["success"] = false;
+        response["message"] = "An unexpected error occurred";
+        return response;
+    }
+}
+QJsonObject addFlight(const QHttpServerRequest &request, DatabaseManager *m_db) {
+    try {
+        // 使用 FlightAddDTO 解析请求
+        FlightAddDTO flightAddDTO(request);
+
+        // 校验授权码
+        if (flightAddDTO.authCode != "123") {
+            throw std::invalid_argument("Invalid authCode");
+        }
+
+        // 调用数据库插入航班函数
+        bool success = m_db->insertFlight(
+            flightAddDTO.flightNumber,
+            flightAddDTO.departureCity,
+            flightAddDTO.arrivalCity,
+            flightAddDTO.departureTime,
+            flightAddDTO.arrivalTime,
+            flightAddDTO.price,
+            flightAddDTO.departureAirport,
+            flightAddDTO.arrivalAirport,
+            flightAddDTO.airlineCompany,
+            flightAddDTO.checkinStartTime,
+            flightAddDTO.checkinEndTime,
+            flightAddDTO.status
+            );
+
+        if (!success) {
+            throw std::runtime_error("Failed to add flight");
+        }
+
+        // 返回成功响应
+        QJsonObject response;
+        response["success"] = true;
+        response["message"] = "Flight added successfully";
         return response;
 
     } catch (const std::invalid_argument &e) {

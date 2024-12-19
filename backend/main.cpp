@@ -14,9 +14,11 @@
 #include "aichat/aichat.h"
 #include "util/easycrypt.h"
 
-class HttpServer : public QObject {
+class HttpServer : public QObject
+{
 public:
-    HttpServer(QObject *parent = nullptr) : QObject(parent) {
+    HttpServer(QObject *parent = nullptr) : QObject(parent)
+    {
         m_db = new DatabaseManager();
         m_db->connectToDatabase();
         // 自动创建表，如果没有手动创建过的话
@@ -24,7 +26,7 @@ public:
 
         /*** 测试函数 ***/
         m_db->populateSampleFlights(); // 插入初始航班信息
-        m_db->populateSampleOrders();  // 插入初始订单信息
+        // m_db->populateSampleOrders();  // 插入初始订单信息
 
         ai = new AIChat(m_db);
 
@@ -32,55 +34,49 @@ public:
         m_httpServer = new QHttpServer(this);
 
         // 设置路由和处理函数
-        m_httpServer->route("/", [](const QHttpServerRequest &request) {
-            return "Welcome to Qt HTTP Server!";
-        });
+        m_httpServer->route("/", [](const QHttpServerRequest &request)
+                            { return "Welcome to Qt HTTP Server!"; });
 
         /***  API ***/
         /*** users ***/
         // 获取用户信息
-        m_httpServer->route("/api/user", QHttpServerRequest::Method::Get,[this](const QHttpServerRequest &request){
-            return getUserInfo(request, m_db);
-        });
-        m_httpServer->route("/api/user", QHttpServerRequest::Method::Put,[this](const QHttpServerRequest &request){
-            return updateUserInfo(request, m_db);
-        });
-        m_httpServer->route("/api/user", QHttpServerRequest::Method::Delete,[this](const QHttpServerRequest &request){
-            return delUser(request, m_db);
-        });
+        m_httpServer->route("/api/user", QHttpServerRequest::Method::Get, [this](const QHttpServerRequest &request)
+                            { return getUserInfo(request, m_db); });
+        m_httpServer->route("/api/user", QHttpServerRequest::Method::Put, [this](const QHttpServerRequest &request)
+                            { return updateUserInfo(request, m_db); });
+        m_httpServer->route("/api/user", QHttpServerRequest::Method::Delete, [this](const QHttpServerRequest &request)
+                            { return delUser(request, m_db); });
         // 登录
-        m_httpServer->route("/api/login",QHttpServerRequest::Method::Post,[this](const QHttpServerRequest &request){
-            return login(request, m_db);
-        });
+        m_httpServer->route("/api/login", QHttpServerRequest::Method::Post, [this](const QHttpServerRequest &request)
+                            { return login(request, m_db); });
         // 注册
-        m_httpServer->route("/api/register",QHttpServerRequest::Method::Post,[this](const QHttpServerRequest &request){
-            return registerUser(request, m_db);
-        });
+        m_httpServer->route("/api/register", QHttpServerRequest::Method::Post, [this](const QHttpServerRequest &request)
+                            { return registerUser(request, m_db); });
 
-        m_httpServer->route("/api/send-code",QHttpServerRequest::Method::Post,[this](const QHttpServerRequest &request){
-            return sendCode(request);
-        });
+        m_httpServer->route("/api/send-code", QHttpServerRequest::Method::Post, [this](const QHttpServerRequest &request)
+                            { return sendCode(request); });
 
         /*** flight_info ***/
         // 获取所有航班信息
-        m_httpServer->route("/api/flights", QHttpServerRequest::Method::Get, [this](const QHttpServerRequest &request) -> QHttpServerResponse {
-            return getFlight(m_db);
-        });
+        m_httpServer->route("/api/flights", QHttpServerRequest::Method::Get, [this](const QHttpServerRequest &request) -> QHttpServerResponse
+                            { return getFlight(m_db); });
         // 获取特定航班
-        m_httpServer->route("/api/flights/<arg>", QHttpServerRequest::Method::Get, [this](const int flightId) -> QHttpServerResponse {
-            return getFlight(flightId, m_db);
-        });
+        m_httpServer->route("/api/flights/<arg>", QHttpServerRequest::Method::Get, [this](const int flightId) -> QHttpServerResponse
+                            { return getFlight(flightId, m_db); });
         // 删除特定航班
-        m_httpServer->route("/api/flights/del", QHttpServerRequest::Method::Post, [this](const QHttpServerRequest &request) {
-            return deleteFlight(request, m_db);
-        });
+        m_httpServer->route("/api/flights/del", QHttpServerRequest::Method::Post, [this](const QHttpServerRequest &request)
+                            { return deleteFlight(request, m_db); });
         // 更新航班状态
-        m_httpServer->route("/api/flights/update", QHttpServerRequest::Method::Post, [this](const QHttpServerRequest &request) {
-            return updateFlight(request, m_db);
+        m_httpServer->route("/api/flights/update", QHttpServerRequest::Method::Post, [this](const QHttpServerRequest &request)
+                            { return updateFlight(request, m_db); });
+        // 添加航班
+        m_httpServer->route("/api/flights/add", QHttpServerRequest::Method::Post, [this](const QHttpServerRequest &request) {
+            return addFlight(request, m_db);
         });
 
         // 获取相同出发地和目的地的下一个航班
-        m_httpServer->route("/api/flights/next", QHttpServerRequest::Method::Post, [this](const QHttpServerRequest &request) -> QHttpServerResponse {
+        m_httpServer->route("/api/flights/next", QHttpServerRequest::Method::Post, [this](const QHttpServerRequest &request) -> QHttpServerResponse
+                            {
 
             QJsonDocument body = QJsonDocument::fromJson(request.body());
             QJsonObject json = body.object();
@@ -121,13 +117,13 @@ public:
         
             qDebug() << "[调试] getNextFlight 结果：" << QJsonDocument(result).toJson(QJsonDocument::Compact);
         
-            return QHttpServerResponse(result);
-        });
+            return QHttpServerResponse(result); });
 
         /*** order_info ***/
 
         // 查询当前用户所有订单
-        m_httpServer->route("/api/orders", QHttpServerRequest::Method::Post,[this](const QHttpServerRequest &request) -> QHttpServerResponse {
+        m_httpServer->route("/api/orders", QHttpServerRequest::Method::Post, [this](const QHttpServerRequest &request) -> QHttpServerResponse
+                            {
             qDebug() << "[调试] main.cpp - 收到 Post 请求 /api/orders";
 
             int userId;
@@ -144,11 +140,11 @@ public:
 
             QJsonObject result = getOrder(m_db, userId);
             qDebug() << "[调试] main.cpp - 当前用户的订单：" << QJsonDocument(result).toJson(QJsonDocument::Compact);
-            return result;
-        });
+            return result; });
 
         // 添加订单
-        m_httpServer->route("/api/orders/add", QHttpServerRequest::Method::Post, [this](const QHttpServerRequest & request) -> QHttpServerResponse{
+        m_httpServer->route("/api/orders/add", QHttpServerRequest::Method::Post, [this](const QHttpServerRequest &request) -> QHttpServerResponse
+                            {
 
             QJsonDocument body = QJsonDocument::fromJson(request.body());
             QJsonObject json = body.object();
@@ -183,11 +179,11 @@ public:
 
             QJsonObject result = createOrder(userId, flightId, m_db); // 调用 payOrder
             qDebug() << "[调试] 支付订单结果：" << QJsonDocument(result).toJson(QJsonDocument::Compact);
-            return QHttpServerResponse(result);
-        });
-        
+            return QHttpServerResponse(result); });
+
         // 支付订单
-        m_httpServer->route("/api/orders/pay", QHttpServerRequest::Method::Post, [this](const QHttpServerRequest & request) -> QHttpServerResponse{
+        m_httpServer->route("/api/orders/pay", QHttpServerRequest::Method::Post, [this](const QHttpServerRequest &request) -> QHttpServerResponse
+                            {
             QJsonDocument body = QJsonDocument::fromJson(request.body());
             QJsonObject json = body.object();
         
@@ -221,11 +217,11 @@ public:
         
             QJsonObject result = payOrder(orderId, m_db); // 调用 payOrder
             qDebug() << "[调试] 支付订单结果：" << QJsonDocument(result).toJson(QJsonDocument::Compact);
-            return QHttpServerResponse(result);
-        });
+            return QHttpServerResponse(result); });
 
         // 改签订单
-        m_httpServer->route("/api/orders/rebook", QHttpServerRequest::Method::Post, [this](const QHttpServerRequest & request) -> QHttpServerResponse{
+        m_httpServer->route("/api/orders/rebook", QHttpServerRequest::Method::Post, [this](const QHttpServerRequest &request) -> QHttpServerResponse
+                            {
             // 解析请求体中的 JSON 数据
             QJsonDocument body = QJsonDocument::fromJson(request.body());
             QJsonObject json = body.object();
@@ -291,12 +287,12 @@ public:
                 response["code"] = 500;
                 response["message"] = "改签失败";
                 return QHttpServerResponse(response);
-            }
-        });
+            } });
 
         // 删除订单(退签)
 
-        m_httpServer->route("/api/orders/delete", QHttpServerRequest::Method::Post, [this](const QHttpServerRequest & request) -> QHttpServerResponse{
+        m_httpServer->route("/api/orders/delete", QHttpServerRequest::Method::Post, [this](const QHttpServerRequest &request) -> QHttpServerResponse
+                            {
             QJsonDocument body = QJsonDocument::fromJson(request.body());
             QJsonObject json = body.object();
 
@@ -328,15 +324,12 @@ public:
 
             QJsonObject result = deleteOrder(orderId, m_db);
             qDebug() << "[调试] 删除订单结果：" << QJsonDocument(result).toJson(QJsonDocument::Compact);
-            return result;
-        });
-
-
-        
+            return result; });
 
         /*** flight_favorites ***/
         // 添加收藏
-        m_httpServer->route("/api/favorites/add", QHttpServerRequest::Method::Post, [this](const QHttpServerRequest &request) {
+        m_httpServer->route("/api/favorites/add", QHttpServerRequest::Method::Post, [this](const QHttpServerRequest &request)
+                            {
             QJsonDocument body = QJsonDocument::fromJson(request.body());
             QJsonObject json = body.object();
 
@@ -360,11 +353,11 @@ public:
                 };
             }
 
-            return addFavorite(m_db, userId, flightId);
-        });
+            return addFavorite(m_db, userId, flightId); });
 
         // 取消收藏
-        m_httpServer->route("/api/favorites/remove", QHttpServerRequest::Method::Post, [this](const QHttpServerRequest &request) {
+        m_httpServer->route("/api/favorites/remove", QHttpServerRequest::Method::Post, [this](const QHttpServerRequest &request)
+                            {
             QJsonDocument body = QJsonDocument::fromJson(request.body());
             QJsonObject json = body.object();
 
@@ -388,11 +381,11 @@ public:
                 };
             }
 
-            return removeFavorite(m_db, userId, flightId);
-        });
+            return removeFavorite(m_db, userId, flightId); });
 
         // 查询收藏
-        m_httpServer->route("/api/favorites", QHttpServerRequest::Method::Post, [this](const QHttpServerRequest &request) {
+        m_httpServer->route("/api/favorites", QHttpServerRequest::Method::Post, [this](const QHttpServerRequest &request)
+                            {
             // 根据token获取用户ID
             int userId;
             try {
@@ -405,30 +398,31 @@ public:
                 };
             }
 
-            return getFavorites(m_db, userId);
-        });
-
+            return getFavorites(m_db, userId); });
 
         // AI客服
-        m_httpServer->route("/api/aichat",QHttpServerRequest::Method::Post,[this](const QHttpServerRequest& request){
-            return ai->chat(request);
-        });
+        m_httpServer->route("/api/aichat", QHttpServerRequest::Method::Post, [this](const QHttpServerRequest &request)
+                            { return ai->chat(request); });
 
         // 监听端口
-        if (m_httpServer->listen(QHostAddress::Any, 8080)) {
+        if (m_httpServer->listen(QHostAddress::Any, 8080))
+        {
             qDebug() << "HTTP Server is running on port 8080";
-        } else {
+        }
+        else
+        {
             qDebug() << "Failed to start HTTP Server";
         }
     }
 
 private:
     QHttpServer *m_httpServer;
-    DatabaseManager* m_db;
-    AIChat* ai;
+    DatabaseManager *m_db;
+    AIChat *ai;
 };
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
     QCoreApplication app(argc, argv);
 
     HttpServer server;
