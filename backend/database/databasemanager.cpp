@@ -266,6 +266,15 @@ void DatabaseManager::deleteUser(const int userId) {
 /*** flight_info ***/
 // 添加航班
 bool DatabaseManager::insertFlight(const QString& flightNumber, const QString& departureCity, const QString& arrivalCity,const QDateTime& departureTime, const QDateTime& arrivalTime, double price, const QString& departureAirport, const QString& arrivalAirport,const QString& airlineCompany, const QDateTime& checkinStartTime, const QDateTime& checkinEndTime, const QString& status) {
+    // 调用字段校验函数
+    if (!validateFlightInput(flightNumber, departureCity, arrivalCity,
+                             departureTime, arrivalTime, price,
+                             departureAirport, arrivalAirport, airlineCompany,
+                             checkinStartTime, checkinEndTime, status)) {
+        qDebug() << "Flight input validation failed.";
+        return false;
+    }
+
     QSqlQuery query;
     query.prepare("INSERT INTO flight_info (flight_number, departure_city, arrival_city, departure_time, arrival_time, price, departure_airport, arrival_airport, checkin_start_time, checkin_end_time, airline_company, status) "
                   "VALUES (:flight_number, :departure_city, :arrival_city, :departure_time, :arrival_time, :price, :departure_airport, :arrival_airport, :checkin_start_time, :checkin_end_time, :airline_company, :status)");
