@@ -14,7 +14,8 @@ QJsonObject getFlight(const QHttpServerRequest &request, DatabaseManager *m_db);
 QJsonObject getNextFlight(int flightId, DatabaseManager *m_db);
 // 删除航班
 QJsonObject deleteFlight(const QHttpServerRequest &request, DatabaseManager *m_db);
-
+// 添加航班
+QJsonObject addFlight(const QHttpServerRequest &request, DatabaseManager *m_db);
 // 更新航班信息
 QJsonObject updateFlight(const QHttpServerRequest &request, DatabaseManager *m_db);
 

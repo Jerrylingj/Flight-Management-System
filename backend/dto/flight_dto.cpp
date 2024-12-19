@@ -123,6 +123,26 @@ int FlightDelDTO::getFlightId() const {
     return flightId;
 }
 
+/*** 航班添加 ***/
+FlightAddDTO::FlightAddDTO(const QHttpServerRequest &request) {
+    // 从请求中解析 JSON 数据
+    QJsonDocument body = QJsonDocument::fromJson(request.body());
+    QJsonObject json = body.object();
+
+    authCode = json.value("authCode").toString();
+    flightNumber = json.value("flightNumber").toString();
+    departureCity = json.value("departureCity").toString();
+    arrivalCity = json.value("arrivalCity").toString();
+    departureTime = QDateTime::fromString(json.value("departureTime").toString(), Qt::RFC2822Date);
+    arrivalTime = QDateTime::fromString(json.value("arrivalTime").toString(), Qt::RFC2822Date);
+    price = json.value("price").toDouble();
+    departureAirport = json.value("departureAirport").toString();
+    arrivalAirport = json.value("arrivalAirport").toString();
+    airlineCompany = json.value("airlineCompany").toString();
+    checkinStartTime = QDateTime::fromString(json.value("checkinStartTime").toString(), Qt::RFC2822Date);
+    checkinEndTime = QDateTime::fromString(json.value("checkinEndTime").toString(), Qt::RFC2822Date);
+    status = json.value("status").toString();
+}
 
 /*** 航班收藏 ***/
 // 默认构造函数

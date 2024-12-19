@@ -69,6 +69,10 @@ public:
         // 更新航班状态
         m_httpServer->route("/api/flights/update", QHttpServerRequest::Method::Post, [this](const QHttpServerRequest &request)
                             { return updateFlight(request, m_db); });
+        // 添加航班
+        m_httpServer->route("/api/flights/add", QHttpServerRequest::Method::Post, [this](const QHttpServerRequest &request) {
+            return addFlight(request, m_db);
+        });
 
         // 获取相同出发地和目的地的下一个航班
         m_httpServer->route("/api/flights/next", QHttpServerRequest::Method::Post, [this](const QHttpServerRequest &request) -> QHttpServerResponse

@@ -74,6 +74,25 @@ private:
     QString authCode;
     int flightId;
 };
+// 航班添加
+class FlightAddDTO {
+public:
+    QString authCode;
+    QString flightNumber;
+    QString departureCity;
+    QString arrivalCity;
+    QDateTime departureTime;
+    QDateTime arrivalTime;
+    double price;
+    QString departureAirport;
+    QString arrivalAirport;
+    QString airlineCompany;
+    QDateTime checkinStartTime;
+    QDateTime checkinEndTime;
+    QString status;
+
+    FlightAddDTO(const QHttpServerRequest &request);
+};
 
 // 航班收藏
 class FavoriteDTO
