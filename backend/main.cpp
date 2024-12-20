@@ -289,8 +289,45 @@ public:
                 return QHttpServerResponse(response);
             } });
 
-        // 删除订单(退签)
+        // 退签订单
+        m_httpServer->route("/api/orders/unpay", QHttpServerRequest::Method::Post, [this](const QHttpServerRequest &request) -> QHttpServerResponse
+                            {
+            QJsonDocument body = QJsonDocument::fromJson(request.body());
+            QJsonObject json = body.object();
+        
+            qDebug() << json;
+            qDebug() << "[调试] main.cpp - 收到 Post 请求 /api/orders/unpay";
+            qDebug() << "[调试] 请求内容：" << QString::fromUtf8(request.body());
+        
+            int userId;
+            try {
+                userId = getUserID(request);
+                qDebug() << "[调试] 提取的用户ID：" << userId;
+            } catch (std::invalid_argument &e) {
+                qWarning() << "[错误] 无法提取用户ID：" << e.what();
+                QJsonObject response;
+                response["success"] = false;
+                response["code"] = 401;
+                response["message"] = "无效的授权令牌";
+                return response;
+            }
+        
+            int orderId = json["orderId"].toInt();
+            qDebug() << "[调试] 提取的orderID：" << orderId;
+            if (orderId == 0) {
+                qWarning() << "[警告] 请求体缺少或包含无效的 orderId";
+                QJsonObject response;
+                response["success"] = false;
+                response["code"] = 400;
+                response["message"] = "无效或缺少 orderId";
+                return response;
+            }
+        
+            QJsonObject result = unpayOrder(orderId, m_db); // 调用 payOrder
+            qDebug() << "[调试] 退签订单结果：" << QJsonDocument(result).toJson(QJsonDocument::Compact);
+            return QHttpServerResponse(result); });
 
+        // 取消支付
         m_httpServer->route("/api/orders/delete", QHttpServerRequest::Method::Post, [this](const QHttpServerRequest &request) -> QHttpServerResponse
                             {
             QJsonDocument body = QJsonDocument::fromJson(request.body());

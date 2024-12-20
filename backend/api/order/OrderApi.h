@@ -18,6 +18,9 @@ QJsonObject createOrder(int userId, int flightId, DatabaseManager* m_db);
 QJsonObject payOrder(int orderId, DatabaseManager* m_db);
 
 // 退签功能
+QJsonObject unpayOrder(int orderId, DatabaseManager* m_db);
+
+// 删除（取消支付）功能
 QJsonObject deleteOrder(int orderId, DatabaseManager* m_db);
 
 // 改签功能
