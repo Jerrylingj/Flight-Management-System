@@ -260,7 +260,27 @@ void DatabaseManager::deleteUser(const int userId) {
     }
 }
 
+void DatabaseManager::queryAllUserList(QJsonArray& arr){
+    QString sql = "SELECT * FROM users";
+    qDebug() << "Executing SQL:" << sql;
+    QSqlQuery query;
+    if (!query.exec(sql)) {
+        qDebug() << "查询失败:" << query.lastError().text();
+        throw std::runtime_error("查询失败");
+    } else {
+        while (query.next()) {
+            QJsonObject userinfo;
+            userinfo["name"] = query.value("username").toString();
+            userinfo["avatar"] = query.value("avatar_url").toString();
+            userinfo["balance"] = query.value("balance").toDouble();
+            userinfo["email"] = query.value("email").toString();
+            userinfo["password"] = query.value("password").toString();
+            arr.append(userinfo);
+        }
+    }
 
+    qDebug() << "Retrieved" << arr.size() << "flights.";
+}
 
 
 /*** flight_info ***/

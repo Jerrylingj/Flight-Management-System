@@ -12,6 +12,7 @@
 #include "api/order/OrderApi.h"
 #include "api/favorite/FavoritesApi.h"
 #include "aichat/aichat.h"
+#include "api/userlist/userlist.h"
 #include "util/easycrypt.h"
 
 class HttpServer : public QObject
@@ -55,6 +56,11 @@ public:
 
         m_httpServer->route("/api/send-code", QHttpServerRequest::Method::Post, [this](const QHttpServerRequest &request)
                             { return sendCode(request); });
+
+        // 获取用户所有信息
+        m_httpServer->route("/api/userlist", QHttpServerRequest::Method::Post, [this](const QHttpServerRequest &request)
+                            { return getAllUserInfo(request, m_db); });
+
 
         /*** flight_info ***/
         // 获取所有航班信息
