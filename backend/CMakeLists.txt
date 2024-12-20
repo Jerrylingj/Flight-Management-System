@@ -32,6 +32,7 @@ add_executable(QtHttpServer
     dto/order_dto.cpp dto/order_dto.h
     dto/user_dto.h dto/user_dto.cpp
     dto/send_code.h dto/send_code.cpp
+    dto/userlist_dto.h dto/userlist_dto.cpp
 
     api/login/login.h api/login/login.cpp
     api/register/register.h api/register/register.cpp
@@ -40,6 +41,7 @@ add_executable(QtHttpServer
     api/order/OrderApi.h api/order/OrderApi.cpp
     api/order/CreateOrderApi.h api/order/CreateOrderApi.cpp
     api/user/user.h api/user/user.cpp
+    api/userlist/userlist.h api/userlist/userlist.cpp
 
     config/ai.qrc config/ai.json
 )

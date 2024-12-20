@@ -31,6 +31,9 @@ public:
 
     void putUser(const int userId, const double balance);
 
+    // 查询所有用户
+    void queryAllUserList(QJsonArray& arr);
+
     /// 感觉在这用枚举变量有点怪，可能文件夹设置的还是不好吧
     /// 如果mode为0，说明要修改用户名
     /// 如果mode为1，说明要修改头像地址
