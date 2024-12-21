@@ -43,7 +43,7 @@ RegisterRequest::RegisterRequest(const QHttpServerRequest &request){
         if(jsonObj.contains("password")&&jsonObj["password"].isString()){
             password = jsonObj["password"].toString();
             // 判断邮箱是否正确
-            static const QRegularExpression passwordRegex(R"(^\S*(?=\S{6,12})(?=\S*\d)(?=\S*[A-Z])(?=\S*[a-z])(?=\S*[!@#$%^&*? ])\S*$)");
+            static const QRegularExpression passwordRegex(R"(^\S*(?=\S{6,12})(?=\S*\d)(?=\S*[A-Z])(?=\S*[a-z])(?=\S*[!@#$%^&*(){}[\]\\|;:'",<.>/? ])\S*$)");
             QRegularExpressionMatch match = passwordRegex.match(password);
 
             // 如果邮箱格式不匹配，抛出异常
