@@ -62,10 +62,7 @@ func main() {
 
 	user := config.Username
 	pass := config.Password
-	// host := config.Hostname
-	// port := config.Port
 	dbName := config.Database
-	// dsn := fmt.Sprintf("driver={SQL Server};server=%s;port=%d;database=%s;uid=%s;pwd=%s", host, port, dbName, user, pass)
 	dsn := fmt.Sprintf("DSN=%s;UID=%s;PWD=%s", dbName, user, pass)
 	db, err := sql.Open("odbc", dsn)
 	if err != nil {
@@ -84,6 +81,9 @@ func main() {
         return
     }
     for _, flight := range flights {
+		if flight.Price == 0.00 {
+			flight.Price = 700.00
+		}
 		_, err := db.Exec("INSERT INTO flight_info (flight_number, departure_city, arrival_city, departure_time, arrival_time, price, departure_airport, arrival_airport, airline_company, checkin_start_time, checkin_end_time, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
 			flight.FlightNumber,
 			flight.DepartureCity,
