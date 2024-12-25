@@ -52,6 +52,7 @@ public:
                       const QDateTime& checkinEndTime, const QString& status);
     // 查询航班：查询全部航班或特定ID航班
     void queryFlight(int flightID,FlightInfo& flight);
+    void queryFlight(QJsonArray &flights, int offset, int limit);
     void queryFlight(QJsonArray& flights);
     void queryFlight(QJsonArray& flights, QString departureCity, QString arrivalCity);
     // 删除航班

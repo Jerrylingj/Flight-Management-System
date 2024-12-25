@@ -66,6 +66,12 @@ public:
         // 获取所有航班信息
         m_httpServer->route("/api/flights", QHttpServerRequest::Method::Get, [this](const QHttpServerRequest &request) -> QHttpServerResponse
                             { return getFlight(m_db); });
+        // 动态获取所有航班信息
+        m_httpServer->route("/api/flights", QHttpServerRequest::Method::Post, [this](const QHttpServerRequest &request)
+        {
+            qDebug() << "动态查询航班";
+            return getFlight(request, m_db);
+        });
         // 获取特定航班
         m_httpServer->route("/api/flights/<arg>", QHttpServerRequest::Method::Get, [this](const int flightId) -> QHttpServerResponse
                             { return getFlight(flightId, m_db); });

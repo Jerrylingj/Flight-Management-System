@@ -353,6 +353,36 @@ void DatabaseManager::queryFlight(int flightId,FlightInfo& flight){
         throw std::invalid_argument("无效的id");
     }
 }
+// 动态查询航班
+void DatabaseManager::queryFlight(QJsonArray &flights, int offset, int limit)
+{
+    QString sql = QString("SELECT * FROM flight_info LIMIT %1 OFFSET %2").arg(limit).arg(offset);
+    qDebug() << "Executing SQL:" << sql;
+
+    QSqlQuery query;
+    if (!query.exec(sql)) {
+        qDebug() << "查询失败:" << query.lastError().text();
+        throw std::runtime_error("查询失败");
+    }
+
+    while (query.next()) {
+        FlightInfo flight;
+
+        flight.flightId = query.value("flight_id").isNull() ? 0 : query.value("flight_id").toInt();
+        flight.flightNumber = query.value("flight_number").isNull() ? "Unknown" : query.value("flight_number").toString();
+        flight.departureCity = query.value("departure_city").isNull() ? "Unknown" : query.value("departure_city").toString();
+        flight.arrivalCity = query.value("arrival_city").isNull() ? "Unknown" : query.value("arrival_city").toString();
+        flight.departureTime = query.value("departure_time").isNull() ? QDateTime() : query.value("departure_time").toDateTime();
+        flight.arrivalTime = query.value("arrival_time").isNull() ? QDateTime() : query.value("arrival_time").toDateTime();
+        flight.departureAirport = query.value("departure_airport").isNull() ? "Unknown" : query.value("departure_airport").toString();
+        flight.arrivalAirport = query.value("arrival_airport").isNull() ? "Unknown" : query.value("arrival_airport").toString();
+        flight.price = query.value("price").isNull() ? 0.0 : query.value("price").toDouble();
+        flight.airlineCompany = query.value("airline_company").isNull() ? "Unknown" : query.value("airline_company").toString();
+        flight.status = query.value("status").isNull() ? "Unknown" : query.value("status").toString();
+
+        flights.append(flight.toJson());
+    }
+}
 
 void DatabaseManager::queryFlight(QJsonArray& flights){
     QString sql = "SELECT * FROM flight_info";
