@@ -52,6 +52,7 @@ public:
                       const QDateTime& checkinEndTime, const QString& status);
     // 查询航班：查询全部航班或特定ID航班
     void queryFlight(int flightID,FlightInfo& flight);
+    void queryFlight(QJsonArray &flights, int offset, int limit);
     void queryFlight(QJsonArray& flights);
     void queryFlight(QJsonArray& flights, QString departureCity, QString arrivalCity);
     // 删除航班
@@ -64,7 +65,7 @@ public:
                           const QDateTime& checkinEndTime, const QString& status);
 
     // 用于改签：获取和flightId所指向的航班相同出发地和目的地的、出发时间晚于flightId所指向的航班，同时时间距离最近的那一个航班
-    void queryNextFlight(int flightId, FlightInfo& flight);
+    void queryNextFlights(int flightId, QJsonArray &flights);
 
     /*** orders ***/
 

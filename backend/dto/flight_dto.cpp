@@ -54,6 +54,21 @@ QJsonObject FlightInfo::toJson() const
     return json;
 }
 
+FlightInfoDTO::FlightInfoDTO(const QHttpServerRequest &request) {
+    // 解析请求体为 JSON 对象
+    QJsonDocument jsonDoc = QJsonDocument::fromJson(request.body());
+    if (!jsonDoc.isObject()) {
+        throw std::runtime_error("无效的请求体");
+    }
+
+    QJsonObject jsonObject = jsonDoc.object();
+    // 提取 offset 和 limit 参数
+    offset = jsonObject.contains("offset") ? jsonObject["offset"].toInt() : 0; // 默认值为 0
+    limit = jsonObject.contains("limit") ? jsonObject["limit"].toInt() : 10;  // 默认值为 10
+}
+
+
+
 /*** 航班更新 ***/
 FlightUpdateDTO::FlightUpdateDTO(const QHttpServerRequest &request) {
     QJsonDocument body = QJsonDocument::fromJson(request.body());

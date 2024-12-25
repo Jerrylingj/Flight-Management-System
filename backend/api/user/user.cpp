@@ -23,7 +23,7 @@ QJsonObject updateUserInfo(const QHttpServerRequest &request, DatabaseManager* m
     try{
         UpdateUserRequest req(request);
         int userId = getUserID(request);
-        if(req.getBalance() > 0.0){
+        if(req.getBalance()){
             m_db->putUser(userId, req.getBalance());
             auto resp = success(QString("交易成功"));
             return resp->toJson();
