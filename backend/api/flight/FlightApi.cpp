@@ -72,16 +72,27 @@ QJsonObject getFlight(int flightID,DatabaseManager* m_db){
 }
 
 QJsonObject getFlight(const QHttpServerRequest &request, DatabaseManager* m_db){
-    try{
+    try {
+        // 解析请求参数
+        FlightInfoDTO flightInfoDTO(request);
+        int offset = flightInfoDTO.offset;
+        int limit = flightInfoDTO.limit;
+
         QJsonArray flights;
-        m_db->queryFlight(flights);
+        m_db->queryFlight(flights, offset, limit);
+
+        if (flights.isEmpty()) {
+            qDebug() << "查询结果为空";
+            return success(QJsonArray())->toJson(); // 返回空数组
+        }
+
         auto response = success(flights);
         return response->toJson();
-    }catch(const std::runtime_error& e){
+    } catch (const std::runtime_error &e) {
         auto response = fail<QJsonObject>(QString::fromStdString(e.what()));
         return response->toJson();
-    }catch(const std::exception& e){
-        auto response = fail<QJsonObject>("失败");
+    } catch (const std::exception &e) {
+        auto response = fail<QJsonObject>("查询失败");
         return response->toJson();
     }
 }

@@ -36,6 +36,16 @@ public:
     QJsonObject toJson() const;
 };
 
+// 动态航班获取
+class FlightInfoDTO {
+public:
+    int offset;
+    int limit;
+
+    FlightInfoDTO(const QHttpServerRequest &request);
+};
+
+
 // 航班更新
 class FlightUpdateDTO {
 public:
