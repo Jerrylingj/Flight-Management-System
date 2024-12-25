@@ -26,7 +26,7 @@ public:
         m_db->createTable();
 
         /*** 测试函数 ***/
-        m_db->populateSampleFlights(); // 插入初始航班信息
+        // m_db->populateSampleFlights(); // 插入初始航班信息
         // m_db->populateSampleOrders();  // 插入初始订单信息
 
         ai = new AIChat(m_db);
@@ -68,10 +68,7 @@ public:
                             { return getFlight(m_db); });
         // 动态获取所有航班信息
         m_httpServer->route("/api/flights", QHttpServerRequest::Method::Post, [this](const QHttpServerRequest &request)
-        {
-            qDebug() << "动态查询航班";
-            return getFlight(request, m_db);
-        });
+                            { return getFlight(request, m_db); });
         // 获取特定航班
         m_httpServer->route("/api/flights/<arg>", QHttpServerRequest::Method::Get, [this](const int flightId) -> QHttpServerResponse
                             { return getFlight(flightId, m_db); });
@@ -82,9 +79,8 @@ public:
         m_httpServer->route("/api/flights/update", QHttpServerRequest::Method::Post, [this](const QHttpServerRequest &request)
                             { return updateFlight(request, m_db); });
         // 添加航班
-        m_httpServer->route("/api/flights/add", QHttpServerRequest::Method::Post, [this](const QHttpServerRequest &request) {
-            return addFlight(request, m_db);
-        });
+        m_httpServer->route("/api/flights/add", QHttpServerRequest::Method::Post, [this](const QHttpServerRequest &request)
+                            { return addFlight(request, m_db); });
 
         // 获取相同出发地和目的地的下一个航班
         m_httpServer->route("/api/flights/next", QHttpServerRequest::Method::Post, [this](const QHttpServerRequest &request) -> QHttpServerResponse

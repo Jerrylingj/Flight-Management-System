@@ -1,0 +1,939 @@
+YANGPuxyu,yingtao0427@gmail.com,393d1379badfa55a1491917c158d69ef876e83f7
+YANGPuxyu,yingtao0427@gmail.com,fe5ace2f10b319365072ed997d298540a78a9c0c
+58	4	backend/api/order/OrderApi.cpp
+3	0	backend/api/order/OrderApi.h
+38	1	backend/main.cpp
+
+math-zhuxy,235934429@qq.com,8e4140a0f290cbaa56beda5f81d50103402db41f
+2	0	backend/CMakeLists.txt
+24	0	backend/api/userlist/userlist.cpp
+10	0	backend/api/userlist/userlist.h
+20	0	backend/database/databasemanager.cpp
+3	0	backend/database/databasemanager.h
+20	0	backend/dto/userlist_dto.cpp
+25	0	backend/dto/userlist_dto.h
+6	0	backend/main.cpp
+
+YANGPuxyu,yingtao0427@gmail.com,9fbe9d5a864e3b24cdced4a0b8ed1351e8ceeed0
+26	6	backend/api/order/OrderApi.cpp
+0	1	backend/api/order/OrderApi.h
+0	1	backend/api/user/user.cpp
+20	0	backend/database/databasemanager.cpp
+1	1	backend/database/databasemanager.h
+1	0	backend/dto/flight_dto.h
+0	2	backend/dto/order_dto.h
+
+YANGPuxyu,yingtao0427@gmail.com,9a8dd19e53992239e8e780d3834adfbc0bfd3f20
+YANGPuxyu,yingtao0427@gmail.com,6a46e2763143cb18d44569080b1153fc29b5287b
+0	6	backend/api/flight/FlightApi.cpp
+0	3	backend/api/flight/FlightApi.h
+
+13711383475,14826781+Jerrylingj@user.noreply.gitee.com,a021f652db7a7f6f40dfd203e8bfeaeb0bd8423b
+9	0	backend/database/databasemanager.cpp
+
+13711383475,14826781+Jerrylingj@user.noreply.gitee.com,41df10bff2ffd701488c7158a46e40601a141911
+58	0	backend/api/flight/FlightApi.cpp
+2	1	backend/api/flight/FlightApi.h
+20	0	backend/dto/flight_dto.cpp
+19	0	backend/dto/flight_dto.h
+4	0	backend/main.cpp
+
+13711383475,14826781+Jerrylingj@user.noreply.gitee.com,da19a9fd7acd528dfe776e3e59cd0b6f81f1499e
+15	22	backend/CMakeLists.txt
+1	1	backend/api/login/login.cpp
+1	1	backend/api/register/register.cpp
+1	1	backend/api/user/user.cpp
+0	34	backend/dto/login_dto.cpp
+0	35	backend/dto/login_dto.h
+0	25	backend/dto/register_dto.h
+0	26	backend/dto/update_user_dto.cpp
+0	26	backend/dto/update_user_dto.h
+60	3	backend/dto/{register_dto.cpp => user_dto.cpp}
+77	0	backend/dto/user_dto.h
+
+13711383475,14826781+Jerrylingj@user.noreply.gitee.com,24c11d04a1e0491901f91c8cdf204e1eb9ce538c
+4	2	backend/CMakeLists.txt
+1	1	backend/api/order/OrderApi.cpp
+1	1	backend/api/order/OrderApi.h
+1	1	backend/database/databasemanager.h
+0	9	backend/dto/create_order.cpp
+0	18	backend/dto/create_order.h
+12	2	backend/dto/{order_info_dto.cpp => order_dto.cpp}
+19	4	backend/dto/{order_info_dto.h => order_dto.h}
+
+13711383475,14826781+Jerrylingj@user.noreply.gitee.com,64322d033433c6ebff39a6aae15a58b9f0e0864d
+1	8	backend/CMakeLists.txt
+1	6	backend/api/flight/FlightApi.cpp
+6	9	backend/api/flight/FlightApi.h
+1	1	backend/database/databasemanager.h
+0	28	backend/dto/flight_del_dto.cpp
+0	23	backend/dto/flight_del_dto.h
+145	0	backend/dto/flight_dto.cpp
+65	6	backend/dto/{flight_info_dto.h => flight_dto.h}
+0	22	backend/dto/flight_favorite_dto.cpp
+0	22	backend/dto/flight_favorite_dto.h
+0	54	backend/dto/flight_info_dto.cpp
+0	45	backend/dto/flight_update_dto.cpp
+0	31	backend/dto/flight_update_dto.h
+0	3	backend/dto/get_flights_dto.cpp
+0	10	backend/dto/get_flights_dto.h
+66	76	backend/main.cpp
+
+YANGPuxyu,yingtao0427@gmail.com,8f4e2e931c96048353f90b662517c04be6b6a936
+YANGPuxyu,yingtao0427@gmail.com,96e32ba6344dad67d410fc3c0f369c24b48ca70c
+43	0	backend/.vscode/settings.json
+40	0	backend/api/flight/FlightApi.cpp
+3	0	backend/api/flight/FlightApi.h
+37	43	backend/api/order/OrderApi.cpp
+70	56	backend/database/databasemanager.cpp
+4	1	backend/database/databasemanager.h
+119	46	backend/main.cpp
+
+13711383475,14826781+Jerrylingj@user.noreply.gitee.com,b07b36a9bd323100ba8d95e5e1a181e8410a2294
+19	15	backend/database/databasemanager.cpp
+1	2	backend/database/databasemanager.h
+
+13711383475,14826781+Jerrylingj@user.noreply.gitee.com,ee29b9ab296a91c2761625e512e64a4b9b9b2823
+13711383475,14826781+Jerrylingj@user.noreply.gitee.com,4b083e540a8d287c174d41c7d0d13b1805d8d89a
+4	0	backend/CMakeLists.txt
+107	0	backend/api/flight/FlightApi.cpp
+6	0	backend/api/flight/FlightApi.h
+139	3	backend/database/databasemanager.cpp
+18	2	backend/database/databasemanager.h
+28	0	backend/dto/flight_del_dto.cpp
+23	0	backend/dto/flight_del_dto.h
+45	0	backend/dto/flight_update_dto.cpp
+31	0	backend/dto/flight_update_dto.h
+9	1	backend/main.cpp
+
+water2027,136900643+water2027@users.noreply.github.com,ba5c287daf5b1942336bd0a85ce881c5dd74946d
+8	0	backend/dto/register_dto.cpp
+
+13711383475,14826781+Jerrylingj@user.noreply.gitee.com,2a10d3c38579ae8262b57a147f537dde10fa39fc
+7	7	backend/database/databasemanager.cpp
+13	36	backend/main.cpp
+
+YANGPuxyu,yingtao0427@gmail.com,3b3872325bb5209e37a111dd442e16956f15f3f9
+4	1	backend/api/order/OrderApi.cpp
+1	1	backend/database/databasemanager.cpp
+
+YANGPuxyu,yingtao0427@gmail.com,36c286b890bd3a0c50a20cf155a20613c21cc907
+1	1	backend/api/order/CreateOrderApi.cpp
+1	1	backend/api/order/CreateOrderApi.h
+30	53	backend/api/order/OrderApi.cpp
+1	1	backend/api/order/OrderApi.h
+15	27	backend/database/databasemanager.cpp
+1	1	backend/database/databasemanager.h
+36	5	backend/main.cpp
+
+YANGPuxyu,yingtao0427@gmail.com,e66804c006170f80d24c084821df189e64c7d4a7
+YANGPuxyu,yingtao0427@gmail.com,6b5a3b9fd660adfea3373112a0e2c5f2986a8c7c
+7	0	.vscode/settings.json
+168	40	backend/api/order/OrderApi.cpp
+1	1	backend/api/order/OrderApi.h
+123	0	backend/database/databasemanager.cpp
+4	3	backend/database/databasemanager.h
+117	7	backend/main.cpp
+
+13711383475,14826781+Jerrylingj@user.noreply.gitee.com,598b32f4bbd939445a55c2cc24719f52cef017f5
+4	4	backend/main.cpp
+
+water2027,136900643+water2027@users.noreply.github.com,44e0989b6e9ccb42608c7c1917ba1224f613861e
+1	1	backend/database/databasemanager.cpp
+1	1	fetchFlights/main.go
+
+water2027,136900643+water2027@users.noreply.github.com,277571e8416ca3cf099c2d5798fb5ca52f652537
+76	65	fetchFlights/main.go
+
+YANGPuxyu,yingtao0427@gmail.com,ae89b6eb156694e4897f82b523a6d5f178b724d7
+73	64	backend/api/order/OrderApi.cpp
+13	5	backend/api/order/OrderApi.h
+4	1	backend/database/databasemanager.h
+18	1	backend/main.cpp
+
+13711383475,14826781+Jerrylingj@user.noreply.gitee.com,2ff591c33ca0593ba7e7fbea6761a585bfb556a5
+1	0	backend/api/favorite/FavoritesApi.cpp
+1	0	backend/database/databasemanager.cpp
+
+13711383475,14826781+Jerrylingj@user.noreply.gitee.com,3de7f006cb48ca4e368ccb7001655cee5b85d25e
+13711383475,14826781+Jerrylingj@user.noreply.gitee.com,ec983b76d6274eb259be749174b55c169771cf10
+6	5	backend/api/favorite/FavoritesApi.cpp
+28	7	backend/database/databasemanager.cpp
+1	1	backend/database/databasemanager.h
+821	0	microBackend/package-lock.json
+1	0	microBackend/package.json
+
+water2027,136900643+water2027@users.noreply.github.com,3e3eaf06f7e54a8a837a6fe3c933c018e27e6675
+7	0	fetchFlights/database_config.template.json
+-	-	fetchFlights/get_flights.exe
+7	0	fetchFlights/go.mod
+6	0	fetchFlights/go.sum
+96	0	fetchFlights/main.go
+93	0	fetchFlights/main.js
+22	0	fetchFlights/nums.json
+77982	0	fetchFlights/result.json
+
+YANGPuxyu,yingtao0427@gmail.com,b06db04f19ae8e8169aa730505e838ac4de4fa8d
+YANGPuxyu,yingtao0427@gmail.com,31a882eea588dfc6f980ba75199c9ad363215eee
+29	8	backend/api/order/OrderApi.cpp
+5	1	backend/api/order/OrderApi.h
+95	48	backend/database/databasemanager.cpp
+2	2	backend/database/databasemanager.h
+28	10	backend/dto/order_info_dto.cpp
+11	3	backend/dto/order_info_dto.h
+18	2	backend/main.cpp
+1	0	microBackend/package.json
+603	0	microBackend/pnpm-lock.yaml
+
+water2027,136900643+water2027@users.noreply.github.com,9a944231c9bf30df0efd73ac23d8b59c7f16111c
+1	0	backend/CMakeLists.txt
+15	0	backend/api/flight/FlightApi.cpp
+3	0	backend/api/flight/FlightApi.h
+3	0	backend/dto/get_flights_dto.cpp
+10	0	backend/dto/get_flights_dto.h
+
+water2027,136900643+water2027@users.noreply.github.com,5d1f46756657bc7063a5ca2d97855895fc7fcaa1
+1	0	backend/CMakeLists.txt
+39	2	backend/api/user/user.cpp
+2	0	backend/api/user/user.h
+6	6	backend/database/databasemanager.cpp
+26	0	backend/dto/update_user_dto.cpp
+26	0	backend/dto/update_user_dto.h
+6	0	backend/main.cpp
+
+water2027,136900643+water2027@users.noreply.github.com,2f003372cbe95173ce784f286c04fc72c14552cc
+84	1	backend/database/databasemanager.cpp
+9	0	backend/database/databasemanager.h
+
+YANGPuxyu,yingtao0427@gmail.com,4c0a7997722b50ade18e9cc0d7a73f75dca63e4d
+YANGPuxyu,yingtao0427@gmail.com,34fa5b48421c7b1d9e051c8e84edab8bbd8aaca5
+39	4	backend/api/flight/FlightApi.cpp
+19	14	backend/database/databasemanager.cpp
+
+water2027,136900643+water2027@users.noreply.github.com,cbcd940f70be16e575303cb6af1f2dfcc410e52b
+0	2	backend/dto/login_dto.cpp
+0	4	backend/dto/login_dto.h
+
+water2027,136900643+water2027@users.noreply.github.com,8e6186185ff9963c4049d4237d3fbe9b5fb0a414
+1	1	backend/api/login/login.cpp
+2	1	backend/api/user/user.cpp
+17	1	backend/database/databasemanager.cpp
+5	0	backend/main.cpp
+
+water2027,136900643+water2027@users.noreply.github.com,98c5d193b109e4be417d5a8323f4cb2773ef72a4
+1	0	backend/CMakeLists.txt
+1	1	backend/api/register/register.cpp
+24	0	backend/api/user/user.cpp
+12	0	backend/api/user/user.h
+2	2	backend/database/databasemanager.cpp
+5	4	backend/database/databasemanager.h
+
+water2027,136900643+water2027@users.noreply.github.com,f2b6de5d299f4ad52ba185464531c7515f1f6a06
+2	2	backend/api/login/login.cpp
+7	6	backend/dto/login_dto.cpp
+5	5	backend/dto/login_dto.h
+6	23	frontend/views/Login.qml
+
+water2027,136900643+water2027@users.noreply.github.com,e87eb3fde902ec2df46b130a60c6d95fdc80f86a
+2	1	frontend/views/ClientServer.qml
+
+water2027,136900643+water2027@users.noreply.github.com,86351c4312410fa27eb87b9aaa5cf98e224efc26
+112	76	frontend/views/ClientServer.qml
+
+water2027,136900643+water2027@users.noreply.github.com,873b75c3cccb494f2f940785bd7cab89f5735b28
+0	1	backend/api/register/register.cpp
+84	30	frontend/views/Register.qml
+
+water2027,136900643+water2027@users.noreply.github.com,6a48ebc83876da52a165449544062a0e4b271498
+1	0	backend/CMakeLists.txt
+13	31	backend/api/register/register.cpp
+10	10	backend/database/databasemanager.cpp
+47	0	backend/dto/register_dto.cpp
+25	0	backend/dto/register_dto.h
+
+water2027,136900643+water2027@users.noreply.github.com,fc6a4d9a785e2523a9f438cfe9cc84c99b3d4b23
+2	0	backend/CMakeLists.txt
+7	28	backend/aichat/aichat.cpp
+17	24	backend/api/login/login.cpp
+25	0	backend/api/register/register.cpp
+2	0	backend/api/register/register.h
+3	16	backend/database/databasemanager.cpp
+15	8	backend/dto/login_dto.cpp
+2	1	backend/dto/login_dto.h
+32	0	backend/dto/send_code.cpp
+29	0	backend/dto/send_code.h
+4	0	backend/main.cpp
+20	0	backend/util/easycrypt.cpp
+4	0	backend/util/easycrypt.h
+41	0	backend/util/networkhandler.cpp
+9	0	backend/util/networkhandler.h
+1	1	microBackend/app.js
+
+water2027,136900643+water2027@users.noreply.github.com,18b502d11c96eb1e02eec06ad4219dc505edd9ec
+2	2	frontend/views/FlightInfoView.qml
+1	1	frontend/views/Login.qml
+1	1	frontend/views/OrdersView.qml
+1	1	frontend/views/Register.qml
+
+water2027,136900643+water2027@users.noreply.github.com,29e3ccc45b36f7ba12a98a2fa26aa5dfc89819b3
+11	6	frontend/api/networkhandler.cpp
+2	1	frontend/api/networkhandler.h
+
+water2027,136900643+water2027@users.noreply.github.com,a9b6d782b10e28c88e93fb4c765154fd5eb34656
+47	44	microBackend/app.js
+
+water2027,136900643+water2027@users.noreply.github.com,5f715111bb771eef1bfe6a350b696cbd4e33c0e7
+3	1	.gitignore
+81	0	microBackend/app.js
+15	0	microBackend/package.json
+23	0	microBackend/pnpm-lock.yaml
+
+13711383475,14826781+Jerrylingj@user.noreply.gitee.com,b2857b0e7a0f7f7b551423b0c4965b27012d4022
+80	12	backend/main.cpp
+6	1	frontend/api/networkhandler.cpp
+2	1	frontend/api/networkhandler.h
+45	2	frontend/components/FlightInfoCard.qml
+66	53	frontend/views/FlightInfoView.qml
+
+13711383475,14826781+Jerrylingj@user.noreply.gitee.com,619079ae0c4c78fe350f51e79c8dbcc7dbb8d1f7
+8	1	frontend/views/FlightInfoView.qml
+
+water2027,136900643+water2027@users.noreply.github.com,1a8b8501ebe6c1ef2ad0db3b306b866cd191b5d4
+12	0	backend/doc/getFlight.md
+
+water2027,136900643+water2027@users.noreply.github.com,728969540cd01f3234ab8a5b034b6e7d1907f216
+11	3	frontend/components/NoteList.qml
+2	9	frontend/views/HomeView.qml
+
+YANGPuxyu,yingtao0427@gmail.com,63c0bc07536dec2bb7dac5709f2e4d95662e2e29
+YANGPuxyu,yingtao0427@gmail.com,f664db530209f9c1bb5bf8391417a7c80ada3066
+80	4	backend/database/databasemanager.cpp
+1	1	backend/database/databasemanager.h
+1	11	backend/dto/order_info_dto.cpp
+1	4	backend/dto/order_info_dto.h
+2	1	backend/main.cpp
+2	2	frontend/views/OrdersView.qml
+
+math-zhuxy,235934429@qq.com,a5faf65d84ef27f0fd18b519a80e0ca8e343c6b7
+math-zhuxy,235934429@qq.com,d845e49e844d95f2b7c23f8a7882b116cb5894ce
+1	1	frontend/main.cpp
+23	1	frontend/storage/userinfo.h
+56	1	frontend/views/Login.qml
+35	7	frontend/views/Register.qml
+
+water2027,136900643+water2027@users.noreply.github.com,285c78c6a2330a97d7d87f29dee0c727ac316acd
+31	0	backend/doc/aichat.md
+51	0	backend/doc/flight.md
+
+water2027,136900643+water2027@users.noreply.github.com,9b2b3ed11963c4dac54821747e12f2dc898e059d
+55	0	backend/doc/LoginAndReg.md
+
+YANGPuxyu,yingtao0427@gmail.com,781e790e4e4efffd20b04a3c35cdca421be85071
+1	0	backend/CMakeLists.txt
+18	18	backend/api/order/OrderApi.cpp
+9	9	backend/api/order/OrderApi.h
+36	0	backend/database/databasemanager.cpp
+1	1	backend/database/databasemanager.h
+90	15	backend/dto/order_info_dto.cpp
+20	4	backend/dto/order_info_dto.h
+4	3	backend/main.cpp
+2	2	frontend/Main.qml
+59	0	frontend/views/OrdersView.qml
+
+13711383475,14826781+Jerrylingj@user.noreply.gitee.com,07f88a93ae1d7ea5288f2a7f0a2e3ab1c2feb11b
+1	0	frontend/CMakeLists.txt
+-	-	frontend/figure/homepage-cover.png
+13	2	frontend/views/HomeView.qml
+
+water2027,136900643+water2027@users.noreply.github.com,2c932eb1140add58c4658a91f90c922329746ba7
+1	0	backend/aichat/aichat.cpp
+2	0	backend/aichat/aichat.h
+
+math-zhuxy,235934429@qq.com,e3c72da1b8641361b2d000d9c9a29d09aeecf611
+math-zhuxy,235934429@qq.com,98f572c88682783f5383f9f7d8dad4747d9cedf4
+0	16	frontend/views/ProfileView.qml
+32	2	frontend/views/Register.qml
+
+YANGPuxyu,yingtao0427@gmail.com,e2dd7d9b942ff5c6563bff69ec4f507b331e7be7
+YANGPuxyu,yingtao0427@gmail.com,3e7c6cd4d4e8fde24d5cc07ccdee20c56ad867fc
+49	49	backend/api/order/CreateOrderApi.cpp
+7	7	backend/api/order/CreateOrderApi.h
+0	2	backend/api/order/OrderApi.h
+39	39	backend/database/databasemanager.cpp
+4	1	backend/database/databasemanager.h
+7	3	backend/main.cpp
+26	10	frontend/components/OrderInfoCard.qml
+9	8	frontend/components/TimeProgressBar.qml
+45	10	frontend/views/OrderDetailView.qml
+356	72	frontend/views/OrdersView.qml
+
+math-zhuxy,235934429@qq.com,a1b1a91a47ec789d464f53ae6c83d7d2aa54bae3
+math-zhuxy,235934429@qq.com,b94f2478fb562f20c74f6150fd55a55e6c4c09a8
+120	57	frontend/views/ProfileView.qml
+109	0	frontend/views/Register.qml
+
+water2027,136900643+water2027@users.noreply.github.com,e7566f5ee7d3115c4aeb58243612a9e3b5945e20
+2	0	backend/CMakeLists.txt
+146	1	backend/aichat/aichat.cpp
+25	3	backend/aichat/aichat.h
+6	20	backend/api/order/CreateOrderApi.cpp
+28	0	backend/config/ai.json
+5	0	backend/config/ai.qrc
+37	0	backend/database/databasemanager.cpp
+1	0	backend/database/databasemanager.h
+8	0	backend/main.cpp
+26	0	backend/util/easycrypt.cpp
+3	0	backend/util/easycrypt.h
+
+math-zhuxy,235934429@qq.com,bce2122cd3234bf7b00b98180c0da604b4a6416a
+1	0	frontend/CMakeLists.txt
+5	0	frontend/views/Login.qml
+0	0	frontend/views/Register.qml
+
+YANGPuxyu,yingtao0427@gmail.com,4905976c57a3f5d3684e347b22040e858dd10a37
+YANGPuxyu,yingtao0427@gmail.com,71cc268967b8c1e273f13e0c901602eba4e5e4b8
+2	2	backend/CMakeLists.txt
+85	0	backend/api/order/OrderApi.cpp
+16	3	backend/api/order/OrderApi.h
+0	0	backend/api/order/OrderInfo.cpp
+0	4	backend/api/order/OrderInfo.h
+29	0	backend/dto/order_info_dto.cpp
+20	0	backend/dto/order_info_dto.h
+2	2	frontend/Main.qml
+2	2	frontend/components/OrderInfoCard.qml
+
+math-zhuxy,235934429@qq.com,a2a4ceae8fe725fb3d389abf9b039893fb636a99
+0	0	frontend/views/{login.qml => Login.qml}
+
+math-zhuxy,235934429@qq.com,d8d1a40ca37a6cda25cee39a46f6632e9b06b40b
+3	3	frontend/Main.qml
+96	0	frontend/views/ClientServer.qml
+1	1	frontend/views/EditPersonalInfo.qml
+1	1	frontend/views/login.qml
+
+math-zhuxy,235934429@qq.com,de07d915da69a3c4eab24b60eb2519eb3b871626
+2	1	frontend/CMakeLists.txt
+9	0	frontend/Main.qml
+6	0	frontend/views/ClientServer.qml
+1	1	frontend/views/ProfileView.qml
+
+water2027,136900643+water2027@users.noreply.github.com,acdc29a4414032854a2dc5f2f34aff17406af7f2
+1	0	backend/CMakeLists.txt
+3	0	backend/aichat/aichat.cpp
+10	0	backend/aichat/aichat.h
+
+13711383475,14826781+Jerrylingj@user.noreply.gitee.com,fddcbe85ba2870ba494f7c1bcf6af28e71d3b82e
+2	1	backend/api/favorite/FavoritesApi.cpp
+16	0	backend/api/favorite/FavoritesApi.h
+19	6	backend/database/databasemanager.h
+22	0	backend/dto/flight_favorite_dto.cpp
+22	0	backend/dto/flight_favorite_dto.h
+
+13711383475,14826781+Jerrylingj@user.noreply.gitee.com,5af1152266f2bb3f8142512359928e607a8302f9
+3	0	backend/CMakeLists.txt
+47	0	backend/api/favorite/FavoritesApi.cpp
+0	0	backend/api/favorite/FavoritesApi.h
+74	12	backend/database/databasemanager.cpp
+0	0	backend/dto/flight_favorite_dto.cpp
+0	0	backend/dto/flight_favorite_dto.h
+38	6	backend/main.cpp
+
+13711383475,14826781+Jerrylingj@user.noreply.gitee.com,825e45df718003f5d953360ef01d7fb9a63dae63
+15	13	README.md
+
+13711383475,14826781+Jerrylingj@user.noreply.gitee.com,1c40c6c13a20c781c5fe02f02696b5608a15fdc3
+4	0	backend/database/databasemanager.cpp
+6	2	backend/dto/flight_info_dto.cpp
+3	1	backend/dto/flight_info_dto.h
+2	1	backend/main.cpp
+7	3	frontend/components/FlightInfoCard.qml
+24	12	frontend/views/FlightInfoView.qml
+
+math-zhuxy,235934429@qq.com,8dc9eb7d5cd1e106774c26dbfc005ffe3244420b
+1	0	frontend/CMakeLists.txt
+-	-	frontend/figure/help-desk.png
+
+YANGPuxyu,yingtao0427@gmail.com,f8821d6b5e8f1bfc0b3d0d36356b55c794c816bf
+YANGPuxyu,yingtao0427@gmail.com,e5829685199869b1bd6b91bce9be7d439bffa809
+4	0	backend/CMakeLists.txt
+0	0	backend/api/order/OrderApi.cpp
+4	0	backend/api/order/OrderApi.h
+0	0	backend/api/order/OrderInfo.cpp
+4	0	backend/api/order/OrderInfo.h
+
+water2027,136900643+water2027@users.noreply.github.com,ce25f88b0edc83e665f715355a831d7498d652dc
+2	0	backend/CMakeLists.txt
+1	0	backend/api/login/login.cpp
+1	1	backend/api/login/login.h
+50	0	backend/api/order/CreateOrderApi.cpp
+10	0	backend/api/order/CreateOrderApi.h
+74	23	backend/database/databasemanager.cpp
+4	1	backend/database/databasemanager.h
+9	0	backend/dto/create_order.cpp
+18	0	backend/dto/create_order.h
+5	0	backend/main.cpp
+16	0	backend/util/easycrypt.h
+
+water2027,136900643+water2027@users.noreply.github.com,77403cd0f142f53c4a278b5fe3f98e958367a255
+0	3	backend/dto/login_dto.cpp
+17	1	backend/util/easycrypt.cpp
+
+water2027,136900643+water2027@users.noreply.github.com,5c4e7e5f8e507f3d76de612b14817c93d768876f
+1	0	backend/CMakeLists.txt
+6	2	backend/api/login/login.cpp
+9	5	backend/database/databasemanager.cpp
+2	2	backend/database/databasemanager.h
+5	1	backend/dto/login_dto.cpp
+34	0	backend/util/easycrypt.cpp
+13	0	backend/util/easycrypt.h
+
+water2027,136900643+water2027@users.noreply.github.com,62d90cb75f0ff4b981abcc97302843dd9d4bf755
+2	4	backend/api/flight/FlightApi.cpp
+2	3	backend/api/flight/FlightApi.h
+3	5	backend/api/login/login.cpp
+2	2	backend/dto/login_dto.cpp
+8	16	backend/dto/login_dto.h
+2	2	backend/main.cpp
+
+water2027,136900643+water2027@users.noreply.github.com,72793a87337329b27ef788dd6a0227e56db7222b
+1	1	backend/CMakeLists.txt
+
+water2027,136900643+water2027@users.noreply.github.com,b8c2709d7df539775b9efb6e7e0cc48fa20a8fbe
+0	0	backend/api/flight/{FlightAPi.cpp => FlightApi.cpp}
+
+water2027,136900643+water2027@users.noreply.github.com,0c6f603cd32151398a0396066b40c341a6f7dde6
+0	54	backend/api/flight/FlightInfo.cpp
+0	36	backend/api/flight/FlightInfo.h
+
+water2027,136900643+water2027@users.noreply.github.com,165922e6ef749e35078d9b721f91aaffbfb60642
+0	65	backend/api/flight/FlightAPi.cpp
+
+water2027,136900643+water2027@users.noreply.github.com,f8b5297b1f152c6d79ab8258a5200c8631278e23
+1	1	backend/CMakeLists.txt
+37	21	backend/api/flight/FlightAPi.cpp
+2	17	backend/api/flight/FlightApi.h
+68	1	backend/database/databasemanager.cpp
+5	0	backend/database/databasemanager.h
+50	0	backend/dto/flight_info_dto.cpp
+34	0	backend/dto/flight_info_dto.h
+3	63	backend/main.cpp
+
+YANGPuxyu,yingtao0427@gmail.com,6e32eb5005e2a40f5668f660d03eddfc35c8132b
+3	3	backend/config/database_config.template.json
+1	0	frontend/CMakeLists.txt
+33	6	frontend/components/OrderInfoCard.qml
+129	0	frontend/components/TimeProgressBar.qml
+7	1	frontend/views/OrderDetailView.qml
+106	132	frontend/views/OrdersView.qml
+
+13711383475,14826781+Jerrylingj@user.noreply.gitee.com,2cc286b02b3c551a73de12e77c9f5f45f160df97
+101	42	frontend/components/FlightInfoCard.qml
+183	166	frontend/views/FlightInfoView.qml
+
+13711383475,14826781+Jerrylingj@user.noreply.gitee.com,5f9718fa78d623be31bef2461dfe45e3e0c5e196
+4	0	backend/api/flight/FlightAPi.cpp
+6	2	backend/api/flight/FlightInfo.cpp
+3	1	backend/api/flight/FlightInfo.h
+81	82	backend/database/databasemanager.cpp
+1	1	backend/database/databasemanager.h
+4	0	backend/main.cpp
+56	30	frontend/components/FlightInfoCard.qml
+89	58	frontend/views/FlightInfoView.qml
+
+math-zhuxy,235934429@qq.com,da48032b8eede9f9596419d66f90491040c4dec0
+math-zhuxy,235934429@qq.com,18c11043103b4200cfb3d0b9cb6da6849f8b4d85
+1	0	frontend/CMakeLists.txt
+10	0	frontend/main.cpp
+52	0	frontend/storage/userinfo.h
+12	2	frontend/views/EditPersonalInfo.qml
+6	6	frontend/views/ProfileView.qml
+
+water2027,136900643+water2027@users.noreply.github.com,85f98d25fab00438ef4a51c89c15d47f3563704e
+7	24	backend/main.cpp
+1	1	frontend/views/FlightInfoView.qml
+
+math-zhuxy,235934429@qq.com,10f460e31cfbe4af25b183e9d60ded90bc42d3a7
+20	18	frontend/views/ProfileView.qml
+
+13711383475,14826781+Jerrylingj@user.noreply.gitee.com,fbacb14377b17283afc6d96c8cddfe799707c61c
+13711383475,14826781+Jerrylingj@user.noreply.gitee.com,d6aa7776a7fe13e8703e09a77555d396f53931d3
+13	4	backend/api/flight/FlightAPi.cpp
+132	0	backend/database/databasemanager.cpp
+10	0	backend/database/databasemanager.h
+39	10	backend/main.cpp
+3	2	frontend/views/FlightInfoView.qml
+
+math-zhuxy,149505619+math-zhuxy@users.noreply.github.com,c261e44be4775d1f67ce0f2dc355d6e8b9764852
+0	2	README.md
+
+math-zhuxy,235934429@qq.com,855893b73f1f0ca05d925d8a3eb0ee469a7eb492
+1	1	frontend/android/AndroidManifest.xml
+4	4	frontend/views/ProfileView.qml
+
+13711383475,14826781+Jerrylingj@user.noreply.gitee.com,bb18c79204af664adb33a56e77f2508ecda5a3e1
+13711383475,14826781+Jerrylingj@user.noreply.gitee.com,9025a844ba47553311cd291bd681436f0297b847
+35	8	frontend/views/FlightInfoView.qml
+
+water2027,136900643+water2027@users.noreply.github.com,1309c728ffc0553dfd1c2da2454e4eeb59790d1f
+1	18	backend/main.cpp
+
+13711383475,14826781+Jerrylingj@user.noreply.gitee.com,267a980b63228edc6b291f5175d60ff2c3a6f08b
+5	11	backend/api/flight/FlightAPi.cpp
+2	2	backend/api/flight/FlightApi.h
+2	2	backend/main.cpp
+
+water2027,136900643+water2027@users.noreply.github.com,40eb0f57e532111324170c02e1d88065911104fb
+1	1	backend/database/databasemanager.cpp
+
+13711383475,14826781+Jerrylingj@user.noreply.gitee.com,35d4cce850439c28ce808cedea2803be651ae080
+56	85	backend/api/flight/FlightAPi.cpp
+7	13	backend/api/flight/FlightApi.h
+49	2	backend/api/flight/FlightInfo.cpp
+22	20	backend/api/flight/FlightInfo.h
+2	2	backend/database/databasemanager.cpp
+82	0	backend/main.cpp
+
+water2027,136900643+water2027@users.noreply.github.com,a4a02cc65708ab7c111ff2a99ae9eaa7a8918de0
+18	2	README.md
+1	0	backend/CMakeLists.txt
+17	20	backend/api/login/login.cpp
+4	2	backend/database/databasemanager.cpp
+27	0	backend/dto/login_dto.cpp
+46	0	backend/dto/login_dto.h
+0	1	backend/dto/response_dto.cpp
+0	4	backend/dto/response_dto.h
+
+13711383475,14826781+Jerrylingj@user.noreply.gitee.com,382cabd36fd0e6c0b950632d219c4640fc3a6f9a
+3	0	backend/CMakeLists.txt
+110	0	backend/api/flight/FlightAPi.cpp
+32	0	backend/api/flight/FlightApi.h
+3	0	backend/api/flight/FlightInfo.cpp
+32	0	backend/api/flight/FlightInfo.h
+18	8	backend/database/databasemanager.cpp
+0	0	backend/dto/flight_info_dto.cpp
+0	0	backend/dto/flight_info_dto.h
+
+water2027,136900643+water2027@users.noreply.github.com,5e083df2a6e72f97430d67f0c8ec05fa59024cad
+1	1	backend/api/register/register.cpp
+12	0	backend/database/databasemanager.cpp
+3	1	backend/database/databasemanager.h
+
+water2027,136900643+water2027@users.noreply.github.com,710f8f900ee18782a42c226c7a6629bff2493cdd
+2	0	backend/CMakeLists.txt
+25	4	backend/api/login/login.cpp
+4	1	backend/api/login/login.h
+46	0	backend/api/register/register.cpp
+11	0	backend/api/register/register.h
+34	16	backend/database/databasemanager.cpp
+3	2	backend/database/databasemanager.h
+8	2	backend/main.cpp
+
+water2027,136900643+water2027@users.noreply.github.com,5b8746b48271ce7a90e3d32d1b034876fc9a36ba
+1	0	backend/CMakeLists.txt
+15	0	backend/api/login/login.cpp
+8	0	backend/api/login/login.h
+1	1	backend/dto/response_dto.h
+2	4	backend/main.cpp
+
+water2027,136900643+water2027@users.noreply.github.com,084f3204f28c68d5ab6ef8b25669a073c1dcd8eb
+1	0	backend/CMakeLists.txt
+29	9	backend/database/databasemanager.cpp
+4	1	backend/database/databasemanager.h
+9	0	backend/dto/response_dto.cpp
+81	0	backend/dto/response_dto.h
+11	7	backend/main.cpp
+
+water2027,136900643+water2027@users.noreply.github.com,c754c25e9219b7133b9e683f555b17b97f9547e2
+0	7	backend/config/database_config.json
+
+water2027,136900643+water2027@users.noreply.github.com,cd73e6ecdaa5ec41904bb4ab8399a9594da6d51f
+3	1	.gitignore
+4	0	README.md
+1	0	backend/CMakeLists.txt
+7	0	backend/config/database_config.template.json
+
+water2027,136900643+water2027@users.noreply.github.com,62f9059e23592a626e95af4b5c64b4a141f5262b
+34	0	backend/CMakeLists.txt
+7	0	backend/config/database_config.json
+6	0	backend/config/database_config.qrc
+92	0	backend/database/databasemanager.cpp
+28	0	backend/database/databasemanager.h
+42	0	backend/main.cpp
+
+13711383475,14826781+Jerrylingj@user.noreply.gitee.com,a6a08e08c456642654f0a9de7b2e05e4afdc39d0
+13711383475,14826781+Jerrylingj@user.noreply.gitee.com,e5a3d5fdff86f29a5709ce4b417cf8fd9235b13f
+213	123	frontend/views/FlightInfoView.qml
+
+YANGPuxyu,yingtao0427@gmail.com,4992b9fce1b92f9feee983000daa6fad88d3e0c6
+YANGPuxyu,yingtao0427@gmail.com,6e7cea214aaca4587f04ec2b84a1b80c72b72ddb
+1	1	frontend/views/FlightInfoView.qml
+1	1	frontend/views/OrdersView.qml
+
+YANGPuxyu,yingtao0427@gmail.com,38a8c40221ba5325140caa5d281016c137371e35
+2	0	frontend/views/FlightInfoView.qml
+48	15	frontend/views/OrdersView.qml
+
+math-zhuxy,235934429@qq.com,d5baa3db949429f3cd1dbe1f4f0287d62c4826e3
+2	0	frontend/CMakeLists.txt
+-	-	frontend/figure/editinfo.png
+86	0	frontend/views/EditPersonalInfo.qml
+57	0	frontend/views/ProfileView.qml
+
+YANGPuxyu,yingtao0427@gmail.com,f330c5fd8c030ea1d2abbcaa9f0f613b0e0e3bd1
+-	-	frontend/android/.gradle/8.0/checksums/checksums.lock
+-	-	frontend/android/.gradle/8.0/checksums/md5-checksums.bin
+-	-	frontend/android/.gradle/8.0/checksums/sha1-checksums.bin
+-	-	frontend/android/.gradle/8.0/dependencies-accessors/dependencies-accessors.lock
+0	0	frontend/android/.gradle/8.0/dependencies-accessors/gc.properties
+-	-	frontend/android/.gradle/8.0/fileChanges/last-build.bin
+-	-	frontend/android/.gradle/8.0/fileHashes/fileHashes.lock
+0	0	frontend/android/.gradle/8.0/gc.properties
+-	-	frontend/android/.gradle/buildOutputCleanup/buildOutputCleanup.lock
+2	0	frontend/android/.gradle/buildOutputCleanup/cache.properties
+0	0	frontend/android/.gradle/vcs-1/gc.properties
+5	1	frontend/components/OrderInfoCard.qml
+239	95	frontend/views/OrdersView.qml
+
+YANGPuxyu,yingtao0427@gmail.com,517218bd9f6f20ce75593f655a9426eeed0778b0
+154	33	frontend/views/OrdersView.qml
+
+13711383475,14826781+Jerrylingj@user.noreply.gitee.com,0fdf8348e22a4afb3865ea9d6e082cfe685b970c
+20	6	frontend/components/FlightInfoCard.qml
+103	53	frontend/views/FlightInfoView.qml
+
+water2027,136900643+water2027@users.noreply.github.com,1d04604d479ff4191a47f29d13f180405b2fc714
+9	1	README.md
+
+water2027,136900643+water2027@users.noreply.github.com,5c952382d0975d2f55d4b001a867e3f679709bb5
+1	1	frontend/Main.qml
+2	10	frontend/components/OrderInfoCard.qml
+20	31	frontend/views/OrdersView.qml
+
+YANGPuxyu,yingtao0427@gmail.com,bd4ed94999815ad1b7fa8c4727e31a05d5d8683d
+37	29	frontend/components/OrderInfoCard.qml
+0	0	frontend/views/OrderDetailView.cpp
+27	6	frontend/views/OrderDetailView.qml
+40	16	frontend/views/OrdersView.qml
+
+math-zhuxy,235934429@qq.com,eb4ea0e3921b02f9c4cd76f3e6e4cef8bc1ee37a
+math-zhuxy,235934429@qq.com,d45aab37fdf31f4b643f6c7823693253052a53a0
+3	0	frontend/CMakeLists.txt
+9	10	frontend/views/ProfileView.qml
+103	0	frontend/views/login.qml
+
+YANGPuxyu,yingtao0427@gmail.com,5bfcfc7d44456cad5746bd69315f4ae8ed6ff4b7
+YANGPuxyu,yingtao0427@gmail.com,13917457272252046dc00dc28b775c173491fd53
+9	0	frontend/CMakeLists.txt
+1	1	frontend/Main.qml
+113	0	frontend/components/OrderInfoCard.qml
+0	0	frontend/views/OrderDetailView.cpp
+93	0	frontend/views/OrderDetailView.qml
+33	3	frontend/views/OrdersView.qml
+
+math-zhuxy,149505619+math-zhuxy@users.noreply.github.com,fb0739b9757618c62f93932e852f870204ca65b6
+6	1	README.md
+
+13711383475,14826781+Jerrylingj@user.noreply.gitee.com,ec7636a6ac63aff177e87e2c6e548cde1e3645a0
+23	19	frontend/components/FlightInfoCard.qml
+123	9	frontend/views/FlightInfoView.qml
+
+water2027,136900643+water2027@users.noreply.github.com,fc6ee0386f78e28fbd1f4deb5fd04b9766a9be51
+12	1	frontend/api/networkhandler.cpp
+2	2	frontend/api/networkhandler.h
+
+math-zhuxy,235934429@qq.com,f910b65c29eda3345862c90749450e7f0da38502
+37	33	frontend/views/ProfileView.qml
+
+13711383475,14826781+Jerrylingj@user.noreply.gitee.com,285e7e7977d81426af9d03a5f0b3d47f8957736d
+3	57	CMakeLists.txt
+28	7	README.md
+0	0	backend/CMakeLists.txt
+62	0	frontend/CMakeLists.txt
+0	0	Main.qml => frontend/Main.qml
+0	0	{android => frontend/android}/AndroidManifest.xml
+0	0	{android => frontend/android}/build.gradle
+0	0	{android => frontend/android}/gradle.properties
+-	-	{android => frontend/android}/gradle/wrapper/gradle-wrapper.jar
+0	0	{android => frontend/android}/gradle/wrapper/gradle-wrapper.properties
+0	0	{android => frontend/android}/gradlew
+0	0	{android => frontend/android}/gradlew.bat
+-	-	{android => frontend/android}/res/drawable-mdpi/icon.png
+0	0	{android => frontend/android}/res/values/libs.xml
+0	0	{android => frontend/android}/res/xml/network_security_config.xml
+0	0	{api => frontend/api}/networkhandler.cpp
+0	0	{api => frontend/api}/networkhandler.h
+0	0	{components => frontend/components}/FlightInfoCard.qml
+0	0	{components => frontend/components}/NoteCard.qml
+0	0	{components => frontend/components}/NoteList.qml
+-	-	{figure => frontend/figure}/login-flight.png
+0	0	main.cpp => frontend/main.cpp
+0	0	{static => frontend/static}/sites.js
+0	0	{views => frontend/views}/FlightInfoView.qml
+0	0	{views => frontend/views}/HomeView.qml
+0	0	{views => frontend/views}/NoteDetailView.qml
+0	0	{views => frontend/views}/OrdersView.qml
+0	0	{views => frontend/views}/ProfileView.qml
+
+math-zhuxy,235934429@qq.com,7bf2a6807bf67c0334c7ce908255117e81930b34
+107	65	views/ProfileView.qml
+
+math-zhuxy,235934429@qq.com,b5d0b93ac7728f6fc3c9872f76d12e1ad4f533a3
+math-zhuxy,235934429@qq.com,a68f147ca90273697cb9f4b3cc30f554ed8daf09
+21	4	views/ProfileView.qml
+
+13711383475,14826781+Jerrylingj@user.noreply.gitee.com,192a9d43f749740a45cdde7e21af29c4f524af80
+1	0	CMakeLists.txt
+110	0	components/FlightInfoCard.qml
+41	74	views/FlightInfoView.qml
+
+water2027,136900643+water2027@users.noreply.github.com,5e3764ab0366a6d172475517e572c80c92d9e813
+1	1	Main.qml
+9	11	components/NoteList.qml
+1	1	views/HomeView.qml
+108	1	views/NoteDetailView.qml
+
+water2027,136900643+water2027@users.noreply.github.com,e88ec1e059aff908009db1b1ab3abbab274c08fb
+1	0	CMakeLists.txt
+31	12	Main.qml
+1	0	components/NoteCard.qml
+15	0	components/NoteList.qml
+2	0	views/FlightInfoView.qml
+7	0	views/HomeView.qml
+7	2	views/NoteDetailView.qml
+3	0	views/OrdersView.qml
+2	2	views/ProfileView.qml
+
+water2027,136900643+water2027@users.noreply.github.com,6511457c3c9681ebcd2dc04cf4d334da9d5341b2
+2	0	CMakeLists.txt
+5	6	components/NoteList.qml
+9	0	static/sites.js
+0	1	views/HomeView.qml
+
+math-zhuxy,235934429@qq.com,72c2a42039fd4fb2f78a80f9cb1cad6148995545
+math-zhuxy,235934429@qq.com,07fe25d8e09e8e17cb03661736f621d76d912016
+119	3	views/ProfileView.qml
+
+water2027,136900643+water2027@users.noreply.github.com,73e8c8106c9152ddd53695e86be497926d1422ca
+1	0	.gitignore
+0	842	CMakeLists.txt.user
+
+math-zhuxy,235934429@qq.com,b2b373d4231fb8f54f926dbfa19a9100cacec84a
+448	28	CMakeLists.txt.user
+1	1	Main.qml
+2	1	android/AndroidManifest.xml
+81	0	android/build.gradle
+14	0	android/gradle.properties
+-	-	android/gradle/wrapper/gradle-wrapper.jar
+5	0	android/gradle/wrapper/gradle-wrapper.properties
+234	0	android/gradlew
+89	0	android/gradlew.bat
+-	-	android/res/drawable-mdpi/icon.png
+21	0	android/res/values/libs.xml
+
+water2027,136900643+water2027@users.noreply.github.com,a720d9a75b6ed4aa470fa233dc14acaa875795a7
+21	21	CMakeLists.txt.user
+8	12	android/AndroidManifest.xml
+5	3	views/HomeView.qml
+
+water2027,136900643+water2027@users.noreply.github.com,b2c1172418f93b584d9cf3ef27f3a120b9a144d0
+3	1	CMakeLists.txt
+3	0	Main.qml
+3	7	components/NoteCard.qml
+2	1	components/NoteList.qml
+5	0	views/NoteDetailView.qml
+
+water2027,136900643+water2027@users.noreply.github.com,5553e2e7a74a9159318ee6c46acbde1f56c8bcee
+8	1	README.md
+
+water2027,136900643+water2027@users.noreply.github.com,c4165a48f9c5e62f5c5857928ec86528aa47d91e
+1	0	Main.qml
+0	28	components/NoteList.qml
+
+water2027,136900643+water2027@users.noreply.github.com,7da55e722fec7c913adebca16424d9b162dab4a0
+37	37	CMakeLists.txt.user
+22	9	Main.qml
+1	1	components/NoteList.qml
+0	7	views/FlightInfoView.qml
+1	7	views/HomeView.qml
+0	7	views/OrdersView.qml
+0	7	views/ProfileView.qml
+
+13711383475,14826781+Jerrylingj@user.noreply.gitee.com,59f061648a3d0bd917c6b4f0bde96ea1cfe05db1
+4	0	CMakeLists.txt
+38	40	CMakeLists.txt.user
+67	7	Main.qml
+85	0	views/FlightInfoView.qml
+19	0	views/HomeView.qml
+19	0	views/OrdersView.qml
+19	0	views/ProfileView.qml
+
+water2027,136900643+water2027@users.noreply.github.com,5a1a5e4a624788ab049464084223761f6ed3eb7b
+water2027,136900643+water2027@users.noreply.github.com,339c8ef86a015db57c657d5859730d3695250fd4
+3	1	.gitignore
+52	1320	CMakeLists.txt.user
+
+water2027,136900643+water2027@users.noreply.github.com,043c12ef072330cd2b65823aaad904c8648c1f8a
+water2027,136900643+water2027@users.noreply.github.com,be31cf400b88377e2dc13465de9881fa4313d0e4
+water2027,136900643+water2027@users.noreply.github.com,7f1b7be00004d9c6e801b843deb62697383b27b9
+4	3	android/AndroidManifest.xml
+4	0	android/res/xml/network_security_config.xml
+
+water2027,136900643+water2027@users.noreply.github.com,654e6957992fcbdc7b0f7ea9eb0451194c07325a
+water2027,136900643+water2027@users.noreply.github.com,c05c21430985feb27de4c819cd41773162db90e9
+3	0	CMakeLists.txt
+0	422	CMakeLists.txt.user.5a05b07
+20	0	android/AndroidManifest.xml
+
+water2027,136900643+water2027@users.noreply.github.com,3eadf03299fd1f6be305fd3b1deae0bc6337ad04
+water2027,136900643+water2027@users.noreply.github.com,b19bc3d39bc865ceaa3eaabc7af1e9fdd6e9c372
+6	2	CMakeLists.txt
+49	0	api/networkhandler.cpp
+41	0	api/networkhandler.h
+68	71	components/NoteList.qml
+2	0	main.cpp
+
+math-zhuxy,235934429@qq.com,33ecbd37226c09be06d954c5d82d989de9c94e80
+1320	50	CMakeLists.txt.user
+422	0	CMakeLists.txt.user.5a05b07
+
+water2027,136900643+water2027@users.noreply.github.com,e69cb523b9e86666ad6c59de21f178d6b6b44008
+water2027,136900643+water2027@users.noreply.github.com,27b30c24ca2be7ad2d82c33f2d60b84e515027e1
+6	0	.qtcreator/project.json
+146	0	.qtcreator/project.json.user
+2	3	CMakeLists.txt
+26	26	CMakeLists.txt.user
+2	2	Main.qml
+0	0	components/{NewList.qml => NoteList.qml}
+
+math-zhuxy,235934429@qq.com,233d3b98793668f272b31a6e8bf6476deda21ede
+3	1	.gitignore
+0	6	.qtcreator/project.json
+0	242	.qtcreator/project.json.user
+
+math-zhuxy,235934429@qq.com,3e556a18ffe7dec386b7ee2388f4237f7ee2581c
+math-zhuxy,235934429@qq.com,4cb89eee590bd2e7d8757da2dc5841be36622f20
+6	0	.qtcreator/project.json
+242	0	.qtcreator/project.json.user
+-	-	figure/login-flight.png
+
+math-zhuxy,149505619+math-zhuxy@users.noreply.github.com,b3ab88c3d2de64013a090b33b27e555782d1ae0a
+1	1	README.md
+
+math-zhuxy,149505619+math-zhuxy@users.noreply.github.com,283c63c1d9fa26f5c468d4ab2c2f0e0dc2e16ae4
+2	1	README.md
+
+water2027,136900643+water2027@users.noreply.github.com,58e42dd89a8403294ec30c11c1a70519e256b112
+water2027,136900643+water2027@users.noreply.github.com,acefa55e671baebd7c47d3b734dd8492414aa1a4
+8	0	README.md
+
+water2027,136900643+water2027@users.noreply.github.com,08f3fc865aa57bceed4fddee98715a895b58f068
+1	0	.gitignore
+45	0	CMakeLists.txt
+422	0	CMakeLists.txt.user
+22	0	Main.qml
+207	0	components/NewList.qml
+110	0	components/NoteCard.qml
+18	0	main.cpp
+
+Jerrylingj,158476194+Jerrylingj@users.noreply.github.com,802fa664de7d9e32d8f9733492256d9c8c4ad64e
+2	0	README.md

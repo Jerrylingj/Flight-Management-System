@@ -87,14 +87,14 @@ public:
     /*** 测试函数 ***/
     /*** flight_info相关 ***/
     bool isFlightInfoEmpty() const; // 判断航班表是否为空
-    void populateSampleFlights();   // 插入测试航班数据
+    // void populateSampleFlights();   // 插入测试航班数据
     // 判断输入航班状态是否合法
     bool validateFlightInput(const QString& flightNumber, const QString& departureCity, const QString& arrivalCity,
                             const QDateTime& departureTime, const QDateTime& arrivalTime,
                             double price, const QString& departureAirport, const QString& arrivalAirport,
                             const QString& airlineCompany, const QDateTime& checkinStartTime,
                             const QDateTime& checkinEndTime,const QString& status);
-    void populateSampleOrders();    // 插入测试订单数据
+    // void populateSampleOrders();    // 插入测试订单数据
     ~DatabaseManager();
 
 private:
