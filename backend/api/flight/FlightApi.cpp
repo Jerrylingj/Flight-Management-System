@@ -52,7 +52,6 @@ QJsonObject getFlight(DatabaseManager* m_db){
     }
 }
 
-
 QJsonObject getFlight(int flightID,DatabaseManager* m_db){
     try{
         FlightInfo flight;
@@ -86,31 +85,26 @@ QJsonObject getFlight(const QHttpServerRequest &request, DatabaseManager* m_db){
     }
 }
 
-// 用于改签：获取和flightId所指向的航班相同出发地和目的地的、出发时间晚于flightId所指向的航班，同时时间距离最近的那一个航班的航班信息，转化为QJsonObject，返还给Controller层
+// 用于改签：获取和flightId所指向的航班相同出发地和目的地的、出发时间晚于flightId所指向的航班，在当天、明天或后天出发的所有航班，转化为QJsonObject，返还给Controller层
 QJsonObject getNextFlight(int flightId, DatabaseManager* m_db){
     QJsonObject response;
 
     if (!m_db) {
         response["success"] = false;
         response["code"] = 500;
-        response["message"] = "获取下一趟航班失败：DatabaseManager 指针为空";
+        response["message"] = "获取后续航班失败：DatabaseManager 指针为空";
         return response;
     }
 
     try {
         QJsonArray flights;
-        FlightInfo flightInfo;
-        m_db->queryNextFlight(flightId, flightInfo);
-
-        if (flightInfo.flightId != 0) {
-            // 找到了下一趟航班，添加到 flights 数组
-            flights.append(flightInfo.toJson());
-        }
+        // 查询符合条件的所有航班
+        m_db->queryNextFlights(flightId, flights); // 注意：需要在DatabaseManager中实现新的queryNextFlights方法
 
         response["success"] = true;
         response["code"] = 200;
         response["data"] = flights;
-        response["message"] = "操作成功";
+        response["message"] = flights.isEmpty() ? "未找到符合条件的航班" : "操作成功";
         return response;
 
     } catch(const std::runtime_error& e){
@@ -121,10 +115,12 @@ QJsonObject getNextFlight(int flightId, DatabaseManager* m_db){
     } catch(const std::exception& e){
         response["success"] = false;
         response["code"] = 500;
-        response["message"] = "获取下一趟航班失败";
+        response["message"] = "获取后续航班失败";
         return response;
     }
 }
+
+
 QJsonObject deleteFlight(const QHttpServerRequest &request, DatabaseManager *m_db) {
     try {
         // 使用 FlightDelDTO 解析请求
@@ -168,6 +164,8 @@ QJsonObject deleteFlight(const QHttpServerRequest &request, DatabaseManager *m_d
         return response;
     }
 }
+
+
 QJsonObject addFlight(const QHttpServerRequest &request, DatabaseManager *m_db) {
     try {
         // 使用 FlightAddDTO 解析请求

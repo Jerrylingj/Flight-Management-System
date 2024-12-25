@@ -524,8 +524,7 @@ bool DatabaseManager::updateFlightInfo(int flightId,
 
 
 
-// 用于改签：获取和flightId所指向的航班相同出发地和目的地的、出发时间晚于flightId所指向的航班，同时时间距离最近的那一个航班
-void DatabaseManager::queryNextFlight(int flightId, FlightInfo & flightInfo){
+void DatabaseManager::queryNextFlights(int flightId, QJsonArray &flights) {
     // 通过 flightId 获取出发城市、到达城市和出发时间
     QString sql = "SELECT departure_city, arrival_city, departure_time FROM flight_info WHERE flight_id = :flightId";
     QSqlQuery query;
@@ -533,52 +532,56 @@ void DatabaseManager::queryNextFlight(int flightId, FlightInfo & flightInfo){
     query.bindValue(":flightId", flightId);
 
     if (!query.exec() || !query.next()) {
-        qDebug() << "无法找到指定的航班:" << query.lastError().text();
-        flightInfo = FlightInfo();
+        qWarning() << "无法找到指定的航班:" << query.lastError().text();
         throw std::runtime_error("无法找到指定的航班");
     }
 
     QString departureCity = query.value("departure_city").toString();
     QString arrivalCity = query.value("arrival_city").toString();
     QDateTime departureTime = query.value("departure_time").toDateTime();
+    QDate baseDate = departureTime.date();
+    QDate startDate = baseDate;        // 当天
+    QDate endDate = baseDate.addDays(2); // 后天
 
-    // 查询下一趟航班
-    QString nextFlightSql = "SELECT * FROM flight_info WHERE departure_city = :departureCity AND arrival_city = :arrivalCity AND departure_time > :departureTime ORDER BY departure_time ASC LIMIT 1";
+    // 查询符合条件的所有航班
+    QString nextFlightSql = R"(
+        SELECT * FROM flight_info
+        WHERE departure_city = :departureCity
+          AND arrival_city = :arrivalCity
+          AND departure_time > :departureTime
+          AND DATE(departure_time) BETWEEN :startDate AND :endDate
+        ORDER BY departure_time ASC
+    )";
     QSqlQuery nextFlightQuery;
     nextFlightQuery.prepare(nextFlightSql);
     nextFlightQuery.bindValue(":departureCity", departureCity);
     nextFlightQuery.bindValue(":arrivalCity", arrivalCity);
     nextFlightQuery.bindValue(":departureTime", departureTime);
+    nextFlightQuery.bindValue(":startDate", startDate.toString("yyyy-MM-dd"));
+    nextFlightQuery.bindValue(":endDate", endDate.toString("yyyy-MM-dd"));
 
     if (!nextFlightQuery.exec()) {
-        qDebug() << "查询错误:" << nextFlightQuery.lastError().text();
-        // 清空 flightInfo
-        flightInfo = FlightInfo();
+        qWarning() << "查询错误:" << nextFlightQuery.lastError().text();
         return;
     }
 
-    if (!nextFlightQuery.next()) {
-        // 没有找到下一趟航班
-        qDebug() << "没有找到下一趟航班";
-        // 清空 flightInfo
-        flightInfo = FlightInfo();
-        return;
+    while (nextFlightQuery.next()) {
+        QJsonObject flightObj;
+        flightObj["flightId"] = nextFlightQuery.value("flight_id").toInt();
+        flightObj["flightNumber"] = nextFlightQuery.value("flight_number").toString();
+        flightObj["departureCity"] = nextFlightQuery.value("departure_city").toString();
+        flightObj["arrivalCity"] = nextFlightQuery.value("arrival_city").toString();
+        flightObj["departureTime"] = nextFlightQuery.value("departure_time").toDateTime().toString("yyyy-MM-dd HH:mm:ss");
+        flightObj["arrivalTime"] = nextFlightQuery.value("arrival_time").toDateTime().toString("yyyy-MM-dd HH:mm:ss");
+        flightObj["departureAirport"] = nextFlightQuery.value("departure_airport").toString();
+        flightObj["arrivalAirport"] = nextFlightQuery.value("arrival_airport").toString();
+        flightObj["checkinStartTime"] = nextFlightQuery.value("checkin_start_time").toDateTime().toString("yyyy-MM-dd HH:mm:ss");
+        flightObj["checkinEndTime"] = nextFlightQuery.value("checkin_end_time").toDateTime().toString("yyyy-MM-dd HH:mm:ss");
+        flightObj["price"] = nextFlightQuery.value("price").toDouble();
+        flightObj["airlineCompany"] = nextFlightQuery.value("airline_company").toString();
+        flightObj["status"] = nextFlightQuery.value("status").toString();
+        flights.append(flightObj);
     }
-
-    // 将查询结果填充到 flightInfo
-    flightInfo.flightId = nextFlightQuery.value("flight_id").toInt();
-    flightInfo.flightNumber = nextFlightQuery.value("flight_number").toString();
-    flightInfo.departureCity = nextFlightQuery.value("departure_city").toString();
-    flightInfo.arrivalCity = nextFlightQuery.value("arrival_city").toString();
-    flightInfo.departureTime = nextFlightQuery.value("departure_time").toDateTime();
-    flightInfo.arrivalTime = nextFlightQuery.value("arrival_time").toDateTime();
-    flightInfo.departureAirport = nextFlightQuery.value("departure_airport").toString();
-    flightInfo.arrivalAirport = nextFlightQuery.value("arrival_airport").toString();
-    flightInfo.checkinStartTime = nextFlightQuery.value("checkin_start_time").toDateTime();
-    flightInfo.checkinEndTime = nextFlightQuery.value("checkin_end_time").toDateTime();
-    flightInfo.price = nextFlightQuery.value("price").toDouble();
-    flightInfo.airlineCompany = nextFlightQuery.value("airline_company").toString();
-    flightInfo.status = nextFlightQuery.value("status").toString();
 }
 /*** order ***/
 
