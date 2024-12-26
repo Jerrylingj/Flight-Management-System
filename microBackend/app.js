@@ -34,10 +34,21 @@ transporter.verify((error, success) => {
  */
 function sendEmail(toEmail, code) {
 	const mailOptions = {
-		from: '"water" <wateringtop@qq.com>', // Sender address
+		from: '"altair" <wateringtop@qq.com>', // Sender address
 		to: toEmail, // List of recipients
 		subject: 'Your Verification Code', // Subject line
-		text: `Your verification code is: ${code}`, // Plain text body
+		html: `
+		<p>Dear User,</p>
+		<p>Thank you for registering with AltAir! We're excited to have you onboard.</p>
+		<p>To complete your registration, please verify your email address by entering the code below:</p>
+		<p><strong>Verification Code:</strong> ${code}</p>
+		<p>Once you've entered this code, your account will be fully activated, and you can enjoy all the features our platform offers, including flight management, booking, and more!</p>
+		<p>If you did not initiate this registration, please ignore this email. If you have any questions or need assistance, feel free to reach out to our support team by visiting our website at <a href="https://github.com/Terminal-Terrace">https://github.com/Terminal-Terrace</a>.</p>
+		<p>About AltAir:</p>
+		<p>At AltAir, we specialize in providing seamless and efficient flight management solutions for businesses and individuals alike. Our mission is to simplify travel booking and provide the best user experience possible. Learn more about our services at <a href="https://github.com/Jerrylingj/Flight-Management-System-Client">https://github.com/Jerrylingj/Flight-Management-System-Client</a>.</p>
+		<p>Thank you for choosing AltAir!</p>
+		<p>Best regards,<br/>The Terminal Terrace Team</p>
+	  `,
 	};
 
 	return new Promise((resolve, reject) => {
