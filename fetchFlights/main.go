@@ -82,7 +82,8 @@ func main() {
     }
     for _, flight := range flights {
 		if flight.Price == 0.00 {
-			flight.Price = 700.00
+			// 分配从500到1000的随机价格
+			flight.Price = 500 + 500*float64(time.Now().Nanosecond()%1000)/1000
 		}
 		_, err := db.Exec("INSERT INTO flight_info (flight_number, departure_city, arrival_city, departure_time, arrival_time, price, departure_airport, arrival_airport, airline_company, checkin_start_time, checkin_end_time, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
 			flight.FlightNumber,
