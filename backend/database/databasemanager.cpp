@@ -869,6 +869,7 @@ QList<QJsonObject> DatabaseManager::queryFavorites(int userId) {
     QSqlQuery query;
     query.prepare(R"(
         SELECT f.flight_id, f.flight_number, f.departure_time, f.arrival_time,
+               f.departure_city, f.arrival_city,
                f.departure_airport, f.arrival_airport, f.price,
                f.airline_company, f.status
         FROM flight_favorites AS fav
@@ -884,6 +885,8 @@ QList<QJsonObject> DatabaseManager::queryFavorites(int userId) {
             flight["flightNumber"] = query.value("flight_number").toString();
             flight["departureTime"] = query.value("departure_time").toString();
             flight["arrivalTime"] = query.value("arrival_time").toString();
+            flight["departureCity"] = query.value("departure_city").toString();
+            flight["arrivalCity"] = query.value("arrival_city").toString();
             flight["departureAirport"] = query.value("departure_airport").toString();
             flight["arrivalAirport"] = query.value("arrival_airport").toString();
             flight["price"] = query.value("price").toDouble();
