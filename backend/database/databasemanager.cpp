@@ -291,7 +291,7 @@ bool DatabaseManager::insertFlight(const QString& flightNumber, const QString& d
                              departureTime, arrivalTime, price,
                              departureAirport, arrivalAirport, airlineCompany,
                              checkinStartTime, checkinEndTime, status)) {
-        qDebug() << "Flight input validation failed.";
+        qDebug() << "航班信息有误！！";
         return false;
     }
 
@@ -501,7 +501,7 @@ bool DatabaseManager::updateFlightInfo(int flightId,
                              departureTime, arrivalTime, price,
                              departureAirport, arrivalAirport, airlineCompany,
                              checkinStartTime, checkinEndTime, status)) {
-        qDebug() << "Flight input validation failed.";
+        qDebug() << "航班信息有误！！";
         return false;
     }
 
@@ -616,7 +616,6 @@ void DatabaseManager::queryNextFlights(int flightId, QJsonArray &flights) {
 /*** order ***/
 
 // 查询一个用户所有订单信息
-
 bool DatabaseManager::orderOfFlightIdExists(int flightId) {
     QSqlQuery query;
     query.prepare("SELECT COUNT(*) FROM order_info WHERE flight_id = :flightId");
@@ -916,184 +915,6 @@ bool DatabaseManager::isFlightInfoEmpty() const {
     qDebug() << "查询 flight_info 表失败：" << query.lastError().text();
     return true; // 如果查询失败，默认认为为空，避免插入失败
 }
-// // 插入样例航班
-// void DatabaseManager::populateSampleFlights() {
-//     // // 清空表格
-//     // QSqlQuery queryClear;
-//     // if (!queryClear.exec("DELETE FROM flight_info")) {
-//     //     qDebug() << "Failed to clear flight_info table:" << queryClear.lastError();
-//     //     return;
-//     // }
-//     // qDebug() << "flight_info 表已清空。";
-
-//     if (!isFlightInfoEmpty()) return; // 如果已有航班信息,就返回
-//     qDebug() << "航班信息表不为空,插入数据！";
-//     // 开始事务
-//     if (!QSqlDatabase::database().transaction()) {
-//         qDebug() << "Failed to start transaction";
-//         return;
-//     }
-
-//     // 所有订单
-//     // if(!query.exec("CREATE TABLE IF NOT EXISTS order_info ("
-//     //                 "id INT AUTO_INCREMENT PRIMARY KEY, "               // 订单ID
-//     //                 "user_id INT NOT NULL, "                            // 用户ID
-//     //                 "flight_id INT NOT NULL, "                          // 航班ID
-//     //                 "order_time DATETIME DEFAULT CURRENT_TIMESTAMP, "   // 订单创建时间
-//     //                 "FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE, "
-//     //                 "FOREIGN KEY (flight_id) REFERENCES flight_info(flight_id) ON DELETE CASCADE)")){
-//     //     qDebug() << "create order_info error: " << query.lastError().text();
-//     // }
-
-//     QList<QVariantList> flights = {
-//         {"MU100", "北京", "上海", QDateTime::fromString("2024-12-08 07:30:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-12-08 09:00:00", "yyyy-MM-dd HH:mm:ss"), 1500.00, "北京首都国际机场", "上海虹桥国际机场", QDateTime::fromString("2024-12-08 06:00:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-12-08 07:00:00", "yyyy-MM-dd HH:mm:ss"), "东方航空", "On Time"},
-//         {"MU200", "北京", "广州", QDateTime::fromString("2024-12-08 10:00:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-12-08 12:00:00", "yyyy-MM-dd HH:mm:ss"), 1600.00, "北京首都国际机场", "广州白云国际机场", QDateTime::fromString("2024-12-08 08:30:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-12-08 09:30:00", "yyyy-MM-dd HH:mm:ss"), "东方航空", "On Time"},
-//         {"CA300", "上海", "成都", QDateTime::fromString("2024-12-08 08:45:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-12-08 11:30:00", "yyyy-MM-dd HH:mm:ss"), 1800.00, "上海浦东国际机场", "成都双流国际机场", QDateTime::fromString("2024-12-08 07:00:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-12-08 08:00:00", "yyyy-MM-dd HH:mm:ss"), "中国国际航空", "Delayed"},
-//         {"MU400", "南京", "青岛", QDateTime::fromString("2024-12-08 09:00:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-12-08 11:30:00", "yyyy-MM-dd HH:mm:ss"), 1700.00, "南京禄口国际机场", "青岛流亭国际机场", QDateTime::fromString("2024-12-08 07:30:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-12-08 08:30:00", "yyyy-MM-dd HH:mm:ss"), "东方航空", "On Time"},
-//         {"ZH500", "深圳", "杭州", QDateTime::fromString("2024-12-08 10:30:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-12-08 12:00:00", "yyyy-MM-dd HH:mm:ss"), 1500.00, "深圳宝安国际机场", "杭州萧山国际机场", QDateTime::fromString("2024-12-08 09:00:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-12-08 10:00:00", "yyyy-MM-dd HH:mm:ss"), "春秋航空", "On Time"},
-//         {"CA600", "上海", "重庆", QDateTime::fromString("2024-12-08 12:00:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-12-08 14:00:00", "yyyy-MM-dd HH:mm:ss"), 1900.00, "上海浦东国际机场", "重庆江北国际机场", QDateTime::fromString("2024-12-08 10:30:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-12-08 11:30:00", "yyyy-MM-dd HH:mm:ss"), "中国国际航空", "On Time"},
-//         {"MU700", "北京", "深圳", QDateTime::fromString("2024-12-08 14:00:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-12-08 16:00:00", "yyyy-MM-dd HH:mm:ss"), 2000.00, "北京首都国际机场", "深圳宝安国际机场", QDateTime::fromString("2024-12-08 12:30:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-12-08 13:30:00", "yyyy-MM-dd HH:mm:ss"), "东方航空", "Delayed"},
-//         {"ZH800", "广州", "上海", QDateTime::fromString("2024-12-08 15:00:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-12-08 17:00:00", "yyyy-MM-dd HH:mm:ss"), 1800.00, "广州白云国际机场", "上海虹桥国际机场", QDateTime::fromString("2024-12-08 13:30:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-12-08 14:30:00", "yyyy-MM-dd HH:mm:ss"), "春秋航空", "On Time"},
-//         {"CA900", "成都", "西安", QDateTime::fromString("2024-12-08 16:00:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-12-08 17:30:00", "yyyy-MM-dd HH:mm:ss"), 1700.00, "成都双流国际机场", "西安咸阳国际机场", QDateTime::fromString("2024-12-08 14:30:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-12-08 15:30:00", "yyyy-MM-dd HH:mm:ss"), "中国国际航空", "On Time"},
-//         {"MU1000", "广州", "杭州", QDateTime::fromString("2024-12-08 17:00:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-12-08 19:00:00", "yyyy-MM-dd HH:mm:ss"), 1600.00, "广州白云国际机场", "杭州萧山国际机场", QDateTime::fromString("2024-12-08 15:30:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-12-08 16:30:00", "yyyy-MM-dd HH:mm:ss"), "东方航空", "On Time"},
-//         {"ZH1100", "上海", "南京", QDateTime::fromString("2024-12-08 18:00:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-12-08 19:00:00", "yyyy-MM-dd HH:mm:ss"), 1500.00, "上海虹桥国际机场", "南京禄口国际机场", QDateTime::fromString("2024-12-08 16:30:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-12-08 17:30:00", "yyyy-MM-dd HH:mm:ss"), "春秋航空", "Delayed"},
-//         {"MU1200", "北京", "杭州", QDateTime::fromString("2024-12-08 19:00:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-12-08 21:00:00", "yyyy-MM-dd HH:mm:ss"), 1700.00, "北京首都国际机场", "杭州萧山国际机场", QDateTime::fromString("2024-12-08 17:30:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-12-08 18:30:00", "yyyy-MM-dd HH:mm:ss"), "东方航空", "On Time"},
-//         {"ZH1300", "上海", "深圳", QDateTime::fromString("2024-12-08 20:00:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-12-08 22:00:00", "yyyy-MM-dd HH:mm:ss"), 1900.00, "上海浦东国际机场", "深圳宝安国际机场", QDateTime::fromString("2024-12-08 18:30:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-12-08 19:30:00", "yyyy-MM-dd HH:mm:ss"), "中国国际航空", "On Time"},
-//         {"MU1400", "北京", "武汉", QDateTime::fromString("2024-12-08 21:00:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-12-08 23:00:00", "yyyy-MM-dd HH:mm:ss"), 1600.00, "北京首都国际机场", "武汉天河国际机场", QDateTime::fromString("2024-12-08 19:00:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-12-08 20:00:00", "yyyy-MM-dd HH:mm:ss"), "东方航空", "On Time"},
-//         {"CA1500", "上海", "重庆", QDateTime::fromString("2024-12-08 22:00:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-12-08 23:30:00", "yyyy-MM-dd HH:mm:ss"), 1800.00, "上海浦东国际机场", "重庆江北国际机场", QDateTime::fromString("2024-12-08 20:30:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-12-08 21:30:00", "yyyy-MM-dd HH:mm:ss"), "中国国际航空", "Delayed"},
-//         {"MU1600", "广州", "上海", QDateTime::fromString("2024-12-09 06:00:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-12-09 08:00:00", "yyyy-MM-dd HH:mm:ss"), 1700.00, "广州白云国际机场", "上海虹桥国际机场", QDateTime::fromString("2024-12-09 04:30:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-12-09 05:30:00", "yyyy-MM-dd HH:mm:ss"), "春秋航空", "On Time"},
-//         {"ZH1700", "成都", "南京", QDateTime::fromString("2024-12-09 07:00:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-12-09 08:30:00", "yyyy-MM-dd HH:mm:ss"), 1500.00, "成都双流国际机场", "南京禄口国际机场", QDateTime::fromString("2024-12-09 05:30:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-12-09 06:30:00", "yyyy-MM-dd HH:mm:ss"), "春秋航空", "On Time"},
-//         {"MU1800", "武汉", "青岛", QDateTime::fromString("2024-12-09 08:00:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-12-09 10:30:00", "yyyy-MM-dd HH:mm:ss"), 1600.00, "武汉天河国际机场", "青岛流亭国际机场", QDateTime::fromString("2024-12-09 06:30:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-12-09 07:30:00", "yyyy-MM-dd HH:mm:ss"), "东方航空", "Delayed"},
-//         {"ZH1900", "上海", "西安", QDateTime::fromString("2024-12-09 09:00:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-12-09 11:00:00", "yyyy-MM-dd HH:mm:ss"), 1700.00, "上海浦东国际机场", "西安咸阳国际机场", QDateTime::fromString("2024-12-09 07:30:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-12-09 08:30:00", "yyyy-MM-dd HH:mm:ss"), "春秋航空", "On Time"},
-//         {"CA2000", "北京", "深圳", QDateTime::fromString("2024-12-09 10:00:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-12-09 12:00:00", "yyyy-MM-dd HH:mm:ss"), 1800.00, "北京首都国际机场", "深圳宝安国际机场", QDateTime::fromString("2024-12-09 08:30:00", "yyyy-MM-dd HH:mm:ss"), QDateTime::fromString("2024-12-09 09:30:00", "yyyy-MM-dd HH:mm:ss"), "中国国际航空", "Delayed"}
-//     };
-
-//     // 准备插入语句
-//     QSqlQuery queryInsert;
-//     const QString insertStmt = "INSERT INTO flight_info (flight_number, departure_city, arrival_city, departure_time, arrival_time, price, departure_airport, arrival_airport, checkin_start_time, checkin_end_time, airline_company, status) "
-//                                "VALUES (:flight_number, :departure_city, :arrival_city, :departure_time, :arrival_time, :price, :departure_airport, :arrival_airport, :checkin_start_time, :checkin_end_time, :airline_company, :status)";
-//     if (!queryInsert.prepare(insertStmt)) {
-//         qDebug() << "Failed to prepare insert statement:" << queryInsert.lastError();
-//         QSqlDatabase::database().rollback();
-//         return;
-//     }
-
-//     for (const QVariant &flight : flights) {
-//         QVariantList flightList = flight.toList();
-//         if (flightList.size() != 12) {
-//             qDebug() << "Invalid flight data size:" << flightList;
-//             continue;
-//         }
-
-//         // 绑定参数
-//         queryInsert.bindValue(":flight_number", flightList.at(0).toString());
-//         queryInsert.bindValue(":departure_city", flightList.at(1).toString());
-//         queryInsert.bindValue(":arrival_city", flightList.at(2).toString());
-//         queryInsert.bindValue(":departure_time", flightList.at(3).toDateTime());
-//         queryInsert.bindValue(":arrival_time", flightList.at(4).toDateTime());
-//         queryInsert.bindValue(":price", flightList.at(5).toDouble());
-//         queryInsert.bindValue(":departure_airport", flightList.at(6).toString());
-//         queryInsert.bindValue(":arrival_airport", flightList.at(7).toString());
-//         queryInsert.bindValue(":checkin_start_time", flightList.at(8).toDateTime());
-//         queryInsert.bindValue(":checkin_end_time", flightList.at(9).toDateTime());
-//         queryInsert.bindValue(":airline_company", flightList.at(10).toString());
-//         queryInsert.bindValue(":status", flightList.at(11).toString());
-
-//         // 执行插入
-//         if (!queryInsert.exec()) {
-//             qDebug() << "Failed to insert flight:" << flightList.at(0).toString() << " Error:" << queryInsert.lastError();
-//             QSqlDatabase::database().rollback();
-//             return;
-//         }
-//         // 调用 finish() 确保资源被正确释放
-//         queryInsert.finish();
-//     }
-
-//     // 提交事务
-//     if (!QSqlDatabase::database().commit()) {
-//         qDebug() << "Failed to commit transaction";
-//         return;
-//     }
-
-//     qDebug() << "Sample flights population completed.";
-// }
-
-// void DatabaseManager::populateSampleOrders(){
-//     QSqlQuery queryClear;
-//     // 如果需要清空表，可以取消注释以下代码
-//     /*
-//     if (!queryClear.exec("DELETE FROM order_info")) {
-//         qDebug() << "Failed to clear order_info table:" << queryClear.lastError();
-//         return;
-//     }
-//     qDebug() << "order_info 表已清空。";
-//     */
-
-//     // 开始事务
-//     if (!QSqlDatabase::database().transaction()) {
-//         qDebug() << "Failed to start transaction";
-//         return;
-//     }
-
-//     // 准备要插入的样本数据
-//     // 每个 QVariantList 包含：user_id, flight_id, total_change_count, payment_status
-//     QList<QVariantList> orders = {
-//         {1, 1, 0, true},
-//         {1, 2, 1, false},
-//         {1, 3, 2, true},
-//         {1, 4, 0, true},
-//         {1, 5, 1, false},
-//         {1, 6, 3, true},
-//         {1, 7, 1, true},
-//         {1, 8, 2, false},
-//         {1, 9, 0, true},
-//         {1, 10, 1, true}
-//     };
-
-//     // 准备插入语句
-//     QSqlQuery queryInsert;
-//     const QString insertStmt = "INSERT INTO order_info (user_id, flight_id, total_change_count, payment_status) "
-//                                "VALUES (:user_id, :flight_id, :total_change_count, :payment_status)";
-//     if (!queryInsert.prepare(insertStmt)) {
-//         qDebug() << "Failed to prepare insert statement:" << queryInsert.lastError();
-//         QSqlDatabase::database().rollback();
-//         return;
-//     }
-
-//     for (const QVariant &order : orders) {
-//         QVariantList orderList = order.toList();
-//         if (orderList.size() != 4) {
-//             qDebug() << "Invalid order data size:" << orderList;
-//             continue;
-//         }
-
-//         // 绑定参数
-//         queryInsert.bindValue(":user_id", orderList.at(0).toInt());
-//         queryInsert.bindValue(":flight_id", orderList.at(1).toInt());
-//         queryInsert.bindValue(":total_change_count", orderList.at(2).toInt());
-//         queryInsert.bindValue(":payment_status", orderList.at(3).toBool());
-
-//         // 执行插入
-//         if (!queryInsert.exec()) {
-//             qDebug() << "Failed to insert order for user_id:" << orderList.at(0).toInt()
-//             << " flight_id:" << orderList.at(1).toInt()
-//             << " Error:" << queryInsert.lastError();
-//             QSqlDatabase::database().rollback();
-//             return;
-//         }
-//         // 重置查询以准备下一次绑定
-//         queryInsert.finish();
-//         queryInsert.prepare(insertStmt);
-//     }
-
-//     // 提交事务
-//     if (!QSqlDatabase::database().commit()) {
-//         qDebug() << "Failed to commit transaction:" << QSqlDatabase::database().lastError();
-//         return;
-//     }
-
-//     qDebug() << "已成功生成模拟的订单数据.";
-// }
 
 bool DatabaseManager::validateFlightInput(const QString& flightNumber,
                                           const QString& departureCity,
