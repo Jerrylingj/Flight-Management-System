@@ -45,13 +45,16 @@
 */
 
 // 获取当前用户的所有订单信息
-QJsonObject getOrder(DatabaseManager* m_db, int userId){
-    if (!m_db) {
+QJsonObject getOrder(DatabaseManager *m_db, int userId)
+{
+    if (!m_db)
+    {
         auto response = fail<QJsonObject>("[错误] getORder 函数异常: DatabaseManager 指针为空");
         return response->toJson();
     }
 
-    try{
+    try
+    {
         QJsonArray orders;
         m_db->queryOrder(orders, userId);
         QJsonObject resp;
@@ -59,7 +62,8 @@ QJsonObject getOrder(DatabaseManager* m_db, int userId){
         resp["data"] = orders;
         return resp;
     }
-    catch(const std::exception& e){
+    catch (const std::exception &e)
+    {
         qDebug() << "[错误] getOrder 函数异常: " << e.what();
         auto response = fail<QJsonObject>(QString::fromStdString(e.what()));
         return response->toJson();
@@ -67,16 +71,19 @@ QJsonObject getOrder(DatabaseManager* m_db, int userId){
 }
 
 // 创建订单函数
-QJsonObject createOrder(int userId, int flightId, DatabaseManager* m_db) {
+QJsonObject createOrder(int userId, int flightId, DatabaseManager *m_db)
+{
     QJsonObject response;
 
-    if (!m_db) {
+    if (!m_db)
+    {
         response["success"] = false;
         response["message"] = "[错误] createOrder 函数异常: DatabaseManager 指针为空";
         return response;
     }
 
-    try {
+    try
+    {
         // 调用 DatabaseManager 的 insertOrder 方法
         m_db->insertOrder(userId, flightId);
 
@@ -85,7 +92,9 @@ QJsonObject createOrder(int userId, int flightId, DatabaseManager* m_db) {
         response["message"] = "Order created successfully";
         response["user_id"] = userId;
         response["flight_id"] = flightId;
-    } catch (const std::exception &e) {
+    }
+    catch (const std::exception &e)
+    {
         // 捕获异常并返回错误信息
         response["success"] = false;
         response["message"] = QString("[错误] createOrder 函数异常: %1").arg(e.what());
@@ -94,19 +103,21 @@ QJsonObject createOrder(int userId, int flightId, DatabaseManager* m_db) {
     return response;
 }
 
-
 // 支付功能
-QJsonObject payOrder(int orderId, DatabaseManager* m_db) {
+QJsonObject payOrder(int orderId, DatabaseManager *m_db)
+{
     QJsonObject response;
 
-    if (!m_db) {
+    if (!m_db)
+    {
         response["success"] = false;
         response["code"] = 500;
         response["message"] = "支付失败：DatabaseManager 指针为空";
         return response;
     }
 
-    try {
+    try
+    {
         // 根据 orderId 获取 flight_id 和 user_id
         int flightId;
         int userId;
@@ -121,7 +132,7 @@ QJsonObject payOrder(int orderId, DatabaseManager* m_db) {
         m_db->putUser(userId, -price); // 扣除金额
 
         // 更新支付状态
-        m_db->updatePaymentStatus(orderId, true);  // 设置支付状态为已支付
+        m_db->updatePaymentStatus(orderId, true); // 设置支付状态为已支付
 
         response["success"] = true;
         response["code"] = 200;
@@ -129,19 +140,22 @@ QJsonObject payOrder(int orderId, DatabaseManager* m_db) {
         response["message"] = "操作成功";
         return response;
     }
-    catch (const std::invalid_argument& e) {
+    catch (const std::invalid_argument &e)
+    {
         response["success"] = false;
         response["code"] = 400;
         response["message"] = QString::fromStdString(e.what());
         return response;
     }
-    catch (const std::runtime_error& e) {
+    catch (const std::runtime_error &e)
+    {
         response["success"] = false;
         response["code"] = 500;
         response["message"] = QString::fromStdString(e.what());
         return response;
     }
-    catch (const std::exception& e) {
+    catch (const std::exception &e)
+    {
         response["success"] = false;
         response["code"] = 500;
         response["message"] = "支付失败";
@@ -149,19 +163,21 @@ QJsonObject payOrder(int orderId, DatabaseManager* m_db) {
     }
 }
 
-
 // 退签功能
-QJsonObject unpayOrder(int orderId, DatabaseManager* m_db) {
+QJsonObject unpayOrder(int orderId, DatabaseManager *m_db)
+{
     QJsonObject response;
 
-    if (!m_db) {
+    if (!m_db)
+    {
         response["success"] = false;
         response["code"] = 500;
         response["message"] = "退签失败：DatabaseManager 指针为空";
         return response;
     }
 
-    try {
+    try
+    {
         // 根据 orderId 获取 flight_id 和 user_id
         int flightId;
         int userId;
@@ -176,7 +192,7 @@ QJsonObject unpayOrder(int orderId, DatabaseManager* m_db) {
         m_db->putUser(userId, price); // 扣除金额
 
         // 更新支付状态
-        m_db->updatePaymentStatus(orderId, false);  // 设置支付状态为已支付
+        m_db->updatePaymentStatus(orderId, false); // 设置支付状态为已支付
 
         response["success"] = true;
         response["code"] = 200;
@@ -184,19 +200,22 @@ QJsonObject unpayOrder(int orderId, DatabaseManager* m_db) {
         response["message"] = "操作成功";
         return response;
     }
-    catch (const std::invalid_argument& e) {
+    catch (const std::invalid_argument &e)
+    {
         response["success"] = false;
         response["code"] = 400;
         response["message"] = QString::fromStdString(e.what());
         return response;
     }
-    catch (const std::runtime_error& e) {
+    catch (const std::runtime_error &e)
+    {
         response["success"] = false;
         response["code"] = 500;
         response["message"] = QString::fromStdString(e.what());
         return response;
     }
-    catch (const std::exception& e) {
+    catch (const std::exception &e)
+    {
         response["success"] = false;
         response["code"] = 500;
         response["message"] = "退签失败";
@@ -204,19 +223,30 @@ QJsonObject unpayOrder(int orderId, DatabaseManager* m_db) {
     }
 }
 
-
 // 改签功能
-QJsonObject rebookOrder(int orderId, int flightId, DatabaseManager* m_db) {
+QJsonObject rebookOrder(int orderId, int flightId, DatabaseManager *m_db)
+{
     QJsonObject response;
 
-    if (!m_db) {
+    if (!m_db)
+    {
         response["success"] = false;
         response["code"] = 500;
         response["message"] = "改签失败：DatabaseManager 指针为空";
         return response;
     }
 
-    try {
+    try
+    {
+        // 检查是否存在对应的 flightId
+        if (m_db->orderOfFlightIdExists(flightId))
+        {
+            response["success"] = false;
+            response["code"] = 400;
+            response["message"] = "改签失败：您已经预定过这个航班";
+            return response;
+        }
+
         // 更新订单的 flight_id
         m_db->updateFlightId(orderId, flightId);
 
@@ -226,19 +256,22 @@ QJsonObject rebookOrder(int orderId, int flightId, DatabaseManager* m_db) {
         response["message"] = "操作成功";
         return response;
     }
-    catch (const std::invalid_argument& e) {
+    catch (const std::invalid_argument &e)
+    {
         response["success"] = false;
         response["code"] = 400;
         response["message"] = QString::fromStdString(e.what());
         return response;
     }
-    catch (const std::runtime_error& e) {
+    catch (const std::runtime_error &e)
+    {
         response["success"] = false;
         response["code"] = 500;
         response["message"] = QString::fromStdString(e.what());
         return response;
     }
-    catch (const std::exception& e) {
+    catch (const std::exception &e)
+    {
         response["success"] = false;
         response["code"] = 500;
         response["message"] = "改签失败";
@@ -246,20 +279,21 @@ QJsonObject rebookOrder(int orderId, int flightId, DatabaseManager* m_db) {
     }
 }
 
-
-
 // 退签功能
-QJsonObject deleteOrder(int orderId, DatabaseManager* m_db) {
+QJsonObject deleteOrder(int orderId, DatabaseManager *m_db)
+{
     QJsonObject response;
 
-    if (!m_db) {
+    if (!m_db)
+    {
         response["success"] = false;
         response["code"] = 500;
         response["message"] = "取消支付失败：DatabaseManager 指针为空";
         return response;
     }
 
-    try {
+    try
+    {
         // 调用 DatabaseManager 的 deleteOrder 函数
         m_db->deleteOrder(orderId);
 
@@ -269,23 +303,25 @@ QJsonObject deleteOrder(int orderId, DatabaseManager* m_db) {
         response["message"] = "操作成功";
         return response;
     }
-    catch (const std::invalid_argument& e) {
+    catch (const std::invalid_argument &e)
+    {
         response["success"] = false;
         response["code"] = 400;
         response["message"] = QString::fromStdString(e.what());
         return response;
     }
-    catch (const std::runtime_error& e) {
+    catch (const std::runtime_error &e)
+    {
         response["success"] = false;
         response["code"] = 500;
         response["message"] = QString::fromStdString(e.what());
         return response;
     }
-    catch (const std::exception& e) {
+    catch (const std::exception &e)
+    {
         response["success"] = false;
         response["code"] = 500;
         response["message"] = "取消支付失败";
         return response;
     }
 }
-

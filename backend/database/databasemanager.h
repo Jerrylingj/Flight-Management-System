@@ -70,6 +70,7 @@ public:
     /*** orders ***/
 
     // void queryOrder(int orderId, OrderInfo& order);
+    bool orderOfFlightIdExists(int flightId);
     void queryOrder(QJsonArray& orders, int userId);
     void insertOrder(int userId, int flightId);
     void deleteOrder(int orderId);

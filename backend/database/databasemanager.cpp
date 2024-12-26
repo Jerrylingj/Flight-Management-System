@@ -616,6 +616,25 @@ void DatabaseManager::queryNextFlights(int flightId, QJsonArray &flights) {
 /*** order ***/
 
 // 查询一个用户所有订单信息
+
+bool DatabaseManager::orderOfFlightIdExists(int flightId) {
+    QSqlQuery query;
+    query.prepare("SELECT COUNT(*) FROM order_info WHERE flight_id = :flightId");
+    query.bindValue(":flightId", flightId);
+
+    if (!query.exec()) {
+        qWarning() << "Database query failed:" << query.lastError();
+        return false;
+    }
+
+    if (query.next()) {
+        int count = query.value(0).toInt();
+        return count > 0;
+    }
+
+    return false;
+}
+
 void DatabaseManager::queryOrder(QJsonArray &orders, int userId) {
     QString sql = R"(
         SELECT
