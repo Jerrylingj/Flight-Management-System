@@ -47,6 +47,9 @@ public:
                             { return updateUserInfo(request, m_db); });
         m_httpServer->route("/api/user", QHttpServerRequest::Method::Delete, [this](const QHttpServerRequest &request)
                             { return delUser(request, m_db); });
+        m_httpServer->route("/api/user/auth", QHttpServerRequest::Method::Post, [this](const QHttpServerRequest &request){
+            return isAuth(request);
+        });
         // 登录
         m_httpServer->route("/api/login", QHttpServerRequest::Method::Post, [this](const QHttpServerRequest &request)
                             { return login(request, m_db); });

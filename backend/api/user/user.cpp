@@ -59,3 +59,25 @@ QJsonObject delUser(const QHttpServerRequest &request, DatabaseManager* m_db){
         return resp->toJson();
     }
 }
+
+QJsonObject isAuth(const QHttpServerRequest &request){
+    try{
+        QByteArray body = request.body();
+        QJsonDocument jsonDoc = QJsonDocument::fromJson(body);
+        if(jsonDoc.isNull()||!jsonDoc.isObject()){
+            throw std::invalid_argument("无效的body");
+        }
+        QJsonObject obj = jsonDoc.object();
+        if(!obj.contains("authCode")){
+            throw std::invalid_argument("没有authCode");
+        }
+        if(obj.value("authCode").toString() != "123"){
+            throw std::invalid_argument("不是管理员");
+        }
+        auto resp = success(true);
+        return resp->toJson();
+    }catch(const std::exception& e){
+        auto resp = fail<QJsonObject>(e.what());
+        return resp->toJson();
+    }
+}

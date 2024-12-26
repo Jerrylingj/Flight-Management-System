@@ -11,4 +11,6 @@ QJsonObject updateUserInfo(const QHttpServerRequest &request, DatabaseManager* m
 
 QJsonObject delUser(const QHttpServerRequest &request, DatabaseManager* m_db);
 
+QJsonObject isAuth(const QHttpServerRequest &request);
+
 #endif // USER_H
