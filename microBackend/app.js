@@ -1,4 +1,5 @@
 const express = require('express');
+const fs = require('fs')
 const nodemailer = require('nodemailer');
 
 const app = express();
@@ -6,25 +7,37 @@ const PORT = 3000; // 运行的端口
 
 app.use(express.json());
 
-// Configure the transporter for Nodemailer
-const transporter = nodemailer.createTransport({
-	host: 'smtp.qq.com', // QQ SMTP server
-	port: 465,
-	secure: true,
-	auth: {
-		user: 'wateringtop@qq.com', // qq邮箱
-		pass: 'veezrihtkxmkbjae', // 类似密码的东西
-	},
-});
+let transporter
 
-// Verify the transporter configuration
-transporter.verify((error, success) => {
-	if (error) {
-		console.error('Error configuring transporter:', error);
-	} else {
-		console.log('Server is ready to send emails');
+fs.readFile('smtp.json', 'utf8', (err, data) => {
+	console.log('Reading SMTP configuration...');
+	if (err) {
+		console.error('Error reading SMTP configuration:', err);
+		return;
 	}
-});
+
+	const { host, port, secure, user, pass } = JSON.parse(data);
+
+	// Configure the transporter for Nodemailer
+	transporter = nodemailer.createTransport({
+		host: host,
+		port: port,
+		secure: secure,
+		auth: {
+			user: user,
+			pass: pass,
+		},
+	});
+
+	// Verify the transporter configuration
+	transporter.verify((error, success) => {
+		if (error) {
+			console.error('Error configuring transporter:', error);
+		} else {
+			console.log('Server is ready to send emails');
+		}
+	});
+})
 
 /**
  * Function to send an email with the provided code
