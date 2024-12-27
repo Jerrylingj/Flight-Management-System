@@ -7,6 +7,8 @@ CMakeLists.txt.user.*
 
 database_config.json
 
+result.json
+
 node_modules
 
 smtp.json
