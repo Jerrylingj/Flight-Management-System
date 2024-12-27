@@ -224,7 +224,7 @@ QJsonObject unpayOrder(int orderId, DatabaseManager *m_db)
 }
 
 // 改签功能
-QJsonObject rebookOrder(int orderId, int flightId, DatabaseManager *m_db)
+QJsonObject rebookOrder(int orderId, int newFlightId, DatabaseManager *m_db)
 {
     QJsonObject response;
 
@@ -238,17 +238,27 @@ QJsonObject rebookOrder(int orderId, int flightId, DatabaseManager *m_db)
 
     try
     {
-        // 检查是否存在对应的 flightId
-        if (m_db->orderOfFlightIdExists(flightId))
-        {
-            response["success"] = false;
-            response["code"] = 400;
-            response["message"] = "改签失败：您已经预定过这个航班";
-            return response;
-        }
+        // 获取当前订单的 flight_id 和 user_id
+        int currentFlightId;
+        int userId;
+        m_db->getOrderDetails(orderId, currentFlightId, userId);
+
+        // 获取当前航班的价格
+        FlightInfo currentFlightInfo;
+        m_db->queryFlight(currentFlightId, currentFlightInfo);
+        double currentPrice = currentFlightInfo.price;
+
+        // 获取新航班的价格
+        FlightInfo newFlightInfo;
+        m_db->queryFlight(newFlightId, newFlightInfo);
+        double newPrice = newFlightInfo.price;
+
+        // 计算差价并更新用户余额
+        double priceDifference = newPrice - currentPrice;
+        m_db->putUser(userId, -priceDifference); // 更新用户余额
 
         // 更新订单的 flight_id
-        m_db->updateFlightId(orderId, flightId);
+        m_db->updateFlightId(orderId, newFlightId);
 
         response["success"] = true;
         response["code"] = 200;

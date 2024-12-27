@@ -3,6 +3,7 @@
 #include "dto/send_code.h"
 #include "dto/user_dto.h"
 #include "util/networkhandler.h"
+#include <QRandomGenerator>
 
 QJsonObject registerUser(const QHttpServerRequest &request, DatabaseManager* m_db){
     try{
@@ -33,7 +34,7 @@ QJsonObject sendCode(const QHttpServerRequest& request){
         SendCodeRequest req(request);
         QJsonObject requestBody;
         requestBody["email"] = req.getEmail();
-        requestBody["code"] = "123456"; // 需要一个生成随机数的函数
+        requestBody["code"] = QString::number(QRandomGenerator::global()->bounded(100000, 999999)); // 需要一个生成随机数的函数
         QJsonObject resp = useNetwork("http://localhost:3000/api/send-code", "POST", requestBody);
         if((!resp.contains("error"))&&(resp.value("error").isNull()||resp.value("error").isUndefined())){
             SendCodeResponse returnValue(requestBody);
