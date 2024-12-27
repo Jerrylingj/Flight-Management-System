@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"os"
 	"time"
+	"sort"
 
 	_ "github.com/alexbrainman/odbc"
 )
@@ -80,6 +81,14 @@ func main() {
         fmt.Println(err)
         return
     }
+
+	sort.Slice(flights, func(i, j int) bool {
+		if flights[i].DepartureTime == flights[j].DepartureTime {
+			return flights[i].ArrivalTime.Before(flights[j].ArrivalTime)
+		}
+		return flights[i].DepartureTime.Before(flights[j].DepartureTime)
+	})
+
     for _, flight := range flights {
 		if flight.Price == 0.00 {
 			// 分配从500到1000的随机价格
