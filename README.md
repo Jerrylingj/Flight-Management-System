@@ -127,7 +127,14 @@ git clone git@github.com:Jerrylingj/Flight-Management-System.git
 ------
 
 ### 5. Configure AI customer service
-
+```json
+{
+  "token": "your-token",
+  "api_base": "https://open.bigmodel.cn/api/paas/v4/chat/completions", // or the address of another platform
+  "model": "your-model" // the model you need
+  // tools are optional, please refer to the API documentation of Zhipu AI or OpenAI for details
+}
+```
 
 
 ------
