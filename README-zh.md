@@ -121,9 +121,9 @@ Server is ready to send emails
 ```json
 {
   "token":"your-token",
-  "api_base":"https://open.bigmodel.cn/api/paas/v4/chat/completions", #或者其它平台的地址
-  "model":"your-model" #你需要的模型
-# tools可不配置，详细请参考智谱ai或openai的api文档
+  "api_base":"https://open.bigmodel.cn/api/paas/v4/chat/completions", // 或者其它平台的地址
+  "model":"your-model" // 你需要的模型
+// tools可不配置，详细请参考智谱ai或openai的api文档
 }
 ```
 
