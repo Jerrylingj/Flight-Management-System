@@ -1,72 +1,199 @@
-# Flight-Management-System
+# 🌍 AltAir - Backend Repository
 
-A Flight Ticketing Management System Based on QT + MySQL
+[English Version](https://chatgpt.com/c/README.md) | [简体中文](https://chatgpt.com/c/README-zh.md)
 
 
-防止奇怪的事情发生，忽略了build改动               
 
-### 一些事项            
-- 导入组件方法            
-1. 使用loader         
-2. import "../components/"             
-> 需要导入某个路径内所有组件而不是某一特定组件，只能导入所有             
-- 如果使用了parent.width(或者parent.height)，确保parent的width/height已经设置，否则默认为0.虽然内容会不管父组件宽度而溢出(如果没设置换行), 但是之后想设置边框或者换行时就会出现bug                
+<div align="center">
+  <img src="./favicon.jpg" alt="Altair Backend Logo" style="border-radius: 8px;"/>
+</div>
 
-### 后端相关
-#### 数据库         
-- 需要配置ODBC
-- 需要在config里新建一个database_config.json文件，database_config.template.json是模板       
 
-#### dto                  
-之后可能需要对每个请求的接收信息和返回信息都约定好数据结构，然后放在dto文件夹里。           
-命名应该是请求名_dto           
-dto尽可能只保存数据结构，不做其它的事情                
-`response_dto`是统一的返回格式       
+------
 
-```json
-{
-  "code":200, // 跟http状态码不同，这个是前后端约定好的，可以是别的。比如状态码为1时表示token过期，前端接收到就执行登出之类的          
-  "message":"操作成功", // 如果成功默认为操作成功，失败没有默认值
-  "data":"实际获取的数据" // 根据请求的dto不同而不同。如果请求失败了，则为空
-}
+## 🚀 **Project Overview**
+
+**AltAir** is the backend module of a full-stack flight management system developed by the **[Terminal Terrace Team](https://github.com/Terminal-Terrace)**  . Built using **C++** and **MySQL**, the backend is designed to provide efficient, secure, and reliable API services for both user and admin operations, including:
+
+- **User Management**
+- **Flight Management**
+- **Order Processing**
+- **Data Interaction and Security**
+
+------
+
+## 🖂 **Project Structure**
+
+```plaintext
+├── backend/                 # Core backend module
+│   ├── aichat/              # AI Chat module for intelligent customer service
+│   ├── api/                 # API routes and logic, calls database functions to implement features
+│   ├── config/              # Global configuration files (e.g., database settings)
+│   ├── database/            # Database operations (CRUD)
+│   ├── doc/                 # Documentation, including API specifications and data structures
+│   ├── dto/                 # Data Transfer Objects (DTO) for uniform data exchange
+│   ├── util/                # Utility functions (e.g., encryption, network requests)
+│   ├── main.cpp             # Backend program entry point, initializes services and routes
+│   └── CMakeLists.txt       # Build configuration using CMake
+├── fetchFlights/            # Module for dynamic flight data scraping
+├── frontend/                # Deprecated mobile front-end code
+├── microBackend/            # Micro-backend module for email registration and login
+└── README.md                # Project documentation
 ```
-参考一下login和login的dto            
-现在的response_dto不是完美的，之后可能要改一下                   
+
+------
+
+## ⚙️ **Development Environment**
+
+| Requirement       | Version         |
+| ----------------- | --------------- |
+| **C++ Version**   | C++17           |
+| **MySQL Version** | 8.0+            |
+| **Build Tool**    | CMake 3.15      |
+| **OS**            | Windows / Linux |
+
+------
+
+## 🛠️ **Getting Started**
+
+### 1. Clone the Repository
+
+```bash
+git clone git@github.com:Jerrylingj/Flight-Management-System.git
+```
+
+------
+
+### 2. Configure MySQL and ODBC
+
+1. Install and configure **MySQL** database.
+
+2. Set up the ODBC driver for database connections.
+
+3. Create a `database_config.json` file in both `backend/config/` and `fetchFlights/` directories using the provided template `database_config.template.json`:
+
+   ```json
+   {
+       "hostname": "127.0.0.1",
+       "port": 3306,
+       "database": "your_database",
+       "username": "your_username",
+       "password": "your_password"
+   }
+   ```
+
+------
+
+### 3. Start the Flight Data Scraping Module
+
+1. Run the `fetchFlights/get_flights.exe` file.
+
+2. Insert scraped data into the database by running:
+
+   ```bash
+   node main.js
+   ```
+
+------
+
+### 4. Configure Email Registration and Login
+
+1. Create an `smtp.json` file in the `microBackend/` directory using the provided `smtp.template.json` template:
+
+   ```json
+   {
+       "host": "smtp.qq.com",
+       "port": 465,
+       "secure": true,
+       "user": "your-email@qq.com",
+       "pass": "your-smtp-auth-code"
+   }
+   ```
+
+2. Start the service:
+
+   ```bash
+   node app.js
+   ```
+
+3. Successful configuration will display:
+
+   ```bash
+   Server is running on port 3000
+   Reading SMTP configuration...
+   Server is ready to send emails
+   ```
+
+------
+
+### 5. Configure AI customer service
 
 
-### 文件夹简介
 
-- backend：后端
+------
 
-  - main.cpp：主程序入口，配置各个api的路由
-  - database：数据库，含对数据库的增删改查
-  - api：各个后端api，调用database中的函数来实现功能
-  - dto: 前后端传递信息的约定，表示按照这个格式发送/接收信息
-  
-- frontend：前端
+## ✨ **Features**
 
-  - main.qml：主页面入口
-  - components：各种组件
+### Core Features
 
-  - views：存放页面
+- **User Management**: User registration, login, and account management.
+- **Flight Management**: Admin can add, update, or delete flight information.
+- **Order Management**: Users can create, pay for, and query orders.
+- **AI Customer Service**: Integrated intelligent customer support.
 
-  - assets：图片、样式等静态资源
-    - figure：图片     
-  
-  
-    - utils：一些工具，如js的网络请求函数
-  
+### Highlights
 
+- **Modular Design**: Clear layered architecture, easy to maintain and extend.
+- **Data Security**: AES256 encryption for user data and SSL/TLS for payment interactions.
+- **Scalability**: Supports distributed database architecture and optimized for high performance.
 
+------
 
-### 命名规范
+## 🛠️ **Notes**
 
-对于 qml , cpp 文件应该使用大驼峰命名，如 NoteCard.qml  ,  NetworkHandler.cpp           
-页面应该以 View 作为结尾，并放在 views 文件夹中, 如HomeView.qml           
-图片应该放在 figure 中相应的文件夹。比如 login 页面需要用到flight.png , 则应该将其放在 /figure/login 中            
-qml中自定义属性以及函数使用小驼峰命名，尽量不使用拼音              
-编写完成后使用Qt自带的代码格式化工具 Ctrl+I 来统一缩进。~~虽然QT的缩进真的一坨~~         
+### Data Transfer Objects (DTO)
 
-### 还没有完成的任务
-- 前端逻辑
-- 后端逻辑
+- **Definition**: All request and response data follow DTO specifications, managed in the `dto/` directory.
+
+- **Standard Response Format**:
+
+  ```json
+  {
+    "code": 200,
+    "message": "Operation successful",
+    "data": { "actual_returned_data" }
+  }
+  ```
+
+### Naming Conventions
+
+1. **File Naming**: Use PascalCase for file names, e.g., `NoteCard.qml`, `NetworkHandler.cpp`.
+2. **View Files**: Suffix view files with `View` and place them in the `views` folder, e.g., `HomeView.qml`.
+3. **Custom Attributes**: Use camelCase for custom properties and avoid non-English names.
+
+------
+
+## 🤝 **Contributing**
+
+Contributions are welcome! Follow these steps:
+
+1. Fork the repository.
+2. Create a feature branch: `git checkout -b feature-name`.
+3. Commit your changes: `git commit -m "Add feature-name"`.
+4. Push your branch: `git push origin feature-name`.
+5. Open a pull request.
+
+------
+
+## 📞 **Contact Us**
+
+For any questions or suggestions, please contact the team:
+
+- [**Jerrylingj**](https://github.com/Jerrylingj): [lingj28@mail2.sysu.edu.cn](mailto:lingj28@mail2.sysu.edu.cn)
+- [**water2027**](https://github.com/water2027): [linshy76@mail2.sysu.edu.cn](mailto:linshy76@mail2.sysu.edu.cn)
+- [**math-zhuxy**](https://github.com/math-zhuxy): [zhuxy255@mail2.sysu.edu.cn](mailto:zhuxy255@mail2.sysu.edu.cn)
+- [**YANGPuxyu**](https://github.com/YANGPuxyu): [yangpx26@mail2.sysu.edu.cn](mailto:yangpx26@mail2.sysu.edu.cn)
+
+------
+
+<div align="center">   <p>&copy; 2024 AltAir. All Rights Reserved.</p> </div> 
