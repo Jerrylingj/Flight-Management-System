@@ -1,6 +1,6 @@
 # 🌍 AltAir - Backend Repository
 
-[English Version](https://chatgpt.com/c/README.md) | [简体中文](https://chatgpt.com/c/README-zh.md)
+[English Version](README.md) | [简体中文](README-zh.md)
 
 
 
